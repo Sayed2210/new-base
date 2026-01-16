@@ -3,7 +3,7 @@
  * Sample mock data for testing features
  */
 
-import { TestDataFactory } from './test_data_factory';
+import { TestDataFactory } from './testDataFactory';
 
 /**
  * Base interface for all models
@@ -77,7 +77,7 @@ export function mockEquipment(id?: number): MockEquipment {
         all_industries: TestDataFactory.randomInt(0, 1),
         industries: TestDataFactory.generateArray(
             TestDataFactory.randomInt(0, 3),
-            (i) => TestDataFactory.randomItem(industries)
+            (i) => TestDataFactory.randomItem(industries)!
         ),
         parent_id: TestDataFactory.randomInt(0, 1) ? TestDataFactory.randomInt(1, 50) : null,
         image: `https://picsum.photos/200/200?random=${_id}`,
@@ -120,8 +120,8 @@ export function mockUser(id?: number): MockUser {
         name: `User ${_id}`,
         email: `user${_id}@example.com`,
         avatar: `https://i.pravatar.cc/150?u=${_id}`,
-        role: TestDataFactory.randomItem(roles),
-        status: TestDataFactory.randomItem(['active', 'inactive']),
+        role: TestDataFactory.randomItem(roles)!,
+        status: TestDataFactory.randomItem(['active', 'inactive'])!,
     };
 }
 
@@ -160,7 +160,7 @@ export function mockProduct(id?: number): MockProduct {
         description: `This is a detailed description for product ${_id}. It includes all the important features and specifications.`,
         price: TestDataFactory.randomInt(10, 1000),
         stock: TestDataFactory.randomInt(0, 100),
-        category: TestDataFactory.randomItem(categories),
+        category: TestDataFactory.randomItem(categories)!,
         image: `https://picsum.photos/400/300?random=${_id}`,
         rating: Math.round(Math.random() * 50) / 10,
     };

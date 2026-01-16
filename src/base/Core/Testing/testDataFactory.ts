@@ -15,7 +15,7 @@ import {
     DataProgress,
     DataCancelled,
     DataRateLimited,
-} from '@/base/Core/NetworkStructure/Resources/dataState/data_state';
+} from '@/base/Core/NetworkStructure/Resources/dataState/dataState';
 import { ErrorModel, ErrorType } from '@/base/Core/NetworkStructure/Resources/errors/errorModel';
 import PaginationModel from '@/base/Core/Models/paginationModel';
 import type { PaginatedResponse, PaginationMeta } from '@/base/Core/Models/pagination.types';
@@ -59,7 +59,7 @@ export class TestDataFactory {
      */
     static failed<T = any>(
         message: string = 'An error occurred',
-        type: ErrorType = ErrorType.unknown
+        type: (typeof ErrorType)[keyof typeof ErrorType] = ErrorType.unknown
     ): DataFailed<T> {
         return new DataFailed<T>({
             error: new ErrorModel(message, type),
@@ -296,7 +296,7 @@ export class TestDataFactory {
     /**
      * Pick random item from array
      */
-    static randomItem<T>(items: T[]): T {
+    static randomItem<T>(items: T[]): T | undefined {
         return items[Math.floor(Math.random() * items.length)];
     }
 
