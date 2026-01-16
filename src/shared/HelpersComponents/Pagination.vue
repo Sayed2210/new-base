@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type PaginationModel from '@/base/core/Models/pagination_model'
+import type PaginationModel from '@/base/Core/Models/pagination_model'
 import IconArrowDown from '@/shared/icons/IconArrowDown.vue'
 
 import Popover from 'primevue/popover'

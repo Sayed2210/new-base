@@ -18,7 +18,7 @@ import {
   DataCancelled,
   DataProgress,
   DataRateLimited,
-} from "@/base/core/networkStructure/Resources/dataState/data_state";
+} from "@/base/Core/NetworkStructure/Resources/dataState/data_state";
 import { computed, type PropType } from "vue";
 
 // Import state components

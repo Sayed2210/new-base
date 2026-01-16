@@ -3,7 +3,7 @@ import { ref, defineProps, watch, computed } from 'vue'
 import Popover from 'primevue/popover'
 import DeleteDialog from '@/base/Presentation/Dialogs/MainDialogs/DeleteDialog.vue'
 import ActionsIcon from '../icons/ActionsIcon.vue'
-import PermissionHandler from '@/base/Presentation/utils/permission_handler'
+import PermissionHandler from '@/base/Presentation/Utils/permission_handler'
 import type { PermissionsEnum } from '@/features/users/Admin/Core/Enum/permission_enum'
 
 interface ActionItem {

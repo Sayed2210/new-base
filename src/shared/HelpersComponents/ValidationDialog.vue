@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import ValidationDialog from "@/base/Presentation/utils/validationService";
+import ValidationDialog from "@/base/Presentation/Utils/validationService";
 import { computed } from "vue";
 
 export default {

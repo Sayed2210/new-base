@@ -2,8 +2,8 @@
 import { ref, computed } from 'vue'
 import Popover from 'primevue/popover'
 import DropIcon from '../icons/DropIcon.vue'
-import wordSlice from '@/base/Presentation/utils/word_slice'
-import { setDefaultImage } from '@/base/Presentation/utils/set_default_image.ts'
+import wordSlice from '@/base/Presentation/Utils/word_slice'
+import { setDefaultImage } from '@/base/Presentation/Utils/set_default_image.ts'
 
 const op = ref()
 

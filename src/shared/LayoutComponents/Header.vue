@@ -5,8 +5,8 @@ import { useRoute, useRouter } from 'vue-router'
 // import IconMenu from '@/shared/icons/IconMenu.vue'
 import IconLogout from '@/shared/icons/IconLogout.vue'
 import IconArrowDownNav from '@/shared/icons/IconArrowDownNav.vue'
-import { setDefaultImage } from '@/base/Presentation/utils/set_default_image'
-// import { setDefaultImage } from "@/base/Presentation/utils/set_default_image";
+import { setDefaultImage } from '@/base/Presentation/Utils/set_default_image'
+// import { setDefaultImage } from "@/base/Presentation/Utils/set_default_image";
 // import { useUserStore } from "@/stores/user";
 // import defaultImage from "@/assets/images/user.png";
 import ChangeLanguage from './ChangeLanguage.vue'
