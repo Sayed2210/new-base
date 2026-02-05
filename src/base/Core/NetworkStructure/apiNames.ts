@@ -951,7 +951,7 @@ class ApiNames {
   public AddAbsence = this.baseUrl + this.websitePrefix + "store_attendance";
   public AbsenceTodayApiService =
     this.baseUrl + this.websitePrefix + "attendance_checkout";
-    
+
   public FetchAbsence = this.baseUrl + this.websitePrefix + "fetch_attendances";
 
   public AddLicenseTypeStudyDashboard =
@@ -1289,6 +1289,14 @@ class ApiNames {
   public IndexDraftTask =
     this.baseUrl + this.websitePrefix + "fetch_draft_tasks";
   public ShowDraftTask = this.baseUrl + this.websitePrefix + "show_draft_task";
+
+  // Employee Email
+  public AddMail = this.baseUrl + this.websitePrefix + "store_employee_email";
+  public EditMail = this.baseUrl + this.websitePrefix + "update_employee_email";
+  public DeleteMail = this.baseUrl + this.websitePrefix + "delete_employee_email";
+  public IndexMail = this.baseUrl + this.websitePrefix + "fetch_employee_emails";
+  public ShowMail = this.baseUrl + this.websitePrefix + "show_employee_email";
+
 
   private static _instance: ApiNames;
 

@@ -5,7 +5,7 @@
 
 import type { AxiosInstance, AxiosResponse, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 import axios from 'axios';
-import HeaderHandler from '@/base/Core/NetworkStructure/networking/utils/header_handler';
+import HeaderHandler from '@/base/Core/NetworkStructure/networking/utils/headerHandler';
 import type PostParams from '@/base/Core/Params/post_params';
 import type GetParams from '@/base/Core/Params/get_params';
 import { env } from '@/base/Core/Config';
