@@ -1,5 +1,5 @@
 import type Params from "@/base/Core/Params/params";
-import { EmailType } from "../constants/email_type.enum";
+import { EmailType } from "../constants/emailType.enum";
 
 /**
  * Parameters for creating/updating employee email

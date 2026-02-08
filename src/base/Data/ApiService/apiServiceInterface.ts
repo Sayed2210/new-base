@@ -1,7 +1,7 @@
 import type Params from '@/base/Core/Params/params';
 import axios from 'axios';
 import type { AxiosResponse } from 'axios';
-import NetworkService, { type NetworkRequestConfig } from '@/base/Core/NetworkStructure/networking/network_service';
+import NetworkService, { type NetworkRequestConfig } from '@/base/Core/NetworkStructure/networking/networkService';
 import type ServiceCallParams from '@/base/Core/Params/callParamsInterface';
 import { dialogManager } from '@/base/Presentation/Dialogs/dialog.manager';
 import { env } from '@/base/Core/Config';

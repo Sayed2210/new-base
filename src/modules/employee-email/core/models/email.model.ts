@@ -1,4 +1,4 @@
-import { EmailType } from "../constants/email_type.enum";
+import { EmailType } from "../constants/emailType.enum";
 
 /**
  * Email model representing employee email data

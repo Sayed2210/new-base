@@ -1,10 +1,8 @@
 import BaseApiService from "@/base/Data/ApiService/baseApiService";
-import type { ApiEndpoints } from "@/base/Data/ApiService/baseApiService";
+import type { ApiEndpoints, ApiResponse } from "@/base/Data/ApiService/baseApiService";
 import { ApiNames } from "@/base/Core/NetworkStructure/apiNames";
+import type Params from "@/base/Core/Params/params";
 
-/**
- * Email API Service for employee email operations
- */
 export default class EmailApiService extends BaseApiService {
     private static instance: EmailApiService;
 
@@ -17,7 +15,13 @@ export default class EmailApiService extends BaseApiService {
             create: this.apiNames.AddMail,
             update: (id: string | number) => `${this.apiNames.EditMail}/${id}`,
             delete: (id: string | number) => `${this.apiNames.DeleteMail}/${id}`,
+
         };
+    }
+
+    executeEmailAction(params: Params): Promise<ApiResponse> {
+
+        return this.customPost(this.endpoints.create || '', params);
     }
 
     /**

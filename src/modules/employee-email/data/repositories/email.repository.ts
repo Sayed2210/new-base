@@ -1,6 +1,8 @@
 import BaseRepository from "@/base/Domain/Repositories/baseRepository";
 import EmailModel from "../../core/models/email.model";
 import EmailApiService from "../api/email.api-service";
+import type { DataState } from "@/base/Core/NetworkStructure/Resources/dataState/dataState";
+import type Params from "@/base/Core/Params/params";
 
 /**
  * Email Repository for API data operations
@@ -28,6 +30,15 @@ export default class EmailRepository extends BaseRepository<EmailModel, EmailMod
         }
         return [];
     }
+
+    async executeEmailAction(params: Params): Promise<DataState<EmailModel>> {
+        return this.executeCustom(
+            () => this.apiService.executeEmailAction(params),
+            (data) => this.parseItem(data)
+        );
+    }
+
+
 
     /**
      * Singleton instance

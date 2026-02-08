@@ -3,7 +3,7 @@
  */
 
 // Constants
-export { EmailType, getEmailTypeName } from "./core/constants/email_type.enum";
+export { EmailType, getEmailTypeName } from "./core/constants/emailType.enum";
 
 // Models
 export { default as EmailModel } from "./core/models/email.model";

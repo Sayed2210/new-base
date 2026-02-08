@@ -1,12 +1,14 @@
 /**
  * Email type enumeration
  */
-export enum EmailType {
-    EMPLOYEE = "employee",
-    PERSONAL = "personal",
-    WORK = "work",
-    OTHER = "other",
-}
+export const EmailType = {
+    EMPLOYEE: "employee",
+    PERSONAL: "personal",
+    WORK: "work",
+    OTHER: "other",
+} as const;
+
+export type EmailType = typeof EmailType[keyof typeof EmailType];
 
 /**
  * Get display name for email type

@@ -30,6 +30,7 @@ export default class EmailController extends BaseController<EmailModel, EmailMod
         super();
     }
 
+
     /**
      * Singleton instance
      */

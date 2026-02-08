@@ -19,12 +19,12 @@ class HeaderHandler {
     const userStore = this.userStore; // Initialize the store here
 
     if (userStore?.user !== null) {
-      const token: string | undefined = userStore?.user?.apiToken;
+      const token: string | undefined = userStore?.user?.apiToken || '$2y$12$w/mwklNIYDADIa7V/2qzhOeKMyQyYPsJji9f5ATBps/CJEXzkypT2';
       if (isAuth) {
-        headers["Authorization"] = "Bearer " + (token ?? "1|UgKKoMkiVaHKGufYYGGO8QeKVArm7gN8bkvTJpovb4f4021b");
+        headers["Authorization"] = "Bearer " + (token ?? '$2y$12$w/mwklNIYDADIa7V/2qzhOeKMyQyYPsJji9f5ATBps/CJEXzkypT2');
       }
       else {
-        headers["Authorization"] = "Bearer " + "1|qpZaF5bd6VuzEOAInA5nNjVJETOcnZRTKUdkOVmidb677908";
+        headers["Authorization"] = "Bearer " + '$2y$12$w/mwklNIYDADIa7V/2qzhOeKMyQyYPsJji9f5ATBps/CJEXzkypT2';
       }
     }
 
