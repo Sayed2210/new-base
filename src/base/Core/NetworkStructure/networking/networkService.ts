@@ -6,10 +6,10 @@
 import type { AxiosInstance, AxiosResponse, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 import axios from 'axios';
 import HeaderHandler from '@/base/Core/NetworkStructure/networking/utils/headerHandler';
-import type PostParams from '@/base/Core/Params/post_params';
-import type GetParams from '@/base/Core/Params/get_params';
+import type PostParams from '@/base/Core/Params/postParams';
+import type GetParams from '@/base/Core/Params/getParams';
 import { env } from '@/base/Core/Config';
-import ErrorHandler from '@/base/Core/NetworkStructure/errors/error_handler';
+import ErrorHandler from '@/base/Core/NetworkStructure/errors/errorHandler';
 import type { RequestConfig, RetryOptions } from '@/base/Core/Config/environment.types';
 import { DEFAULT_RETRY_OPTIONS } from '@/base/Core/Config/environment.types';
 

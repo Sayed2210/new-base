@@ -5,7 +5,7 @@ import NetworkService, { type NetworkRequestConfig } from '@/base/Core/NetworkSt
 import type ServiceCallParams from '@/base/Core/Params/callParamsInterface';
 import { dialogManager } from '@/base/Presentation/Dialogs/dialog.manager';
 import { env } from '@/base/Core/Config';
-import ErrorHandler from '@/base/Core/NetworkStructure/errors/erroHandler';
+import ErrorHandler from '@/base/Core/NetworkStructure/errors/errorHandler';
 import {
   CancelledRequestException,
   NetworkDisconnectException,
@@ -176,6 +176,7 @@ export default abstract class ServicesInterface {
             },
             networkConfig
           );
+
           break;
 
         case CrudType.PATCH:

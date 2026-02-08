@@ -4,6 +4,15 @@
  */
 
 import { ref, computed, type Ref, type ComputedRef } from 'vue';
+
+
+//images for dialogs  
+import successImage from '@/assets/images/dialogs/success.png';
+import errorImage from '@/assets/images/dialogs/error.png';
+import warningImage from '@/assets/images/dialogs/warning.png';
+import infoImage from '@/assets/images/dialogs/info.png';
+
+
 import {
     DialogType,
     type DialogOptions,
@@ -13,6 +22,15 @@ import {
     DEFAULT_DIALOG_OPTIONS,
     DEFAULT_TOAST_OPTIONS,
 } from './dialog.types';
+
+
+const ImgDialog = {
+    success: successImage,
+    error: errorImage,
+    warning: warningImage,
+    info: infoImage,
+};
+
 
 /**
  * Generate unique ID
@@ -124,6 +142,7 @@ class DialogManager {
         return this.show({
             type: DialogType.SUCCESS,
             title: 'Success',
+            image: ImgDialog.success,
             message,
             duration: 3000,
             ...options,
@@ -137,6 +156,7 @@ class DialogManager {
         return this.show({
             type: DialogType.ERROR,
             title: 'Error',
+            image: ImgDialog.error,
             message,
             duration: 5000,
             ...options,
@@ -150,6 +170,7 @@ class DialogManager {
         return this.show({
             type: DialogType.WARNING,
             title: 'Warning',
+            image: ImgDialog.warning,
             message,
             duration: 4000,
             ...options,
@@ -163,6 +184,7 @@ class DialogManager {
         return this.show({
             type: DialogType.INFO,
             title: 'Information',
+            image: ImgDialog.info,
             message,
             duration: 3000,
             ...options,
@@ -180,6 +202,7 @@ class DialogManager {
         return this.show({
             type: DialogType.CONFIRM,
             title: 'Confirm',
+            image: ImgDialog.warning,
             message,
             duration: 0, // Don't auto-dismiss
             closeOnBackdrop: false,
@@ -349,7 +372,7 @@ class DialogManager {
         const index = this.toasts.value.findIndex((t) => t.id === id);
         if (index !== -1) {
             const toast = this.toasts.value[index];
-            if (toast.onClose) {
+            if (toast && toast.onClose) {
                 toast.onClose();
             }
             this.toasts.value.splice(index, 1);
@@ -361,7 +384,7 @@ class DialogManager {
      */
     dismissAllToasts(): void {
         this.toasts.value.forEach((toast) => {
-            if (toast.onClose) {
+            if (toast && toast.onClose) {
                 toast.onClose();
             }
         });

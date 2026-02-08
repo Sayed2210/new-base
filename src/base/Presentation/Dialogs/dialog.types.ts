@@ -6,15 +6,17 @@
 /**
  * Dialog type enumeration
  */
-export enum DialogType {
-    SUCCESS = 'success',
-    ERROR = 'error',
-    WARNING = 'warning',
-    INFO = 'info',
-    CONFIRM = 'confirm',
-    LOADING = 'loading',
-    PROGRESS = 'progress',
-}
+export const DialogType = {
+    SUCCESS: 'success',
+    ERROR: 'error',
+    WARNING: 'warning',
+    INFO: 'info',
+    CONFIRM: 'confirm',
+    LOADING: 'loading',
+    PROGRESS: 'progress',
+} as const;
+
+export type DialogType = (typeof DialogType)[keyof typeof DialogType];
 
 /**
  * Toast position options
@@ -77,6 +79,9 @@ export interface DialogOptions {
 
     /** Progress value (0-100) for progress dialogs */
     progress?: number;
+
+    /** Image for dialog */
+    image?: string;
 
     /** Confirm callback */
     onConfirm?: () => void | Promise<void>;

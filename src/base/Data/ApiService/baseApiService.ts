@@ -5,7 +5,7 @@ import ServicesInterface, {
     type ExtendedCallOptions,
     type ProgressCallback
 } from './apiServiceInterface';
-import { dialogManager } from '@/base/persention/Dialogs/dialog.manager';
+import { dialogManager } from '@/base/Presentation/Dialogs/dialog.manager';
 import { env } from '@/base/Core/Config/index';
 
 /**

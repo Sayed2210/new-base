@@ -37,7 +37,7 @@ import {
     ValidationException,
 } from '@/base/Core/Constants/exceptionConstants';
 import { env } from '@/base/Core/Config';
-import ErrorHandler from '@/base/Core/NetworkStructure/errors/erroHandler';
+import ErrorHandler from '@/base/Core/NetworkStructure/errors/errorHandler';
 
 /**
  * Configuration for repository response parsing.
