@@ -1,89 +1,94 @@
 import {
-    DataEmpty,
-    DataFailed,
-    DataState,
-    DataSuccess,
-    DataTimeout,
-    DataNoNetwork,
-    DataCancelled,
-    DataRateLimited,
-} from '@/base/Core/NetworkStructure/Resources/dataState/dataState';
-import type Params from '@/base/Core/Params/params';
-import { HttpStatusCode } from 'axios';
+  DataEmpty,
+  DataFailed,
+  DataState,
+  DataSuccess,
+  DataTimeout,
+  DataNoNetwork,
+  DataCancelled,
+  DataRateLimited,
+} from "@/base/Core/NetworkStructure/Resources/dataState/dataState";
+import type Params from "@/base/Core/Params/params";
+import { HttpStatusCode } from "axios";
 import {
-    ErrorModel,
-    ErrorType,
-} from '@/base/Core/NetworkStructure/Resources/errors/errorModel';
-import type BaseApiService from '@/base/Data/ApiService/baseApiService';
-import type { ApiCallOptions, ApiResponse, CustomEndpointConfig } from '@/base/Data/ApiService/baseApiService';
-import PaginationModel from '@/base/Core/Models/paginationModel';
+  ErrorModel,
+  ErrorType,
+} from "@/base/Core/NetworkStructure/Resources/errors/errorModel";
+import type BaseApiService from "@/base/Data/ApiService/baseApiService";
+import type {
+  ApiCallOptions,
+  ApiResponse,
+  CrudType,
+  CustomEndpointConfig,
+} from "@/base/Data/ApiService/baseApiService";
+import PaginationModel from "@/base/Core/Models/paginationModel";
 import {
-    BadGatewayException,
-    BadRequestException,
-    ConflictException,
-    ForbiddenException,
-    GatewayTimeoutException,
-    InternalServerException,
-    MethodNotAllowedException,
-    NetworkDisconnectException,
-    NotAcceptableException,
-    NotFoundException,
-    NotImplementedException,
-    RequestTimeoutException,
-    ServiceUnavailableException,
-    UnAuthorizedException,
-    RateLimitException,
-    CancelledRequestException,
-    ValidationException,
-} from '@/base/Core/Constants/exceptionConstants';
-import { env } from '@/base/Core/Config';
-import ErrorHandler from '@/base/Core/NetworkStructure/errors/errorHandler';
+  BadGatewayException,
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  GatewayTimeoutException,
+  InternalServerException,
+  MethodNotAllowedException,
+  NetworkDisconnectException,
+  NotAcceptableException,
+  NotFoundException,
+  NotImplementedException,
+  RequestTimeoutException,
+  ServiceUnavailableException,
+  UnAuthorizedException,
+  RateLimitException,
+  CancelledRequestException,
+  ValidationException,
+} from "@/base/Core/Constants/exceptionConstants";
+import { env } from "@/base/Core/Config";
+import ErrorHandler from "@/base/Core/NetworkStructure/errors/errorHandler";
 
 /**
  * Configuration for repository response parsing.
  */
 export interface RepositoryConfig {
-    /** Whether responses include pagination metadata */
-    hasPagination?: boolean;
+  /** Whether responses include pagination metadata */
+  hasPagination?: boolean;
 
-    /** Whether to parse response data (false for void operations like delete) */
-    parseResponse?: boolean;
+  /** Whether to parse response data (false for void operations like delete) */
+  parseResponse?: boolean;
 
-    /** Data key in response (default: 'data') */
-    dataKey?: string;
+  /** Data key in response (default: 'data') */
+  dataKey?: string;
 
-    /** Pagination key in response (default: 'meta') */
-    paginationKey?: string;
+  /** Pagination key in response (default: 'meta') */
+  paginationKey?: string;
 }
 
 /**
  * Execute options for custom operations
  */
 export interface ExecuteOptions {
-    /** Enable retry for failed requests */
-    enableRetry?: boolean;
+  /** Enable retry for failed requests */
+  enableRetry?: boolean;
 
-    /** Store retry function for UI retry buttons */
-    captureRetryFn?: boolean;
+  /** Store retry function for UI retry buttons */
+  captureRetryFn?: boolean;
 }
 
 /**
  * Base Repository providing unified CRUD operations with DataState handling.
  * Extend this class and define the API service + parsing logic for feature-specific repositories.
- * 
+ *
  * @example
  * ```typescript
  * class ProductRepository extends BaseRepository<ProductModel, ProductModel[]> {
  *   protected get apiService() { return ProductApiService.getInstance(); }
- *   
+ *
  *   protected parseItem(data: any): ProductModel {
  *     return ProductModel.fromMap(data);
  *   }
- *   
+ *
  *   protected parseList(data: any): ProductModel[] {
  *     return data.map((item: any) => ProductModel.fromMap(item));
  *   }
- *   
+ *
  *   // Add custom operations
  *   async getStats(productId: string): Promise<DataState<ProductStats>> {
  *     return this.executeCustom(
@@ -95,388 +100,470 @@ export interface ExecuteOptions {
  * ```
  */
 export default abstract class BaseRepository<T, TList = T[]> {
-    /**
-     * The API service instance for making HTTP calls.
-     */
-    protected abstract get apiService(): BaseApiService;
+  /**
+   * The API service instance for making HTTP calls.
+   */
+  protected abstract get apiService(): BaseApiService;
 
-    /**
-     * Parse a single item from API response data.
-     */
-    protected abstract parseItem(data: any): T;
+  /**
+   * Parse a single item from API response data.
+   */
+  protected abstract parseItem(data: any): T;
 
-    /**
-     * Parse a list of items from API response data.
-     */
-    protected abstract parseList(data: any): TList;
+  /**
+   * Parse a list of items from API response data.
+   */
+  protected abstract parseList(data: any): TList;
 
-    /**
-     * Default configuration for the repository.
-     */
-    protected get config(): RepositoryConfig {
-        return {
-            hasPagination: false,
-            parseResponse: true,
-            dataKey: 'data',
-            paginationKey: 'meta',
-        };
+  /**
+   * Default configuration for the repository.
+   */
+  protected get config(): RepositoryConfig {
+    return {
+      hasPagination: false,
+      parseResponse: true,
+      dataKey: "data",
+      paginationKey: "meta",
+    };
+  }
+
+  // =========================================================================
+  // CRUD Operations
+  // =========================================================================
+
+  /**
+   * Fetch list of items with optional pagination.
+   */
+  async index(
+    CrudType?: CrudType,
+    params?: Params,
+    options?: ApiCallOptions,
+  ): Promise<DataState<TList>> {
+    const retryFn = () => this.index(CrudType, params, options);
+
+    try {
+      const httpResponse = await this.apiService.index(
+        CrudType,
+        params,
+        options,
+      );
+      return this.processListResponse(httpResponse, retryFn);
+    } catch (error) {
+      return this.handleError(error, retryFn);
     }
+  }
 
-    // =========================================================================
-    // CRUD Operations
-    // =========================================================================
+  /**
+   * Fetch single item by ID.
+   */
+  async show(
+    id: string | number,
+    options?: ApiCallOptions,
+  ): Promise<DataState<T>> {
+    const retryFn = () => this.show(id, options);
 
-    /**
-     * Fetch list of items with optional pagination.
-     */
-    async index(params?: Params, options?: ApiCallOptions): Promise<DataState<TList>> {
-        const retryFn = () => this.index(params, options);
+    try {
+      const httpResponse = await this.apiService.show(id, options);
+      return this.processItemResponse(httpResponse, retryFn);
+    } catch (error) {
+      return this.handleError(error, retryFn);
+    }
+  }
 
-        try {
-            const httpResponse = await this.apiService.index(params, options);
-            return this.processListResponse(httpResponse, retryFn);
-        } catch (error) {
-            return this.handleError(error, retryFn);
+  /**
+   * Create new item.
+   */
+  async create(
+    params: Params,
+    options?: ApiCallOptions,
+  ): Promise<DataState<T>> {
+    const retryFn = () => this.create(params, options);
+
+    try {
+      const httpResponse = await this.apiService.create(params, options);
+      return this.processItemResponse(httpResponse, retryFn);
+    } catch (error) {
+      return this.handleError(error, retryFn);
+    }
+  }
+
+  /**
+   * Update existing item.
+   */
+  async update(
+    id: string | number,
+    params: Params,
+    options?: ApiCallOptions,
+  ): Promise<DataState<T>> {
+    const retryFn = () => this.update(id, params, options);
+
+    try {
+      const httpResponse = await this.apiService.update(id, params, options);
+      return this.processItemResponse(httpResponse, retryFn);
+    } catch (error) {
+      return this.handleError(error, retryFn);
+    }
+  }
+
+  /**
+   * Delete item by ID.
+   */
+  async delete(
+    id: string | number,
+    options?: ApiCallOptions,
+  ): Promise<DataState<void>> {
+    const retryFn = () => this.delete(id, options);
+
+    try {
+      const httpResponse = await this.apiService.delete(id, options);
+      return this.processVoidResponse(httpResponse);
+    } catch (error) {
+      return this.handleError(error, retryFn);
+    }
+  }
+
+  // =========================================================================
+  // Custom Operations
+  // =========================================================================
+
+  /**
+   * Execute a custom API call with custom response parsing.
+   * Use this for non-CRUD operations.
+   */
+  protected async executeCustom<R>(
+    apiCall: () => Promise<ApiResponse>,
+    parser: (data: any) => R,
+    options?: ExecuteOptions,
+  ): Promise<DataState<R>> {
+    const retryFn =
+      options?.captureRetryFn !== false
+        ? () => this.executeCustom(apiCall, parser, options)
+        : undefined;
+
+    try {
+      const httpResponse = await apiCall();
+      const isSuccess = this.isSuccessStatus(
+        httpResponse.statusCode,
+        httpResponse.data,
+      );
+
+      if (isSuccess && httpResponse.data.data != null) {
+        return new DataSuccess<R>({
+          data: parser(httpResponse.data.data),
+          message: httpResponse.data.message,
+        });
+      }
+
+      return new DataFailed({
+        error: new ErrorModel(
+          httpResponse.data.message ?? "Unknown error",
+          ErrorType.serviceSide,
+        ),
+      });
+    } catch (error) {
+      return this.handleError(error, retryFn);
+    }
+  }
+
+  /**
+   * Execute custom with retry support.
+   */
+  protected async executeWithRetry<R>(
+    apiCall: () => Promise<ApiResponse>,
+    parser: (data: any) => R,
+    maxAttempts: number = 3,
+  ): Promise<DataState<R>> {
+    let lastError: any;
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      try {
+        return await this.executeCustom(apiCall, parser, {
+          captureRetryFn: false,
+        });
+      } catch (error: any) {
+        lastError = error;
+
+        if (!ErrorHandler.isRetryable(error)) {
+          break;
         }
-    }
 
-    /**
-     * Fetch single item by ID.
-     */
-    async show(id: string | number, options?: ApiCallOptions): Promise<DataState<T>> {
-        const retryFn = () => this.show(id, options);
-
-        try {
-            const httpResponse = await this.apiService.show(id, options);
-            return this.processItemResponse(httpResponse, retryFn);
-        } catch (error) {
-            return this.handleError(error, retryFn);
+        if (attempt < maxAttempts - 1) {
+          const delay = ErrorHandler.getRetryDelay(attempt);
+          await new Promise((resolve) => setTimeout(resolve, delay));
         }
+      }
     }
 
-    /**
-     * Create new item.
-     */
-    async create(params: Params, options?: ApiCallOptions): Promise<DataState<T>> {
-        const retryFn = () => this.create(params, options);
+    return this.handleError(lastError);
+  }
 
+  // =========================================================================
+  // Response Processing
+  // =========================================================================
+
+  /**
+   * Check if HTTP response indicates success.
+   */
+  private isSuccessStatus(statusCode: number, data: any): boolean {
+    return (
+      [
+        HttpStatusCode.Ok,
+        HttpStatusCode.Created,
+        HttpStatusCode.Accepted,
+      ].includes(statusCode) &&
+      (data.status ?? true)
+    );
+  }
+
+  /**
+   * Process response for list operations (index).
+   */
+  private processListResponse(
+    httpResponse: ApiResponse,
+    retryFn?: () => Promise<DataState<TList>>,
+  ): DataState<TList> {
+    const isSuccess = this.isSuccessStatus(
+      httpResponse.statusCode,
+      httpResponse.data,
+    );
+
+    if (isSuccess) {
+      const dataKey = this.config.dataKey || "data";
+      const paginationKey = this.config.paginationKey || "meta";
+
+      if (httpResponse.data[dataKey] != null) {
         try {
-            const httpResponse = await this.apiService.create(params, options);
-            return this.processItemResponse(httpResponse, retryFn);
-        } catch (error) {
-            return this.handleError(error, retryFn);
-        }
-    }
+          let pagination: PaginationModel | null = null;
+          let rawData = httpResponse.data[dataKey];
 
-    /**
-     * Update existing item.
-     */
-    async update(
-        id: string | number,
-        params: Params,
-        options?: ApiCallOptions
-    ): Promise<DataState<T>> {
-        const retryFn = () => this.update(id, params, options);
+          // Handle nested pagination structure
+          if (
+            this.config.hasPagination &&
+            httpResponse.data[dataKey][paginationKey]
+          ) {
+            const paginatedData = httpResponse.data[dataKey];
 
-        try {
-            const httpResponse = await this.apiService.update(id, params, options);
-            return this.processItemResponse(httpResponse, retryFn);
-        } catch (error) {
-            return this.handleError(error, retryFn);
-        }
-    }
-
-    /**
-     * Delete item by ID.
-     */
-    async delete(id: string | number, options?: ApiCallOptions): Promise<DataState<void>> {
-        const retryFn = () => this.delete(id, options);
-
-        try {
-            const httpResponse = await this.apiService.delete(id, options);
-            return this.processVoidResponse(httpResponse);
-        } catch (error) {
-            return this.handleError(error, retryFn);
-        }
-    }
-
-    // =========================================================================
-    // Custom Operations
-    // =========================================================================
-
-    /**
-     * Execute a custom API call with custom response parsing.
-     * Use this for non-CRUD operations.
-     */
-    protected async executeCustom<R>(
-        apiCall: () => Promise<ApiResponse>,
-        parser: (data: any) => R,
-        options?: ExecuteOptions
-    ): Promise<DataState<R>> {
-        const retryFn = options?.captureRetryFn !== false
-            ? () => this.executeCustom(apiCall, parser, options)
-            : undefined;
-
-        try {
-            const httpResponse = await apiCall();
-            const isSuccess = this.isSuccessStatus(httpResponse.statusCode, httpResponse.data);
-
-            if (isSuccess && httpResponse.data.data != null) {
-                return new DataSuccess<R>({
-                    data: parser(httpResponse.data.data),
-                    message: httpResponse.data.message,
-                });
-            }
-
-            return new DataFailed({
-                error: new ErrorModel(
-                    httpResponse.data.message ?? 'Unknown error',
-                    ErrorType.serviceSide
+            if (paginatedData.data?.length === 0) {
+              return new DataEmpty<TList>(
+                new ErrorModel(
+                  httpResponse.data.message ?? "",
+                  ErrorType.dataEmpty,
                 ),
-            });
-        } catch (error) {
-            return this.handleError(error, retryFn);
-        }
-    }
-
-    /**
-     * Execute custom with retry support.
-     */
-    protected async executeWithRetry<R>(
-        apiCall: () => Promise<ApiResponse>,
-        parser: (data: any) => R,
-        maxAttempts: number = 3
-    ): Promise<DataState<R>> {
-        let lastError: any;
-
-        for (let attempt = 0; attempt < maxAttempts; attempt++) {
-            try {
-                return await this.executeCustom(apiCall, parser, { captureRetryFn: false });
-            } catch (error: any) {
-                lastError = error;
-
-                if (!ErrorHandler.isRetryable(error)) {
-                    break;
-                }
-
-                if (attempt < maxAttempts - 1) {
-                    const delay = ErrorHandler.getRetryDelay(attempt);
-                    await new Promise((resolve) => setTimeout(resolve, delay));
-                }
+              );
             }
+
+            pagination = PaginationModel.fromMap(paginatedData[paginationKey]);
+            rawData = paginatedData.data ?? paginatedData;
+          }
+
+          return new DataSuccess<TList>({
+            data: this.parseList(rawData),
+            pagination,
+            message: httpResponse.data.message,
+          });
+        } catch (e) {
+          if (env.isLoggingEnabled) {
+            console.error("Error parsing list data from Repository", e);
+          }
+          return new DataFailed({
+            error: new ErrorModel(
+              httpResponse.data.message ?? "",
+              ErrorType.dataDirty,
+            ),
+          });
         }
-
-        return this.handleError(lastError);
-    }
-
-    // =========================================================================
-    // Response Processing
-    // =========================================================================
-
-    /**
-     * Check if HTTP response indicates success.
-     */
-    private isSuccessStatus(statusCode: number, data: any): boolean {
-        return (
-            [HttpStatusCode.Ok, HttpStatusCode.Created, HttpStatusCode.Accepted].includes(
-                statusCode
-            ) && (data.status ?? true)
+      } else {
+        return new DataEmpty<TList>(
+          new ErrorModel(
+            httpResponse.data.message ?? "No data",
+            ErrorType.dataEmpty,
+          ),
         );
+      }
     }
 
-    /**
-     * Process response for list operations (index).
-     */
-    private processListResponse(
-        httpResponse: ApiResponse,
-        retryFn?: () => Promise<DataState<TList>>
-    ): DataState<TList> {
-        const isSuccess = this.isSuccessStatus(httpResponse.statusCode, httpResponse.data);
+    return new DataFailed({
+      error: new ErrorModel(
+        httpResponse.data.message ?? "",
+        ErrorType.serviceSide,
+      ),
+    });
+  }
 
-        if (isSuccess) {
-            const dataKey = this.config.dataKey || 'data';
-            const paginationKey = this.config.paginationKey || 'meta';
+  /**
+   * Process response for single item operations (show, create, update).
+   */
+  private processItemResponse(
+    httpResponse: ApiResponse,
+    retryFn?: () => Promise<DataState<T>>,
+  ): DataState<T> {
+    const isSuccess = this.isSuccessStatus(
+      httpResponse.statusCode,
+      httpResponse.data,
+    );
+    const dataKey = this.config.dataKey || "data";
 
-            if (httpResponse.data[dataKey] != null) {
-                try {
-                    let pagination: PaginationModel | null = null;
-                    let rawData = httpResponse.data[dataKey];
-
-                    // Handle nested pagination structure
-                    if (this.config.hasPagination && httpResponse.data[dataKey][paginationKey]) {
-                        const paginatedData = httpResponse.data[dataKey];
-
-                        if (paginatedData.data?.length === 0) {
-                            return new DataEmpty<TList>(
-                                new ErrorModel(httpResponse.data.message ?? '', ErrorType.dataEmpty)
-                            );
-                        }
-
-                        pagination = PaginationModel.fromMap(paginatedData[paginationKey]);
-                        rawData = paginatedData.data ?? paginatedData;
-                    }
-
-                    return new DataSuccess<TList>({
-                        data: this.parseList(rawData),
-                        pagination,
-                        message: httpResponse.data.message,
-                    });
-                } catch (e) {
-                    if (env.isLoggingEnabled) {
-                        console.error('Error parsing list data from Repository', e);
-                    }
-                    return new DataFailed({
-                        error: new ErrorModel(httpResponse.data.message ?? '', ErrorType.dataDirty),
-                    });
-                }
-            } else {
-                return new DataEmpty<TList>(
-                    new ErrorModel(httpResponse.data.message ?? 'No data', ErrorType.dataEmpty)
-                );
-            }
+    if (isSuccess) {
+      if (httpResponse.data[dataKey] != null) {
+        try {
+          return new DataSuccess<T>({
+            data: this.parseItem(httpResponse.data[dataKey]),
+            message: httpResponse.data.message,
+          });
+        } catch (e) {
+          if (env.isLoggingEnabled) {
+            console.error("Error parsing item data from Repository", e);
+          }
+          return new DataFailed({
+            error: new ErrorModel(
+              httpResponse.data.message ?? "",
+              ErrorType.dataDirty,
+            ),
+          });
         }
-
-        return new DataFailed({
-            error: new ErrorModel(httpResponse.data.message ?? '', ErrorType.serviceSide),
-        });
+      }
+      // Success without data (valid for some operations)
+      return new DataSuccess<T>({
+        message: httpResponse.data.message,
+      });
     }
 
-    /**
-     * Process response for single item operations (show, create, update).
-     */
-    private processItemResponse(
-        httpResponse: ApiResponse,
-        retryFn?: () => Promise<DataState<T>>
-    ): DataState<T> {
-        const isSuccess = this.isSuccessStatus(httpResponse.statusCode, httpResponse.data);
-        const dataKey = this.config.dataKey || 'data';
+    return new DataFailed({
+      error: new ErrorModel(
+        httpResponse.data.message ?? "",
+        ErrorType.serviceSide,
+      ),
+    });
+  }
 
-        if (isSuccess) {
-            if (httpResponse.data[dataKey] != null) {
-                try {
-                    return new DataSuccess<T>({
-                        data: this.parseItem(httpResponse.data[dataKey]),
-                        message: httpResponse.data.message,
-                    });
-                } catch (e) {
-                    if (env.isLoggingEnabled) {
-                        console.error('Error parsing item data from Repository', e);
-                    }
-                    return new DataFailed({
-                        error: new ErrorModel(httpResponse.data.message ?? '', ErrorType.dataDirty),
-                    });
-                }
-            }
-            // Success without data (valid for some operations)
-            return new DataSuccess<T>({
-                message: httpResponse.data.message,
-            });
-        }
+  /**
+   * Process response for void operations (delete).
+   */
+  private processVoidResponse(httpResponse: ApiResponse): DataState<void> {
+    const isSuccess = this.isSuccessStatus(
+      httpResponse.statusCode,
+      httpResponse.data,
+    );
 
-        return new DataFailed({
-            error: new ErrorModel(httpResponse.data.message ?? '', ErrorType.serviceSide),
-        });
+    if (isSuccess) {
+      return new DataSuccess<void>({
+        message: httpResponse.data.message,
+      });
     }
 
-    /**
-     * Process response for void operations (delete).
-     */
-    private processVoidResponse(httpResponse: ApiResponse): DataState<void> {
-        const isSuccess = this.isSuccessStatus(httpResponse.statusCode, httpResponse.data);
+    return new DataFailed({
+      error: new ErrorModel(
+        httpResponse.data.message ?? "",
+        ErrorType.serviceSide,
+      ),
+    });
+  }
 
-        if (isSuccess) {
-            return new DataSuccess<void>({
-                message: httpResponse.data.message,
-            });
-        }
+  // =========================================================================
+  // Error Handling
+  // =========================================================================
 
-        return new DataFailed({
-            error: new ErrorModel(httpResponse.data.message ?? '', ErrorType.serviceSide),
-        });
+  /**
+   * Handle different exception types and convert to appropriate DataState.
+   */
+  protected handleError<R>(
+    error: any,
+    retryFn?: () => Promise<DataState<R>>,
+  ): DataState<R> {
+    // Log error
+    if (env.isLoggingEnabled) {
+      ErrorHandler.logError(error, "Repository");
     }
 
-    // =========================================================================
-    // Error Handling
-    // =========================================================================
-
-    /**
-     * Handle different exception types and convert to appropriate DataState.
-     */
-    protected handleError<R>(
-        error: any,
-        retryFn?: () => Promise<DataState<R>>
-    ): DataState<R> {
-        // Log error
-        if (env.isLoggingEnabled) {
-            ErrorHandler.logError(error, 'Repository');
-        }
-
-        // Handle timeout
-        if (error instanceof RequestTimeoutException || ErrorHandler.isTimeout(error)) {
-            return new DataTimeout<R>(retryFn);
-        }
-
-        // Handle network disconnection
-        if (error instanceof NetworkDisconnectException || ErrorHandler.isNetworkError(error)) {
-            return new DataNoNetwork<R>(retryFn);
-        }
-
-        // Handle cancelled request
-        if (error instanceof CancelledRequestException) {
-            return new DataCancelled<R>();
-        }
-
-        // Handle rate limiting
-        if (error instanceof RateLimitException) {
-            return new DataRateLimited<R>(error.retryAfter, retryFn);
-        }
-
-        // Handle specific exception types
-        if (error instanceof BadRequestException) {
-            return new DataFailed({ error: new ErrorModel(error.message, ErrorType.badRequest) });
-        }
-
-        if (error instanceof UnAuthorizedException) {
-            return new DataFailed({ error: new ErrorModel(error.message, ErrorType.unAuthorized) });
-        }
-
-        if (error instanceof ForbiddenException) {
-            return new DataFailed({ error: new ErrorModel(error.message, ErrorType.forbidden) });
-        }
-
-        if (error instanceof NotFoundException) {
-            return new DataFailed({ error: new ErrorModel(error.message, ErrorType.notFound) });
-        }
-
-        if (error instanceof MethodNotAllowedException) {
-            return new DataFailed({ error: new ErrorModel(error.message, ErrorType.methodNotAllowed) });
-        }
-
-        if (error instanceof ValidationException) {
-            return new DataFailed({
-                error: new ErrorModel(error.message, ErrorType.validation, {
-                    validationErrors: error.errors,
-                }),
-            });
-        }
-
-        if (error instanceof ConflictException) {
-            return new DataFailed({ error: new ErrorModel(error.message, ErrorType.conflict) });
-        }
-
-        if (
-            error instanceof InternalServerException ||
-            error instanceof NotImplementedException ||
-            error instanceof BadGatewayException ||
-            error instanceof ServiceUnavailableException ||
-            error instanceof GatewayTimeoutException
-        ) {
-            return new DataFailed({ error: new ErrorModel(error.message, ErrorType.serviceSide) });
-        }
-
-        // Unknown error
-        return new DataFailed({
-            error: new ErrorModel(error?.message ?? 'Unknown error', ErrorType.unknown),
-        });
+    // Handle timeout
+    if (
+      error instanceof RequestTimeoutException ||
+      ErrorHandler.isTimeout(error)
+    ) {
+      return new DataTimeout<R>(retryFn);
     }
+
+    // Handle network disconnection
+    if (
+      error instanceof NetworkDisconnectException ||
+      ErrorHandler.isNetworkError(error)
+    ) {
+      return new DataNoNetwork<R>(retryFn);
+    }
+
+    // Handle cancelled request
+    if (error instanceof CancelledRequestException) {
+      return new DataCancelled<R>();
+    }
+
+    // Handle rate limiting
+    if (error instanceof RateLimitException) {
+      return new DataRateLimited<R>(error.retryAfter, retryFn);
+    }
+
+    // Handle specific exception types
+    if (error instanceof BadRequestException) {
+      return new DataFailed({
+        error: new ErrorModel(error.message, ErrorType.badRequest),
+      });
+    }
+
+    if (error instanceof UnAuthorizedException) {
+      return new DataFailed({
+        error: new ErrorModel(error.message, ErrorType.unAuthorized),
+      });
+    }
+
+    if (error instanceof ForbiddenException) {
+      return new DataFailed({
+        error: new ErrorModel(error.message, ErrorType.forbidden),
+      });
+    }
+
+    if (error instanceof NotFoundException) {
+      return new DataFailed({
+        error: new ErrorModel(error.message, ErrorType.notFound),
+      });
+    }
+
+    if (error instanceof MethodNotAllowedException) {
+      return new DataFailed({
+        error: new ErrorModel(error.message, ErrorType.methodNotAllowed),
+      });
+    }
+
+    if (error instanceof ValidationException) {
+      return new DataFailed({
+        error: new ErrorModel(error.message, ErrorType.validation, {
+          validationErrors: error.errors,
+        }),
+      });
+    }
+
+    if (error instanceof ConflictException) {
+      return new DataFailed({
+        error: new ErrorModel(error.message, ErrorType.conflict),
+      });
+    }
+
+    if (
+      error instanceof InternalServerException ||
+      error instanceof NotImplementedException ||
+      error instanceof BadGatewayException ||
+      error instanceof ServiceUnavailableException ||
+      error instanceof GatewayTimeoutException
+    ) {
+      return new DataFailed({
+        error: new ErrorModel(error.message, ErrorType.serviceSide),
+      });
+    }
+
+    // Unknown error
+    return new DataFailed({
+      error: new ErrorModel(
+        error?.message ?? "Unknown error",
+        ErrorType.unknown,
+      ),
+    });
+  }
 }

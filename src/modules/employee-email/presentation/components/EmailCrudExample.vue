@@ -4,14 +4,8 @@
 
     <!-- List of Emails -->
     <div class="email-list" v-if="!controller.isListLoading()">
-      <div
-        v-if="controller.listData.value && controller.listData.value.length > 0"
-      >
-        <div
-          v-for="email in controller.listData.value"
-          :key="email.id"
-          class="email-item"
-        >
+      <div v-if="controller.listData.value && controller.listData.value.length > 0">
+        <div v-for="email in controller.listData.value" :key="email.id" class="email-item">
           <span>{{ email.email }}</span>
           <span class="email-type">{{ getEmailTypeName(email.type) }}</span>
           <div class="actions">
@@ -32,11 +26,7 @@
     <!-- Add/Edit Form -->
     <div class="email-form">
       <h3>{{ isEditing ? "Edit Email" : "Add New Email" }}</h3>
-      <input
-        v-model="formEmail"
-        type="email"
-        placeholder="Enter email address"
-      />
+      <input v-model="formEmail" type="email" placeholder="Enter email address" />
       <select v-model="formType">
         <option :value="EmailType.EMPLOYEE">Employee</option>
         <option :value="EmailType.PERSONAL">Personal</option>
