@@ -4,6 +4,7 @@ import { EmailType } from '../core/constants/emailType.enum';
 
 /**
  * Test data factory for email-related test data
+ * Provides utilities to create mock emails for testing
  */
 export class EmailTestFactory extends TestDataFactory {
     /**
@@ -86,6 +87,103 @@ export class EmailTestFactory extends TestDataFactory {
     static createEmailListApiResponse(emails?: EmailModel[] | any[]) {
         const emailsData = emails?.map((e: any) => e.toJson ? e.toJson() : e) ?? this.createMockEmailJsonList();
         return this.apiResponse(emailsData, true, 'Emails retrieved successfully');
+    }
+
+    /**
+     * Create invalid email data for negative testing
+     */
+    static createInvalidEmailData(): any {
+        return {
+            id: 1,
+            email: 'not-a-valid-email',  // Invalid format
+            type: EmailType.WORK,
+            employee_id: 10,
+        };
+    }
+
+    /**
+     * Create email with missing required fields
+     */
+    static createIncompleteEmailData(): any {
+        return {
+            id: 1,
+            // email is missing
+            type: EmailType.WORK,
+        };
+    }
+
+    /**
+     * Create malformed email data for error testing
+     */
+    static createMalformedEmailData(): any {
+        return {
+            id: 'not-a-number',
+            email: 'test@example.com',
+            type: 'invalid-type',
+            employee_id: 'not-a-number',
+        };
+    }
+
+    /**
+     * Create email with boundary values
+     */
+    static createBoundaryEmail(boundary: 'min' | 'max'): EmailModel {
+        if (boundary === 'min') {
+            return new EmailModel({
+                id: 1,
+                email: 'a@b.c',  // Minimum valid length
+                type: EmailType.EMPLOYEE,
+                employeeId: 1,
+            });
+        } else {
+            const longLocal = 'a'.repeat(64);
+            const longDomain = 'b'.repeat(63);
+            return new EmailModel({
+                id: 999999,
+                email: `${longLocal}@${longDomain}.com`,
+                type: EmailType.OTHER,
+                employeeId: 999999,
+            });
+        }
+    }
+
+    /**
+     * Create emails with different types
+     */
+    static createEmailsByType(): EmailModel[] {
+        return Object.values(EmailType).map((type, index) =>
+            this.createMockEmail({
+                id: index + 1,
+                email: `${type}${index}@example.com`,
+                type: type as EmailType,
+            })
+        );
+    }
+
+    /**
+     * Create error response for testing error handling
+     */
+    static createErrorEmailResponse(message: string = 'Email operation failed', statusCode: number = 500) {
+        return this.errorApiResponse(message, statusCode);
+    }
+
+    /**
+     * Create empty response for testing empty state
+     */
+    static createEmptyEmailListResponse() {
+        return this.apiResponse([], true, 'No emails found');
+    }
+
+    /**
+     * Create partially valid email list (some valid, some invalid)
+     */
+    static createPartiallyValidEmailList(): any[] {
+        return [
+            this.createMockEmailJson({ email: 'valid1@example.com' }),
+            this.createInvalidEmailData(),
+            this.createMockEmailJson({ email: 'valid2@example.com' }),
+            this.createIncompleteEmailData(),
+        ];
     }
 }
 

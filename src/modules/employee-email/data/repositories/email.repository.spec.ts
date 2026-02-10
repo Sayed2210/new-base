@@ -109,7 +109,8 @@ describe('EmailRepository', () => {
             const errorResponse = EmailTestFactory.errorApiResponse('Email not found', 404);
             mockApiService.show.mockResolvedValue(errorResponse);
 
-            const result = await repository.show(999);
+            const options = { auth: true };
+            const result = await repository.show(999, undefined, options);
 
             expect(result).toBeInstanceOf(DataFailed);
         });
@@ -118,9 +119,9 @@ describe('EmailRepository', () => {
             const mockResponse = EmailTestFactory.createEmailApiResponse();
             mockApiService.show.mockResolvedValue(mockResponse);
 
-            await repository.show(42);
+            await repository.show(42, undefined, { auth: true });
 
-            expect(mockApiService.show).toHaveBeenCalledWith(42, undefined);
+            expect(mockApiService.show).toHaveBeenCalledWith(42, undefined, { auth: true });
         });
     });
 
@@ -205,7 +206,7 @@ describe('EmailRepository', () => {
             };
             mockApiService.delete.mockResolvedValue(mockResponse);
 
-            const result = await repository.delete(20);
+            const result = await repository.delete(20, undefined, { auth: true });
 
             expect(result).toBeInstanceOf(DataSuccess);
         });
@@ -214,7 +215,7 @@ describe('EmailRepository', () => {
             const errorResponse = EmailTestFactory.errorApiResponse('Cannot delete email', 403);
             mockApiService.delete.mockResolvedValue(errorResponse);
 
-            const result = await repository.delete(25);
+            const result = await repository.delete(25, undefined, { auth: true });
 
             expect(result).toBeInstanceOf(DataFailed);
         });
@@ -223,9 +224,9 @@ describe('EmailRepository', () => {
             const mockResponse = { data: { status: true }, statusCode: 200 };
             mockApiService.delete.mockResolvedValue(mockResponse);
 
-            await repository.delete(30);
+            await repository.delete(30, undefined, { auth: true });
 
-            expect(mockApiService.delete).toHaveBeenCalledWith(30, undefined);
+            expect(mockApiService.delete).toHaveBeenCalledWith(30, undefined, { auth: true });
         });
     });
 
@@ -297,6 +298,177 @@ describe('EmailRepository', () => {
             const parsed = (repository as any).parseList(null);
 
             expect(parsed).toEqual([]);
+        });
+    });
+
+    describe('error handling and edge cases', () => {
+        describe('malformed data handling', () => {
+            it('should throw error when parsing malformed item', () => {
+                const malformedData = EmailTestFactory.createInvalidEmailData();
+
+                expect(() => (repository as any).parseItem(malformedData)).toThrow();
+            });
+
+            it('should handle parseList with mix of valid and invalid items', () => {
+                const mixedData = EmailTestFactory.createPartiallyValidEmailList();
+
+                const parsed = (repository as any).parseList(mixedData);
+
+                // Should only include successfully parsed items
+                expect(parsed.length).toBeLessThan(mixedData.length);
+                expect(parsed.every((item: EmailModel) => item instanceof EmailModel)).toBe(true);
+            });
+
+            it('should handle null values in list gracefully', () => {
+                const dataWithNulls = [
+                    { id: 1, email: 'valid@example.com', type: EmailType.WORK, employee_id: 10 },
+                    null,
+                    { id: 2, email: 'another@example.com', type: EmailType.PERSONAL, employee_id: 20 },
+                ];
+
+                const parsed = (repository as any).parseList(dataWithNulls);
+
+                expect(parsed.length).toBeLessThan(dataWithNulls.length);
+                expect(parsed.length).toBeGreaterThan(0);
+            });
+        });
+
+        describe('network and API errors', () => {
+            it('should handle network timeout', async () => {
+                mockApiService.index.mockRejectedValue(new Error('Network timeout'));
+
+                await expect(repository.index()).rejects.toThrow('Network timeout');
+            });
+
+            it('should handle server 500 error', async () => {
+                const errorResponse = EmailTestFactory.errorApiResponse('Internal server error', 500);
+                mockApiService.show.mockResolvedValue(errorResponse);
+
+                const result = await repository.show(1);
+
+                expect(result).toBeInstanceOf(DataFailed);
+            });
+
+            it('should handle 401 unauthorized', async () => {
+                const errorResponse = EmailTestFactory.errorApiResponse('Unauthorized', 401);
+                mockApiService.index.mockResolvedValue(errorResponse);
+
+                const result = await repository.index();
+
+                expect(result).toBeInstanceOf(DataFailed);
+            });
+
+            it('should handle 403 forbidden', async () => {
+                const errorResponse = EmailTestFactory.errorApiResponse('Forbidden', 403);
+                mockApiService.delete.mockResolvedValue(errorResponse);
+
+                const result = await repository.delete(10);
+
+                expect(result).toBeInstanceOf(DataFailed);
+            });
+        });
+
+        describe('concurrent operations', () => {
+            it('should handle multiple concurrent index calls', async () => {
+                const response1 = EmailTestFactory.createEmailListApiResponse([EmailTestFactory.createMockEmailJson({ id: 1 })]);
+                const response2 = EmailTestFactory.createEmailListApiResponse([EmailTestFactory.createMockEmailJson({ id: 2 })]);
+
+                mockApiService.index
+                    .mockResolvedValueOnce(response1)
+                    .mockResolvedValueOnce(response2);
+
+                const [result1, result2] = await Promise.all([
+                    repository.index(),
+                    repository.index()
+                ]);
+
+                expect(result1).toBeInstanceOf(DataSuccess);
+                expect(result2).toBeInstanceOf(DataSuccess);
+            });
+
+            it('should handle concurrent show calls for different IDs', async () => {
+                const response1 = EmailTestFactory.createEmailApiResponse(EmailTestFactory.createMockEmailJson({ id: 1 }));
+                const response2 = EmailTestFactory.createEmailApiResponse(EmailTestFactory.createMockEmailJson({ id: 2 }));
+
+                mockApiService.show
+                    .mockResolvedValueOnce(response1)
+                    .mockResolvedValueOnce(response2);
+
+                const [result1, result2] = await Promise.all([
+                    repository.show(1),
+                    repository.show(2)
+                ]);
+
+                expect(result1).toBeInstanceOf(DataSuccess);
+                expect(result2).toBeInstanceOf(DataSuccess);
+            });
+        });
+
+        describe('executeEmailAction edge cases', () => {
+            it('should handle invalid response data', async () => {
+                const invalidResponse = {
+                    data: { data: { id: 1, email: 'invalid' }, status: true },  // Invalid email
+                    statusCode: 200
+                };
+                mockApiService.executeEmailAction.mockResolvedValue(invalidResponse);
+
+                const result = await repository.executeEmailAction({ action: 'test' } as any);
+
+                expect(result).toBeInstanceOf(DataFailed);
+            });
+
+            it('should handle missing data in response', async () => {
+                const emptyResponse = {
+                    data: { data: null, status: true },
+                    statusCode: 200
+                };
+                mockApiService.executeEmailAction.mockResolvedValue(emptyResponse);
+
+                const result = await repository.executeEmailAction({ action: 'test' } as any);
+
+                expect(result).toBeInstanceOf(DataEmpty);
+            });
+        });
+
+        describe('boundary conditions', () => {
+            it('should handle empty array from API', async () => {
+                const emptyResponse = EmailTestFactory.createEmailListApiResponse([]);
+                mockApiService.index.mockResolvedValue(emptyResponse);
+
+                const result = await repository.index();
+
+                expect(result).toBeInstanceOf(DataSuccess);
+                if (result instanceof DataSuccess) {
+                    expect(result.data).toEqual([]);
+                }
+            });
+
+            it('should handle very large email lists', async () => {
+                const largeList = EmailTestFactory.createMockEmailJsonList(1000);
+                const response = EmailTestFactory.createEmailListApiResponse(largeList);
+                mockApiService.index.mockResolvedValue(response);
+
+                const result = await repository.index();
+
+                expect(result).toBeInstanceOf(DataSuccess);
+                if (result instanceof DataSuccess) {
+                    expect(result.data).toHaveLength(1000);
+                }
+            });
+
+            it('should handle email with maximum valid length', () => {
+                const longEmail = 'a'.repeat(50) + '@' + 'b'.repeat(50) + '.com';
+                const json = {
+                    id: 1,
+                    email: longEmail,
+                    type: EmailType.WORK,
+                    employee_id: 10,
+                };
+
+                const parsed = (repository as any).parseItem(json);
+
+                expect(parsed.email).toBe(longEmail.toLowerCase());
+            });
         });
     });
 });

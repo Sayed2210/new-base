@@ -241,7 +241,7 @@ export default abstract class BaseApiService extends ServicesInterface {
    */
   async update(
     id: string | number,
-    params: Params,
+    params?: Params,
     options?: ApiCallOptions,
   ): Promise<ApiResponse> {
     const url = this.resolveEndpoint(this.endpoints.update, id);
@@ -270,7 +270,7 @@ export default abstract class BaseApiService extends ServicesInterface {
    */
   async delete(
     id: string | number,
-    params: Params,
+    params?: Params,
     options?: ApiCallOptions,
   ): Promise<ApiResponse> {
     const url = options?.usePost
