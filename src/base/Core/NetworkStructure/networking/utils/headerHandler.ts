@@ -18,19 +18,14 @@ class HeaderHandler {
     const headers: { [key: string]: string } = {};
     const userStore = this.userStore; // Initialize the store here
 
+    const token: string | undefined =
+      userStore?.user?.apiToken ||
+      "$2y$12$w/mwklNIYDADIa7V/2qzhOeKMyQyYPsJji9f5ATBps/CJEXzkypT2";
     if (userStore?.user !== null) {
-      const token: string | undefined =
-        userStore?.user?.apiToken ||
-        "$2y$12$w/mwklNIYDADIa7V/2qzhOeKMyQyYPsJji9f5ATBps/CJEXzkypT2";
       if (isAuth) {
-        headers["Authorization"] =
-          "Bearer " +
-          (token ??
-            "$2y$12$w/mwklNIYDADIa7V/2qzhOeKMyQyYPsJji9f5ATBps/CJEXzkypT2");
+        headers["Authorization"] = "Bearer " + token;
       } else {
-        headers["Authorization"] =
-          "Bearer " +
-          "$2y$12$w/mwklNIYDADIa7V/2qzhOeKMyQyYPsJji9f5ATBps/CJEXzkypT2";
+        headers["Authorization"] = "Bearer " + token;
       }
     }
 
@@ -40,7 +35,7 @@ class HeaderHandler {
     }
     headers["Content-Type"] = "application/json";
     headers["Accept"] = "application/json";
-
+    headers["Authorization"] = "Bearer " + token;
     return headers;
   }
 }

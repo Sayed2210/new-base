@@ -7,7 +7,6 @@ import {
   getEmailTypeName,
 } from "@/modules/employee-email";
 import DeleteParams from "../../core/params/delete.email.params";
-import EmailEdit from "./EmailEdit.vue";
 
 // Controller instance
 const controller = EmailController.getInstance();
@@ -18,23 +17,19 @@ const formType = ref<EmailType>(EmailType.EMPLOYEE);
 const isEditing = ref(false);
 const editingId = ref<number | null>(null);
 
-// Fetch emails on component mount
-onMounted(async () => {
-  await controller.fetchList();
-});
 
 /**
  * Save (create or update) email
  */
 async function saveEmail() {
-  const params = new EmailParams(formEmail.value, formType.value);
+  const params = new EmailParams(formEmail.value, 1);
 
   if (isEditing.value && editingId.value) {
     // Update existing email
     await controller.update(editingId.value, params);
   } else {
     // Create new email
-    await controller.create(params,);
+    await controller.create(params);
   }
 
   // Refresh list and reset form
@@ -47,8 +42,6 @@ async function saveEmail() {
 /**
  * Edit email
  */
-const ShowEditForm = ref()
-
 function editEmail(email: any) {
   formEmail.value = email.email;
   formType.value = email.type;
@@ -76,7 +69,7 @@ async function deleteEmail(id: number) {
  * Cancel edit
  */
 async function cancelEdit() {
-  const Addparams = new DeleteParams(5)
+  const Addparams = new EmailParams("mohab@gmail.com", 1, 5)
   await controller.update(null, Addparams);
   // resetForm();
 }
@@ -92,33 +85,9 @@ function resetForm() {
 }
 </script>
 
+
 <template>
   <div class="email-crud-example">
-    <h2>Employee Email Management</h2>
-
-    <!-- List of Emails -->
-    <div class="email-list" v-if="!controller.isListLoading()">
-      <div v-if="controller.listData.value && controller.listData.value.length > 0">
-        <div v-for="email in controller.listData.value" :key="email.id" class="email-item">
-          <span>{{ email.email }}</span>
-          <span class="email-type">{{ getEmailTypeName(email.type) }}</span>
-          <div class="actions">
-            <button @click="ShowEditForm = email.id">Edit</button>
-            <button @click="deleteEmail(email.id!)">Delete</button>
-          </div>
-          <EmailEdit v-if="email.id == ShowEditForm" />
-        </div>
-      </div>
-      <div v-else>
-        <p>No emails found</p>
-      </div>
-    </div>
-
-    <div v-else>
-      <p>Loading emails...</p>
-    </div>
-
-    <!-- Add/Edit Form -->
     <div class="email-form">
       <h3>{{ isEditing ? "Edit Email" : "Add New Email" }}</h3>
       <input v-model="formEmail" type="email" placeholder="Enter email address" />

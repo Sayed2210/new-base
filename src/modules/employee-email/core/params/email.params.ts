@@ -26,7 +26,7 @@ export default class EmailParams implements Params {
     };
 
     if (this.employeeId !== undefined) {
-      map["employee_id"] = this.employeeId;
+      map["id"] = this.employeeId;
     }
 
     return map;

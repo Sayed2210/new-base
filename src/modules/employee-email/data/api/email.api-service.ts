@@ -11,20 +11,6 @@ export default class EmailApiService extends BaseApiService {
 
   private apiNames = ApiNames.instance;
 
-  protected get endpoints(): ApiEndpoints {
-    return {
-      index: this.apiNames.IndexMail,
-      show: (id: string | number) => `${this.apiNames.ShowMail}/${id}`,
-      create: this.apiNames.AddMail,
-      update: (id: string | number) => `${this.apiNames.EditMail}/${id}`,
-      delete: (id: string | number) => `${this.apiNames.DeleteMail}/${id}`,
-    };
-  }
-
-  executeEmailAction(params: Params): Promise<ApiResponse> {
-    return this.customPost(this.endpoints.create || "", params);
-  }
-
   /**
    * Singleton instance
    */
@@ -33,5 +19,22 @@ export default class EmailApiService extends BaseApiService {
       EmailApiService.instance = new EmailApiService();
     }
     return EmailApiService.instance;
+  }
+
+  protected get endpoints(): ApiEndpoints {
+    return {
+      index: this.apiNames.IndexMail,
+      show: (id: string | number) =>
+        `${this.apiNames.ShowMail}${id ? `/${id}` : ``}`,
+      create: this.apiNames.AddMail,
+      update: (id: string | number) =>
+        `${this.apiNames.EditMail}${id ? `/${id}` : ``}`,
+      delete: (id: string | number) =>
+        `${this.apiNames.DeleteMail}${id ? `/${id}` : ``}`,
+    };
+  }
+
+  executeEmailAction(params: Params): Promise<ApiResponse> {
+    return this.customPost(this.endpoints.create || "", params);
   }
 }
