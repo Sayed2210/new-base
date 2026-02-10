@@ -70,6 +70,9 @@ export interface ApiCallOptions extends ExtendedCallOptions {
 
   /** Use JSON instead of FormData for create/update */
   useJson?: boolean;
+
+  /** Use JSON instead of FormData for create/update */
+  usePost?: boolean;
 }
 
 /**
@@ -176,17 +179,18 @@ export default abstract class BaseApiService extends ServicesInterface {
   /**
    * Fetch list of items (GET request).
    */
-  async index(
-    crudType?: CrudType,
-    params?: Params,
-    options?: ApiCallOptions,
-  ): Promise<ApiResponse> {
+  async index(params?: Params, options?: ApiCallOptions): Promise<ApiResponse> {
     const url = this.resolveEndpoint(this.endpoints.index);
-    const mergedOptions = this.mergeOptions(options);
+    // options.usePost = options?.usePost ? options?.usePost : true;
+    // const mergedOptions = this.mergeOptions(options);
 
+    const mergedOptions = this.mergeOptions({
+      ...options,
+      usePost: options?.usePost ? options?.usePost : true,
+    });
     return this.call({
       url,
-      type: crudType || CrudType.POST,
+      type: mergedOptions?.usePost ? CrudType.POST : CrudType.GET,
       params,
       ...mergedOptions,
     });
@@ -197,14 +201,22 @@ export default abstract class BaseApiService extends ServicesInterface {
    */
   async show(
     id: string | number,
+    params?: Params,
     options?: ApiCallOptions,
   ): Promise<ApiResponse> {
-    const url = this.resolveEndpoint(this.endpoints.show, id);
-    const mergedOptions = this.mergeOptions(options);
+    // const url = this.resolveEndpoint(this.endpoints.show, id);
+    const url = options?.usePost
+      ? this.resolveEndpoint(this.endpoints.show, "")
+      : this.resolveEndpoint(this.endpoints.show, id);
+    const mergedOptions = this.mergeOptions({
+      ...options,
+      usePost: options?.usePost ? options.usePost : true,
+    });
 
     return this.call({
       url,
-      type: CrudType.GET,
+      type: mergedOptions?.usePost ? CrudType.POST : CrudType.GET,
+      params,
       ...mergedOptions,
     });
   }
@@ -233,7 +245,10 @@ export default abstract class BaseApiService extends ServicesInterface {
     options?: ApiCallOptions,
   ): Promise<ApiResponse> {
     const url = this.resolveEndpoint(this.endpoints.update, id);
-    const mergedOptions = this.mergeOptions(options);
+    const mergedOptions = this.mergeOptions({
+      ...options,
+      usePost: options?.usePost ? options?.usePost : true,
+    });
 
     let method: CrudType = CrudType.FormData;
     if (mergedOptions.usePut) {
@@ -244,7 +259,7 @@ export default abstract class BaseApiService extends ServicesInterface {
 
     return this.call({
       url,
-      type: method,
+      type: mergedOptions?.usePost ? CrudType.POST : method,
       params,
       ...mergedOptions,
     });
@@ -255,14 +270,22 @@ export default abstract class BaseApiService extends ServicesInterface {
    */
   async delete(
     id: string | number,
+    params: Params,
     options?: ApiCallOptions,
   ): Promise<ApiResponse> {
-    const url = this.resolveEndpoint(this.endpoints.delete, id);
-    const mergedOptions = this.mergeOptions(options);
+    const url = options?.usePost
+      ? this.resolveEndpoint(this.endpoints.delete, "")
+      : this.resolveEndpoint(this.endpoints.delete, id);
+    // const mergedOptions = this.mergeOptions(options);
+    const mergedOptions = this.mergeOptions({
+      ...options,
+      usePost: options?.usePost ? options?.usePost : true,
+    });
 
     return this.call({
       url,
-      type: CrudType.DELETE,
+      type: mergedOptions?.usePost ? CrudType.POST : CrudType.DELETE,
+      params,
       ...mergedOptions,
     });
   }

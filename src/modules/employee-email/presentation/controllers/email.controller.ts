@@ -46,11 +46,4 @@ export default class EmailController extends BaseController<
   /**
    * Fetch emails for a specific employee
    */
-  async fetchEmployeeEmails(employeeId: number) {
-    // You can create a custom params class for filtering by employee
-    // For now, using the base fetchList with details (query params)
-    return this.fetchList(undefined, {
-      details: { employee_id: employeeId },
-    });
-  }
 }

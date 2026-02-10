@@ -135,18 +135,14 @@ export default abstract class BaseRepository<T, TList = T[]> {
    * Fetch list of items with optional pagination.
    */
   async index(
-    CrudType?: CrudType,
     params?: Params,
     options?: ApiCallOptions,
   ): Promise<DataState<TList>> {
-    const retryFn = () => this.index(CrudType, params, options);
+    const retryFn = () => this.index(params, options);
 
     try {
-      const httpResponse = await this.apiService.index(
-        CrudType,
-        params,
-        options,
-      );
+      console.log(options, "options repo");
+      const httpResponse = await this.apiService.index(params, options);
       return this.processListResponse(httpResponse, retryFn);
     } catch (error) {
       return this.handleError(error, retryFn);
@@ -158,12 +154,13 @@ export default abstract class BaseRepository<T, TList = T[]> {
    */
   async show(
     id: string | number,
+    params: Params,
     options?: ApiCallOptions,
   ): Promise<DataState<T>> {
-    const retryFn = () => this.show(id, options);
+    const retryFn = () => this.show(id, params, options);
 
     try {
-      const httpResponse = await this.apiService.show(id, options);
+      const httpResponse = await this.apiService.show(id, params, options);
       return this.processItemResponse(httpResponse, retryFn);
     } catch (error) {
       return this.handleError(error, retryFn);
@@ -210,12 +207,13 @@ export default abstract class BaseRepository<T, TList = T[]> {
    */
   async delete(
     id: string | number,
+    params: Params,
     options?: ApiCallOptions,
   ): Promise<DataState<void>> {
-    const retryFn = () => this.delete(id, options);
+    const retryFn = () => this.delete(id, params, options);
 
     try {
-      const httpResponse = await this.apiService.delete(id, options);
+      const httpResponse = await this.apiService.delete(id, params, options);
       return this.processVoidResponse(httpResponse);
     } catch (error) {
       return this.handleError(error, retryFn);

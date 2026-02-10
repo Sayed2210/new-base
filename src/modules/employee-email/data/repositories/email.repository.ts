@@ -3,6 +3,7 @@ import EmailModel from "../../core/models/email.model";
 import EmailApiService from "../api/email.api-service";
 import type { DataState } from "@/base/Core/NetworkStructure/Resources/dataState/dataState";
 import type Params from "@/base/Core/Params/params";
+import DeleteParams from "../../core/params/delete.email.params";
 
 /**
  * Email Repository for API data operations
@@ -13,10 +14,18 @@ export default class EmailRepository extends BaseRepository<
 > {
   private static instance: EmailRepository;
 
-
-  
   protected get apiService() {
     return EmailApiService.getInstance();
+  }
+
+  /**
+   * Singleton instance
+   */
+  static getInstance(): EmailRepository {
+    if (!EmailRepository.instance) {
+      EmailRepository.instance = new EmailRepository();
+    }
+    return EmailRepository.instance;
   }
 
   /**
@@ -41,15 +50,5 @@ export default class EmailRepository extends BaseRepository<
       () => this.apiService.executeEmailAction(params),
       (data) => this.parseItem(data),
     );
-  }
-
-  /**
-   * Singleton instance
-   */
-  static getInstance(): EmailRepository {
-    if (!EmailRepository.instance) {
-      EmailRepository.instance = new EmailRepository();
-    }
-    return EmailRepository.instance;
   }
 }

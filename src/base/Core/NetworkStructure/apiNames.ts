@@ -26,16 +26,18 @@ class ApiNames {
     this.baseUrl + this.websitePrefix + "delete_request_type";
 
   // Fetch Packedge Project
-  public IndexPackedge = this.baseUrl + this.websitePrefix + "full_package_permit_for_project";
+  public IndexPackedge =
+    this.baseUrl + this.websitePrefix + "full_package_permit_for_project";
 
-  public StorePackege = this.baseUrl + this.websitePrefix + "store_package_task";
+  public StorePackege =
+    this.baseUrl + this.websitePrefix + "store_package_task";
 
-  public FetchPackege = this.baseUrl + this.websitePrefix + "fetch_sent_package_tasks";
+  public FetchPackege =
+    this.baseUrl + this.websitePrefix + "fetch_sent_package_tasks";
 
   // SetAllAbsenceTodayApiService
   public SetAllAbsenceTodayApiService =
     this.baseUrl + this.websitePrefix + "set_all_absence_today";
-
 
   // GetAttendanceStateApiService
   public GetAttendanceStateApiService =
@@ -1022,7 +1024,6 @@ class ApiNames {
   public FetchSmartProjectTrackingReport =
     this.baseUrl + this.websitePrefix + "fetch_smart_project_statics_report";
 
-
   public FetchSmartProjectTrackingPermitsReport =
     this.baseUrl + this.websitePrefix + "fetch_smart_project_tracking_report";
   public StoreGeneralTask =
@@ -1293,10 +1294,11 @@ class ApiNames {
   // Employee Email
   public AddMail = this.baseUrl + this.websitePrefix + "store_employee_email";
   public EditMail = this.baseUrl + this.websitePrefix + "update_employee_email";
-  public DeleteMail = this.baseUrl + this.websitePrefix + "delete_employee_email";
-  public IndexMail = this.baseUrl + this.websitePrefix + "fetch_employee_emails";
+  public DeleteMail =
+    this.baseUrl + this.websitePrefix + "delete_employee_email";
+  public IndexMail =
+    this.baseUrl + this.websitePrefix + "fetch_employee_emails";
   public ShowMail = this.baseUrl + this.websitePrefix + "show_employee_email";
-
 
   private static _instance: ApiNames;
 
