@@ -154,7 +154,7 @@ export default abstract class BaseRepository<T, TList = T[]> {
    */
   async show(
     id: string | number,
-    params: Params,
+    params?: Params,
     options?: ApiCallOptions,
   ): Promise<DataState<T>> {
     const retryFn = () => this.show(id, params, options);
@@ -207,7 +207,7 @@ export default abstract class BaseRepository<T, TList = T[]> {
    */
   async delete(
     id: string | number,
-    params: Params,
+    params?: Params,
     options?: ApiCallOptions,
   ): Promise<DataState<void>> {
     const retryFn = () => this.delete(id, params, options);

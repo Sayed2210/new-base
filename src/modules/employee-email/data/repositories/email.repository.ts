@@ -3,10 +3,13 @@ import EmailModel from "../../core/models/email.model";
 import EmailApiService from "../api/email.api-service";
 import type { DataState } from "@/base/Core/NetworkStructure/Resources/dataState/dataState";
 import type Params from "@/base/Core/Params/params";
-import DeleteParams from "../../core/params/delete.email.params";
+import { DataFailed } from "@/base/Core/NetworkStructure/Resources/dataState/dataState";
 
 /**
  * Email Repository for API data operations
+ * 
+ * This repository handles all data access for employee emails,
+ * including parsing API responses and error handling.
  */
 export default class EmailRepository extends BaseRepository<
   EmailModel,
@@ -19,7 +22,8 @@ export default class EmailRepository extends BaseRepository<
   }
 
   /**
-   * Singleton instance
+   * Get singleton instance
+   * @returns EmailRepository instance
    */
   static getInstance(): EmailRepository {
     if (!EmailRepository.instance) {
@@ -30,25 +34,43 @@ export default class EmailRepository extends BaseRepository<
 
   /**
    * Parse a single email item from API response
+   * @param data - Raw API response data
+   * @returns EmailModel instance
+   * @throws Error if data is invalid
    */
   protected parseItem(data: any): EmailModel {
-    return EmailModel.fromJson(data);
+    try {
+      return EmailModel.fromJson(data);
+    } catch (error) {
+      throw new Error(`Failed to parse email data: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   /**
    * Parse list of email items from API response
+   * @param data - Raw API response data (array)
+   * @returns Array of EmailModel instances
    */
   protected parseList(data: any): EmailModel[] {
-    if (Array.isArray(data)) {
-      return data.map((item) => EmailModel.fromJson(item));
-    }
-    return [];
+    return data.map((item: any) => this.parseItem(item));
   }
 
+  /**
+   * Execute a custom email action
+   * @param params - Action parameters
+   * @returns DataState with EmailModel result
+   */
   async executeEmailAction(params: Params): Promise<DataState<EmailModel>> {
-    return this.executeCustom(
-      () => this.apiService.executeEmailAction(params),
-      (data) => this.parseItem(data),
-    );
+    try {
+      return this.executeCustom(
+        () => this.apiService.executeEmailAction(params),
+        (data) => this.parseItem(data),
+      );
+    } catch (error) {
+      const errorMessage = `Email action failed: ${error instanceof Error ? error.message : 'Unknown error'}`;
+      return new DataFailed({
+        error: error instanceof Error ? error : new Error(errorMessage)
+      });
+    }
   }
 }

@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import EmailController from './email.controller';
-import EmailRepository from '../../data/repositories/email.repository';
+// import EmailRepository from '../../data/repositories/email.repository';
 import { EmailType } from '../../core/constants/emailType.enum';
 import EmailTestFactory from '../../__tests__/email.test-factory';
 import { DataSuccess, DataFailed } from '@/base/Core/NetworkStructure/Resources/dataState/dataState';
+import EmailParams from '../../core/params/email.params';
 
 describe('EmailController', () => {
     let controller: EmailController;
@@ -89,9 +90,9 @@ describe('EmailController', () => {
             const successState = EmailTestFactory.success(mockEmail);
             mockRepository.show.mockResolvedValue(successState);
 
-            const result = await controller.fetchOne(10);
+            const result = await controller.fetchOne(10, new EmailParams('sd', EmailType.EMPLOYEE, 999), { auth: true });
 
-            expect(mockRepository.show).toHaveBeenCalledWith(10, undefined);
+            expect(mockRepository.show).toHaveBeenCalledWith(10, new EmailParams('sd', EmailType.EMPLOYEE, 999), { auth: true });
             expect(result).toBe(successState);
         });
 
@@ -100,16 +101,16 @@ describe('EmailController', () => {
             const successState = EmailTestFactory.success(EmailTestFactory.createMockEmail());
             mockRepository.show.mockResolvedValue(successState);
 
-            await controller.fetchOne(20, mockOptions);
+            await controller.fetchOne(20, new EmailParams('sd', EmailType.EMPLOYEE, 999), mockOptions);
 
-            expect(mockRepository.show).toHaveBeenCalledWith(20, mockOptions);
+            expect(mockRepository.show).toHaveBeenCalledWith(20, new EmailParams('sd', EmailType.EMPLOYEE, 999), mockOptions);
         });
 
         it('should handle DataFailed when item not found', async () => {
             const failedState = EmailTestFactory.failed('Email not found');
             mockRepository.show.mockResolvedValue(failedState);
 
-            const result = await controller.fetchOne(999);
+            const result = await controller.fetchOne(999, new EmailParams('sd', EmailType.EMPLOYEE, 999), { auth: true });
 
             expect(result).toBeInstanceOf(DataFailed);
         });
@@ -208,7 +209,7 @@ describe('EmailController', () => {
             const successState = new DataSuccess<void>({ message: 'Deleted' });
             mockRepository.delete.mockResolvedValue(successState);
 
-            await controller.delete(30, mockOptions);
+            await controller.delete(30, new EmailParams('sd', EmailType.EMPLOYEE, 999), mockOptions);
 
             expect(mockRepository.delete).toHaveBeenCalledWith(30, mockOptions);
         });
@@ -259,6 +260,168 @@ describe('EmailController', () => {
             expect(mockRepository.index).toHaveBeenLastCalledWith(undefined, {
                 details: { employee_id: 999 }
             });
+        });
+    });
+
+    describe('fetchEmailsByType - filter by type', () => {
+        it('should call fetchList with type in details', async () => {
+            const mockEmails = EmailTestFactory.createMockEmailList(2);
+            const successState = EmailTestFactory.success(mockEmails);
+            mockRepository.index.mockResolvedValue(successState);
+
+            const result = await controller.fetchEmailsByType(EmailType.WORK);
+
+            expect(mockRepository.index).toHaveBeenCalledWith(undefined, {
+                details: { type: EmailType.WORK }
+            });
+            expect(result).toBe(successState);
+        });
+
+        it('should work with all email types', async () => {
+            const successState = EmailTestFactory.success([]);
+            mockRepository.index.mockResolvedValue(successState);
+
+            const types = [EmailType.EMPLOYEE, EmailType.PERSONAL, EmailType.WORK, EmailType.OTHER];
+
+            for (const type of types) {
+                await controller.fetchEmailsByType(type);
+                expect(mockRepository.index).toHaveBeenLastCalledWith(undefined, {
+                    details: { type }
+                });
+            }
+        });
+
+        it('should handle errors when fetching by type', async () => {
+            const failedState = EmailTestFactory.failed('Failed to fetch by type');
+            mockRepository.index.mockResolvedValue(failedState);
+
+            const result = await controller.fetchEmailsByType(EmailType.PERSONAL);
+
+            expect(result).toBeInstanceOf(DataFailed);
+        });
+    });
+
+    describe('fetchEmployeeWorkEmails - employee work emails', () => {
+        it('should fetch work emails for specific employee', async () => {
+            const mockEmails = EmailTestFactory.createMockEmailList(1);
+            const successState = EmailTestFactory.success(mockEmails);
+            mockRepository.index.mockResolvedValue(successState);
+
+            const result = await controller.fetchEmployeeWorkEmails(25);
+
+            expect(mockRepository.index).toHaveBeenCalledWith(undefined, {
+                details: {
+                    employee_id: 25,
+                    type: EmailType.WORK
+                }
+            });
+            expect(result).toBe(successState);
+        });
+
+        it('should handle errors fetching work emails', async () => {
+            const failedState = EmailTestFactory.failed('No work emails found');
+            mockRepository.index.mockResolvedValue(failedState);
+
+            const result = await controller.fetchEmployeeWorkEmails(99);
+
+            expect(result).toBeInstanceOf(DataFailed);
+        });
+    });
+
+    describe('fetchEmployeePersonalEmails - employee personal emails', () => {
+        it('should fetch personal emails for specific employee', async () => {
+            const mockEmails = EmailTestFactory.createMockEmailList(2);
+            const successState = EmailTestFactory.success(mockEmails);
+            mockRepository.index.mockResolvedValue(successState);
+
+            const result = await controller.fetchEmployeePersonalEmails(35);
+
+            expect(mockRepository.index).toHaveBeenCalledWith(undefined, {
+                details: {
+                    employee_id: 35,
+                    type: EmailType.PERSONAL
+                }
+            });
+            expect(result).toBe(successState);
+        });
+
+        it('should handle errors fetching personal emails', async () => {
+            const failedState = EmailTestFactory.failed('No personal emails found');
+            mockRepository.index.mockResolvedValue(failedState);
+
+            const result = await controller.fetchEmployeePersonalEmails(99);
+
+            expect(result).toBeInstanceOf(DataFailed);
+        });
+
+        it('should handle empty results', async () => {
+            const successState = EmailTestFactory.success([]);
+            mockRepository.index.mockResolvedValue(successState);
+
+            const result = await controller.fetchEmployeePersonalEmails(100);
+
+            expect(result).toBeInstanceOf(DataSuccess);
+            if (result instanceof DataSuccess) {
+                expect(result.data).toEqual([]);
+            }
+        });
+    });
+
+    describe('edge cases and error scenarios', () => {
+        it('should handle repository returning unexpected data', async () => {
+            const unexpectedState = { data: null, statusCode: 200 } as any;
+            mockRepository.index.mockResolvedValue(unexpectedState);
+
+            const result = await controller.fetchList();
+
+            expect(result).toBeDefined();
+        });
+
+        it('should handle concurrent requests', async () => {
+            const successState1 = EmailTestFactory.success([EmailTestFactory.createMockEmail({ id: 1 })]);
+            const successState2 = EmailTestFactory.success([EmailTestFactory.createMockEmail({ id: 2 })]);
+
+            mockRepository.index
+                .mockResolvedValueOnce(successState1)
+                .mockResolvedValueOnce(successState2);
+
+            const [result1, result2] = await Promise.all([
+                controller.fetchList(),
+                controller.fetchList()
+            ]);
+
+            expect(result1).toBe(successState1);
+            expect(result2).toBe(successState2);
+            expect(mockRepository.index).toHaveBeenCalledTimes(2);
+        });
+
+        it('should handle large employee IDs', async () => {
+            const successState = EmailTestFactory.success([]);
+            mockRepository.index.mockResolvedValue(successState);
+
+            await controller.fetchEmployeeEmails(999999999);
+
+            expect(mockRepository.index).toHaveBeenCalledWith(undefined, {
+                details: { employee_id: 999999999 }
+            });
+        });
+
+        it('should handle repository throwing exception', async () => {
+            mockRepository.index.mockRejectedValue(new Error('Network error'));
+
+            await expect(controller.fetchList()).rejects.toThrow('Network error');
+        });
+
+        it('should handle empty email list result', async () => {
+            const emptyState = EmailTestFactory.success([]);
+            mockRepository.index.mockResolvedValue(emptyState);
+
+            const result = await controller.fetchList();
+
+            expect(result).toBeInstanceOf(DataSuccess);
+            if (result instanceof DataSuccess) {
+                expect(result.data).toEqual([]);
+            }
         });
     });
 });
