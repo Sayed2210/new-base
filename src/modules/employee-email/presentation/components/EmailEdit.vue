@@ -22,7 +22,7 @@ const editingId = ref<number | null>(null);
  * Save (create or update) email
  */
 async function saveEmail() {
-  const params = new EmailParams(formEmail.value, 1);
+  const params = new EmailParams(formEmail.value, null);
 
   if (isEditing.value && editingId.value) {
     // Update existing email
