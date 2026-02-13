@@ -342,7 +342,7 @@ export default abstract class BaseController<T, TList = T[]> {
   async create(
     params: Params,
     options?: ApiCallOptions,
-  ): Promise<DataState<T>> {
+  ): Promise<DataState<T> | undefined> {
     this._lastOperation = { type: "create", params, options };
 
     this.setItemLoading();
@@ -351,6 +351,11 @@ export default abstract class BaseController<T, TList = T[]> {
       this.showLoadingDialog("Creating...");
     }
 
+    params.validate();
+    if (!params.validate().isValid) {
+      params.validateOrThrow();
+      return;
+    }
     try {
       const result = await this.repository.create(params, options);
       this.setItemState(result);
@@ -373,13 +378,19 @@ export default abstract class BaseController<T, TList = T[]> {
     id: string | number,
     params?: Params,
     options?: ApiCallOptions,
-  ): Promise<DataState<T>> {
+  ): Promise<DataState<T> | undefined> {
     this._lastOperation = { type: "update", id, params, options };
 
     this.setItemLoading();
 
     if (this.config.showLoadingDialog) {
       this.showLoadingDialog("Updating...");
+    }
+
+    params?.validate();
+    if (!params?.validate().isValid) {
+      params?.validateOrThrow();
+      return;
     }
 
     try {
@@ -404,7 +415,7 @@ export default abstract class BaseController<T, TList = T[]> {
     id: string | number,
     params?: Params,
     options?: ApiCallOptions,
-  ): Promise<DataState<void>> {
+  ): Promise<DataState<void> | undefined> {
     this._lastOperation = { type: "delete", id, options };
 
     this.setItemLoading();
@@ -413,6 +424,11 @@ export default abstract class BaseController<T, TList = T[]> {
       this.showLoadingDialog("Deleting...");
     }
 
+    params?.validate();
+    if (!params?.validate().isValid) {
+      params?.validateOrThrow();
+      return;
+    }
     try {
       const result = await this.repository.delete(id, params, options);
 

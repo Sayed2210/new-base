@@ -1,9 +1,13 @@
 <script setup lang="ts">
+// import LoaderDialog from './base/Presentation/Dialogs/LoaderDialogs/LoaderDialog.vue';
+import MainDialog from './base/Presentation/Dialogs/MainDialogs/MainDialog.vue';
 import EmailCrudExample from './modules/employee-email/presentation/components/EmailCrudExample.vue';
 </script>
 
 <template>
   <EmailCrudExample />
+  <MainDialog />
+  <!-- <LoaderDialog /> -->
 </template>
 
 <style scoped>
