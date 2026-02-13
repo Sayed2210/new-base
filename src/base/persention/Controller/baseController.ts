@@ -58,7 +58,6 @@ const DEFAULT_CONFIG: ControllerConfig = {
 interface LastOperation {
     type: 'fetchList' | 'fetchOne' | 'create' | 'update' | 'delete' | 'custom';
     params?: any;
-    id?: string | number;
     options?: ApiCallOptions;
 }
 
@@ -291,8 +290,8 @@ export default abstract class BaseController<T, TList = T[]> {
     /**
      * Fetch single item by ID.
      */
-    async fetchOne(id: string | number, options?: ApiCallOptions): Promise<DataState<T>> {
-        this._lastOperation = { type: 'fetchOne', id, options };
+    async fetchOne(params: Params, options?: ApiCallOptions): Promise<DataState<T>> {
+        this._lastOperation = { type: 'fetchOne', params, options };
 
         this.setItemLoading();
 
@@ -301,7 +300,7 @@ export default abstract class BaseController<T, TList = T[]> {
         }
 
         try {
-            const result = await this.repository.show(id, options);
+            const result = await this.repository.show(params, options);
             this.setItemState(result);
             this.handleItemResponse(result);
             return result;
@@ -346,11 +345,10 @@ export default abstract class BaseController<T, TList = T[]> {
      * Update existing item.
      */
     async update(
-        id: string | number,
         params: Params,
         options?: ApiCallOptions
     ): Promise<DataState<T>> {
-        this._lastOperation = { type: 'update', id, params, options };
+        this._lastOperation = { type: 'update', params, options };
 
         this.setItemLoading();
 
@@ -359,7 +357,7 @@ export default abstract class BaseController<T, TList = T[]> {
         }
 
         try {
-            const result = await this.repository.update(id, params, options);
+            const result = await this.repository.update(params, options);
             this.setItemState(result);
             this.handleItemResponse(result, 'Updated successfully');
             return result;
@@ -376,8 +374,8 @@ export default abstract class BaseController<T, TList = T[]> {
     /**
      * Delete item by ID.
      */
-    async delete(id: string | number, options?: ApiCallOptions): Promise<DataState<void>> {
-        this._lastOperation = { type: 'delete', id, options };
+    async delete(params?: Params, options?: ApiCallOptions): Promise<DataState<void>> {
+        this._lastOperation = { type: 'delete', params, options };
 
         this.setItemLoading();
 
@@ -386,7 +384,7 @@ export default abstract class BaseController<T, TList = T[]> {
         }
 
         try {
-            const result = await this.repository.delete(id, options);
+            const result = await this.repository.delete(params, options);
 
             // Reset item state on successful delete
             if (result instanceof DataSuccess) {
@@ -426,13 +424,13 @@ export default abstract class BaseController<T, TList = T[]> {
             case 'fetchList':
                 return this.fetchList(op.params, op.options);
             case 'fetchOne':
-                return this.fetchOne(op.id!, op.options);
+                return this.fetchOne(op.params, op.options);
             case 'create':
                 return this.create(op.params, op.options);
             case 'update':
-                return this.update(op.id!, op.params, op.options);
+                return this.update(op.params, op.options);
             case 'delete':
-                return this.delete(op.id!, op.options);
+                return this.delete(op.params, op.options);
             default:
                 return null;
         }
