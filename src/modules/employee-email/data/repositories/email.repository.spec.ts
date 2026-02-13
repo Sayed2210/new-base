@@ -236,32 +236,7 @@ describe('EmailRepository', () => {
         });
     });
 
-    describe('executeEmailAction - custom method', () => {
-        it('should return DataSuccess with email data', async () => {
-            const mockEmail = EmailTestFactory.createMockEmailJson({ email: 'action@example.com' });
-            const mockResponse = EmailTestFactory.createEmailApiResponse(mockEmail);
-            mockApiService.executeEmailAction.mockResolvedValue(mockResponse);
 
-            const params = { action: 'verify' };
-            const result = await repository.executeEmailAction(params as any);
-
-            expect(result).toBeInstanceOf(DataSuccess);
-            if (result instanceof DataSuccess) {
-                expect(result.data).toBeInstanceOf(EmailModel);
-                expect(result.data.email).toBe('action@example.com');
-            }
-        });
-
-        it('should call apiService.executeEmailAction with params', async () => {
-            const mockResponse = EmailTestFactory.createEmailApiResponse();
-            mockApiService.executeEmailAction.mockResolvedValue(mockResponse);
-
-            const params = { action: 'test' };
-            await repository.executeEmailAction(params as any);
-
-            expect(mockApiService.executeEmailAction).toHaveBeenCalledWith(params);
-        });
-    });
 
     describe('parseItem', () => {
         it('should correctly parse email JSON to EmailModel', () => {
@@ -343,7 +318,9 @@ describe('EmailRepository', () => {
             it('should handle network timeout', async () => {
                 mockApiService.index.mockRejectedValue(new Error('Network timeout'));
 
-                await expect(repository.index()).rejects.toThrow('Network timeout');
+                const result = await repository.index();
+
+                expect(result).toBeInstanceOf(DataFailed);
             });
 
             it('should handle server 500 error', async () => {
@@ -415,31 +392,7 @@ describe('EmailRepository', () => {
             });
         });
 
-        describe('executeEmailAction edge cases', () => {
-            it('should handle invalid response data', async () => {
-                const invalidResponse = {
-                    data: { data: { id: 1, email: 'invalid' }, status: true },  // Invalid email
-                    statusCode: 200
-                };
-                mockApiService.executeEmailAction.mockResolvedValue(invalidResponse);
 
-                const result = await repository.executeEmailAction({ action: 'test' } as any);
-
-                expect(result).toBeInstanceOf(DataFailed);
-            });
-
-            it('should handle missing data in response', async () => {
-                const emptyResponse = {
-                    data: { data: null, status: true },
-                    statusCode: 200
-                };
-                mockApiService.executeEmailAction.mockResolvedValue(emptyResponse);
-
-                const result = await repository.executeEmailAction({ action: 'test' } as any);
-
-                expect(result).toBeInstanceOf(DataEmpty);
-            });
-        });
 
         describe('boundary conditions', () => {
             it('should handle empty array from API', async () => {

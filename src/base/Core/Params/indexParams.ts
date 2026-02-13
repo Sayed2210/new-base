@@ -1,11 +1,16 @@
 import type Params from "./params";
-import type { ValidationError } from "@/base/Presentation/Utils/ClassValidation";
+import { ClassValidation } from "@/base/Presentation/Utils/classValidation";
 
 export default class IndexParams implements Params {
   public word: string;
   public withPage: number = 1;
   public perPage: number = 10;
   public pageNumber: number = 10;
+
+  public static readonly validation = new ClassValidation().setRules({
+    pageNumber: { required: true, min: 1 },
+    perPage: { required: true, min: 1 },
+  });
 
   constructor(
     word: string,
@@ -28,21 +33,11 @@ export default class IndexParams implements Params {
     return data;
   }
 
-  validate(): { isValid: boolean; errors: ValidationError[] } {
-    const errors: ValidationError[] = [];
-    if (this.pageNumber < 1) {
-      errors.push({ field: "pageNumber", message: "Page number must be >= 1" });
-    }
-    if (this.perPage < 1) {
-      errors.push({ field: "perPage", message: "Per page must be >= 1" });
-    }
-    return { isValid: errors.length === 0, errors };
+  validate() {
+    return IndexParams.validation.validate(this);
   }
 
-  validateOrThrow(): void {
-    const { isValid, errors } = this.validate();
-    if (!isValid) {
-      throw new Error(errors.map((e) => e.message).join(", "));
-    }
+  validateOrThrow() {
+    return IndexParams.validation.validateOrThrow(this);
   }
 }

@@ -1,8 +1,12 @@
 import type Params from "./params";
-import type { ValidationError } from "@/base/Presentation/Utils/ClassValidation";
+import { ClassValidation } from "@/base/Presentation/Utils/classValidation";
 
 export default class BaseIdParams implements Params {
   id: number;
+
+  public static readonly validation = new ClassValidation().setRules({
+    id: { required: true, min: 1 },
+  });
 
   constructor(id: number) {
     this.id = id;
@@ -14,18 +18,11 @@ export default class BaseIdParams implements Params {
     return map;
   }
 
-  validate(): { isValid: boolean; errors: ValidationError[] } {
-    const errors: ValidationError[] = [];
-    if (this.id === undefined || this.id === null || this.id <= 0) {
-      errors.push({ field: "id", message: "ID must be a positive number" });
-    }
-    return { isValid: errors.length === 0, errors };
+  validate() {
+    return BaseIdParams.validation.validate(this);
   }
 
-  validateOrThrow(): void {
-    const { isValid, errors } = this.validate();
-    if (!isValid) {
-      throw new Error(errors.map((e) => e.message).join(", "));
-    }
+  validateOrThrow() {
+    return BaseIdParams.validation.validateOrThrow(this);
   }
 }

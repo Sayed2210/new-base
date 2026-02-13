@@ -1,9 +1,6 @@
 import BaseRepository from "@/base/Domain/Repositories/baseRepository";
 import EmailModel from "../../core/models/email.model";
 import EmailApiService from "../api/email.api-service";
-import type { DataState } from "@/base/Core/NetworkStructure/Resources/dataState/dataState";
-import type Params from "@/base/Core/Params/params";
-import { DataFailed } from "@/base/Core/NetworkStructure/Resources/dataState/dataState";
 
 /**
  * Email Repository for API data operations
@@ -52,7 +49,16 @@ export default class EmailRepository extends BaseRepository<
    * @returns Array of EmailModel instances
    */
   protected parseList(data: any): EmailModel[] {
-    return data.map((item: any) => this.parseItem(item));
+    if (!Array.isArray(data)) return [];
+    const results: EmailModel[] = [];
+    for (const item of data) {
+      try {
+        results.push(this.parseItem(item));
+      } catch {
+        // Skip items that fail to parse
+      }
+    }
+    return results;
   }
 
   
