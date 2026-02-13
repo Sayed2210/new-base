@@ -3,4 +3,4 @@
  */
 
 export * from './testDataFactory';
-export * from './mock_data';
+export * from './mockData';
