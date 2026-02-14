@@ -12,6 +12,7 @@ export default class EmailParams implements Params {
 
   public static readonly validation = new ClassValidation().setRules({
     type: { required: true, minLength: 2, maxLength: 100 },
+    email: { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ },
   });
 
   constructor(

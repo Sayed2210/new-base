@@ -1,58 +1,53 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted } from "vue";
 import {
   EmailController,
-  EmailParams,
-  EmailType,
+  getEmailTypeName,
 } from "@/modules/employee-email";
-
-import EmailForm from "./EmailForm.vue";
 
 // Controller instance
 const controller = EmailController.getInstance();
 
-// Form state
-const params = ref<EmailParams | null>(null);
-/**
- * Save (create or update) email
- */
-async function saveEmail() {
-  if (!params.value) {
-    console.error("No email parameters to save");
-    return;
-  }
-
-  const paramsToSave = params.value;
-
-  if (paramsToSave.employeeId) {
-    await controller.update(paramsToSave);
-  } 
 
 
-}
+// Fetch emails on component mount
+onMounted(async () => {
+  await controller.fetchList();
+});
 
-const updateData = (updatedParams: EmailParams) => {
-  params.value = updatedParams;
-  // saveEmail();
-};
 
 </script>
 
 <template>
   <div class="email-crud-example">
-    <EmailForm
-      :email="controller.itemData.value!"
-      @updateData="updateData"
-    />
+    <h2>Employee Email Management</h2>
 
-    <button type="button" @click="saveEmail">Save Email</button>
-
-    <!-- Error Display -->
-    <div v-if="controller.errorMessage.value" class="error">
-      {{ controller.errorMessage.value }}
+    <!-- List of Emails -->
+    <div class="email-list" v-if="!controller.isListLoading()">
+      <div v-if="controller.listData.value && controller.listData.value.length > 0">
+        <div v-for="email in controller.listData.value" :key="email.id" class="email-item">
+          <span>{{ email.email }}</span>
+          <span class="email-type">{{ getEmailTypeName(email.type) }}</span>
+          <div class="actions">
+            <!-- <button @click="ShowEditForm = email.id">Edit</button>
+            <button @click="deleteEmail(email.id!)">Delete</button> -->
+          </div>
+          <!-- <EmailEdit v-if="email.id == ShowEditForm" /> -->
+        </div>
+      </div>
+      <div v-else>
+        <p>No emails found</p>
+      </div>
     </div>
+
+    <div v-else>
+      <p>Loading emails...</p>
+    </div>
+
+    
   </div>
 </template>
+
 
 <style scoped>
 .email-crud-example {

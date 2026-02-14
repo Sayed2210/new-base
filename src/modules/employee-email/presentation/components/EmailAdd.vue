@@ -3,8 +3,8 @@ import { ref } from "vue";
 import {
   EmailController,
   EmailParams,
-  EmailType,
 } from "@/modules/employee-email";
+
 
 import EmailForm from "./EmailForm.vue";
 
@@ -16,17 +16,30 @@ const params = ref<EmailParams | null>(null);
 /**
  * Save (create or update) email
  */
-async function saveEmail() {
-  if (!params.value) {
-    console.error("No email parameters to save");
-    return;
+const saveEmail = async () => {
+  try {
+    if (!params.value) {
+      console.error("No email parameters to save");
+      return;
+    }
+
+    const paramsToSave = params.value;
+
+    if (paramsToSave.employeeId) {
+      await controller.update(paramsToSave);
+    } else {
+      await controller.create(paramsToSave);
+    }
+
+    // Refresh list and reset form
+    if (controller.isItemSuccess()) {
+      await controller.fetchList();
+      params.value = null; // Reset form
+    }
+  } catch (error) {
+    console.error("Error saving email:", error);
   }
-
-  const paramsToSave = params.value;
-
-  if (paramsToSave.employeeId) {
-    await controller.update(paramsToSave);
-  } 
+  
 
 
 }
