@@ -6,6 +6,8 @@ import {
   EmailType,
 } from "@/modules/employee-email";
 import DeleteParams from "../../core/params/delete.email.params";
+import Email from "@/shared/icons/email.vue";
+import EmailForm from "./EmailForm.vue";
 
 // Controller instance
 const controller = EmailController.getInstance();
@@ -85,26 +87,10 @@ function resetForm() {
 
 <template>
   <div class="email-crud-example">
-    <div class="email-form">
-      <h3>{{ isEditing ? "Edit Email" : "Add New Email" }}</h3>
-      <input
-        v-model="formEmail"
-        type="email"
-        placeholder="Enter email address"
-      />
-      <select v-model="formType">
-        <option :value="EmailType.EMPLOYEE">Employee</option>
-        <option :value="EmailType.PERSONAL">Personal</option>
-        <option :value="EmailType.WORK">Work</option>
-        <option :value="EmailType.OTHER">Other</option>
-      </select>
-      <div class="form-actions">
-        <button @click="saveEmail">
-          {{ isEditing ? "Update" : "Create" }}
-        </button>
-        <button @click.prevent="cancelEdit">Cancel</button>
-      </div>
-    </div>
+    <EmailForm
+      :email="controller.item.value"
+      @updateData="updateData"
+    />
 
     <!-- Error Display -->
     <div v-if="controller.errorMessage.value" class="error">
