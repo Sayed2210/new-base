@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import {
-  EmailController,
-  EmailParams,
-} from "@/modules/employee-email";
-
+import { EmailController, EmailParams } from "@/modules/employee-email";
 
 import EmailForm from "./EmailForm.vue";
+import router from "@/router";
 
 // Controller instance
 const controller = EmailController.getInstance();
@@ -29,34 +26,28 @@ const saveEmail = async () => {
       await controller.update(paramsToSave);
     } else {
       await controller.create(paramsToSave);
+      router.push({ name: "Employee Emails" });
     }
 
-    // Refresh list and reset form
-    if (controller.isItemSuccess()) {
-      await controller.fetchList();
-      params.value = null; // Reset form
-    }
+    // // Refresh list and reset form
+    // if (controller.isItemSuccess()) {
+    //   await controller.fetchList();
+    //   params.value = null; // Reset form
+    // }
   } catch (error) {
     console.error("Error saving email:", error);
   }
-  
-
-
-}
+};
 
 const updateData = (updatedParams: EmailParams) => {
   params.value = updatedParams;
   // saveEmail();
 };
-
 </script>
 
 <template>
   <div class="email-crud-example">
-    <EmailForm
-      :email="controller.itemData.value!"
-      @updateData="updateData"
-    />
+    <EmailForm :email="controller.itemData.value!" @updateData="updateData" />
 
     <button type="button" @click="saveEmail">Save Email</button>
 

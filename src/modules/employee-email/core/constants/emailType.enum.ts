@@ -2,10 +2,10 @@
  * Email type enumeration
  */
 export const EmailType = {
-    EMPLOYEE: "employee",
-    PERSONAL: "personal",
-    WORK: "work",
-    OTHER: "other",
+    EMPLOYEE: 1,
+    PERSONAL: 2,
+    WORK: 3,
+    OTHER: 4,
 } as const;
 
 export type EmailType = typeof EmailType[keyof typeof EmailType];
