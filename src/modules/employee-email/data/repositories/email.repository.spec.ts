@@ -95,7 +95,8 @@ describe('EmailRepository', () => {
             const mockResponse = EmailTestFactory.createEmailApiResponse(mockEmail);
             mockApiService.show.mockResolvedValue(mockResponse);
 
-            const result = await repository.show(10);
+            const params = { toMap: () => ({ id: 10 }), validate: () => ({ isValid: true, errors: [] }), validateOrThrow: () => {} };
+            const result = await repository.show(params as any);
 
             expect(result).toBeInstanceOf(DataSuccess);
             if (result instanceof DataSuccess) {
@@ -109,19 +110,21 @@ describe('EmailRepository', () => {
             const errorResponse = EmailTestFactory.errorApiResponse('Email not found', 404);
             mockApiService.show.mockResolvedValue(errorResponse);
 
+            const params = { toMap: () => ({ id: 999 }), validate: () => ({ isValid: true, errors: [] }), validateOrThrow: () => {} };
             const options = { auth: true };
-            const result = await repository.show(999, undefined, options);
+            const result = await repository.show(params as any, options);
 
             expect(result).toBeInstanceOf(DataFailed);
         });
 
-        it('should call apiService.show with correct ID', async () => {
+        it('should call apiService.show with correct params', async () => {
             const mockResponse = EmailTestFactory.createEmailApiResponse();
             mockApiService.show.mockResolvedValue(mockResponse);
 
-            await repository.show(42, undefined, { auth: true });
+            const params = { toMap: () => ({ id: 42 }), validate: () => ({ isValid: true, errors: [] }), validateOrThrow: () => {} };
+            await repository.show(params as any, { auth: true });
 
-            expect(mockApiService.show).toHaveBeenCalledWith(42, undefined, { auth: true });
+            expect(mockApiService.show).toHaveBeenCalledWith(params, { auth: true });
         });
     });
 
@@ -176,8 +179,8 @@ describe('EmailRepository', () => {
             const mockResponse = EmailTestFactory.createEmailApiResponse(mockEmail);
             mockApiService.update.mockResolvedValue(mockResponse);
 
-            const params = { email: 'updated@example.com', type: EmailType.PERSONAL };
-            const result = await repository.update(5, params as any);
+            const params = { toMap: () => ({ id: 5, email: 'updated@example.com', type: EmailType.PERSONAL }), validate: () => ({ isValid: true, errors: [] }), validateOrThrow: () => {} };
+            const result = await repository.update(params as any);
 
             expect(result).toBeInstanceOf(DataSuccess);
             if (result instanceof DataSuccess) {
@@ -187,14 +190,14 @@ describe('EmailRepository', () => {
             }
         });
 
-        it('should call apiService.update with correct ID and params', async () => {
+        it('should call apiService.update with correct params', async () => {
             const mockResponse = EmailTestFactory.createEmailApiResponse();
             mockApiService.update.mockResolvedValue(mockResponse);
 
-            const params = { email: 'update@example.com' };
-            await repository.update(15, params as any);
+            const params = { toMap: () => ({ id: 15, email: 'update@example.com' }), validate: () => ({ isValid: true, errors: [] }), validateOrThrow: () => {} };
+            await repository.update(params as any);
 
-            expect(mockApiService.update).toHaveBeenCalledWith(15, params, undefined);
+            expect(mockApiService.update).toHaveBeenCalledWith(params, undefined);
         });
     });
 
@@ -206,7 +209,8 @@ describe('EmailRepository', () => {
             };
             mockApiService.delete.mockResolvedValue(mockResponse);
 
-            const result = await repository.delete(20, undefined, { auth: true });
+            const params = { toMap: () => ({ id: 20 }), validate: () => ({ isValid: true, errors: [] }), validateOrThrow: () => {} };
+            const result = await repository.delete(params as any, { auth: true });
 
             expect(result).toBeInstanceOf(DataSuccess);
         });
@@ -215,47 +219,24 @@ describe('EmailRepository', () => {
             const errorResponse = EmailTestFactory.errorApiResponse('Cannot delete email', 403);
             mockApiService.delete.mockResolvedValue(errorResponse);
 
-            const result = await repository.delete(25, undefined, { auth: true });
+            const params = { toMap: () => ({ id: 25 }), validate: () => ({ isValid: true, errors: [] }), validateOrThrow: () => {} };
+            const result = await repository.delete(params as any, { auth: true });
 
             expect(result).toBeInstanceOf(DataFailed);
         });
 
-        it('should call apiService.delete with correct ID', async () => {
+        it('should call apiService.delete with correct params', async () => {
             const mockResponse = { data: { status: true }, statusCode: 200 };
             mockApiService.delete.mockResolvedValue(mockResponse);
 
-            await repository.delete(30, undefined, { auth: true });
+            const params = { toMap: () => ({ id: 30 }), validate: () => ({ isValid: true, errors: [] }), validateOrThrow: () => {} };
+            await repository.delete(params as any, { auth: true });
 
-            expect(mockApiService.delete).toHaveBeenCalledWith(30, undefined, { auth: true });
+            expect(mockApiService.delete).toHaveBeenCalledWith(params, { auth: true });
         });
     });
 
-    describe('executeEmailAction - custom method', () => {
-        it('should return DataSuccess with email data', async () => {
-            const mockEmail = EmailTestFactory.createMockEmailJson({ email: 'action@example.com' });
-            const mockResponse = EmailTestFactory.createEmailApiResponse(mockEmail);
-            mockApiService.executeEmailAction.mockResolvedValue(mockResponse);
 
-            const params = { action: 'verify' };
-            const result = await repository.executeEmailAction(params as any);
-
-            expect(result).toBeInstanceOf(DataSuccess);
-            if (result instanceof DataSuccess) {
-                expect(result.data).toBeInstanceOf(EmailModel);
-                expect(result.data.email).toBe('action@example.com');
-            }
-        });
-
-        it('should call apiService.executeEmailAction with params', async () => {
-            const mockResponse = EmailTestFactory.createEmailApiResponse();
-            mockApiService.executeEmailAction.mockResolvedValue(mockResponse);
-
-            const params = { action: 'test' };
-            await repository.executeEmailAction(params as any);
-
-            expect(mockApiService.executeEmailAction).toHaveBeenCalledWith(params);
-        });
-    });
 
     describe('parseItem', () => {
         it('should correctly parse email JSON to EmailModel', () => {
@@ -337,14 +318,17 @@ describe('EmailRepository', () => {
             it('should handle network timeout', async () => {
                 mockApiService.index.mockRejectedValue(new Error('Network timeout'));
 
-                await expect(repository.index()).rejects.toThrow('Network timeout');
+                const result = await repository.index();
+
+                expect(result).toBeInstanceOf(DataFailed);
             });
 
             it('should handle server 500 error', async () => {
                 const errorResponse = EmailTestFactory.errorApiResponse('Internal server error', 500);
                 mockApiService.show.mockResolvedValue(errorResponse);
 
-                const result = await repository.show(1);
+                const params = { toMap: () => ({ id: 1 }), validate: () => ({ isValid: true, errors: [] }), validateOrThrow: () => {} };
+                const result = await repository.show(params as any);
 
                 expect(result).toBeInstanceOf(DataFailed);
             });
@@ -362,7 +346,8 @@ describe('EmailRepository', () => {
                 const errorResponse = EmailTestFactory.errorApiResponse('Forbidden', 403);
                 mockApiService.delete.mockResolvedValue(errorResponse);
 
-                const result = await repository.delete(10);
+                const params = { toMap: () => ({ id: 10 }), validate: () => ({ isValid: true, errors: [] }), validateOrThrow: () => {} };
+                const result = await repository.delete(params as any);
 
                 expect(result).toBeInstanceOf(DataFailed);
             });
@@ -394,9 +379,12 @@ describe('EmailRepository', () => {
                     .mockResolvedValueOnce(response1)
                     .mockResolvedValueOnce(response2);
 
+                const params1 = { toMap: () => ({ id: 1 }), validate: () => ({ isValid: true, errors: [] }), validateOrThrow: () => {} };
+                const params2 = { toMap: () => ({ id: 2 }), validate: () => ({ isValid: true, errors: [] }), validateOrThrow: () => {} };
+
                 const [result1, result2] = await Promise.all([
-                    repository.show(1),
-                    repository.show(2)
+                    repository.show(params1 as any),
+                    repository.show(params2 as any)
                 ]);
 
                 expect(result1).toBeInstanceOf(DataSuccess);
@@ -404,31 +392,7 @@ describe('EmailRepository', () => {
             });
         });
 
-        describe('executeEmailAction edge cases', () => {
-            it('should handle invalid response data', async () => {
-                const invalidResponse = {
-                    data: { data: { id: 1, email: 'invalid' }, status: true },  // Invalid email
-                    statusCode: 200
-                };
-                mockApiService.executeEmailAction.mockResolvedValue(invalidResponse);
 
-                const result = await repository.executeEmailAction({ action: 'test' } as any);
-
-                expect(result).toBeInstanceOf(DataFailed);
-            });
-
-            it('should handle missing data in response', async () => {
-                const emptyResponse = {
-                    data: { data: null, status: true },
-                    statusCode: 200
-                };
-                mockApiService.executeEmailAction.mockResolvedValue(emptyResponse);
-
-                const result = await repository.executeEmailAction({ action: 'test' } as any);
-
-                expect(result).toBeInstanceOf(DataEmpty);
-            });
-        });
 
         describe('boundary conditions', () => {
             it('should handle empty array from API', async () => {

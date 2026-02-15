@@ -21,16 +21,13 @@ export default class EmailApiService extends BaseApiService {
     return EmailApiService.instance;
   }
 
-  protected get endpoints(): ApiEndpoints {
+  protected get endpoints(): Partial<ApiEndpoints> {
     return {
       index: this.apiNames.IndexMail,
-      show: (id: string | number) =>
-        `${this.apiNames.ShowMail}${id ? `/${id}` : ``}`,
+      show: this.apiNames.ShowMail,
       create: this.apiNames.AddMail,
-      update: (id: string | number) =>
-        `${this.apiNames.EditMail}${id ? `/${id}` : ``}`,
-      delete: (id: string | number) =>
-        `${this.apiNames.DeleteMail}${id ? `/${id}` : ``}`,
+      update: this.apiNames.EditMail,
+      delete: this.apiNames.DeleteMail,      
     };
   }
 

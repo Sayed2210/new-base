@@ -1,32 +1,33 @@
 import type Params from "@/base/Core/Params/params";
 import ServicesInterface, {
-  CrudType,
-  type ApiResponse,
-  type ExtendedCallOptions,
-  type ProgressCallback,
-} from "./apiServiceInterface";
-import { dialogManager } from "@/base/Presentation/Dialogs/dialog.manager";
-import { env } from "@/base/Core/Config/index";
+    CrudType,
+    type ApiResponse,
+    type ExtendedCallOptions,
+    type ProgressCallback
+} from './apiServiceInterface';
+import { env } from '@/base/Core/Config/index';
 
 /**
  * Configuration for API endpoints supporting CRUD operations.
- * Use function for dynamic endpoints (e.g., show, update, delete with ID).
+ * All endpoints are plain strings — IDs are sent in the body via Params.
  */
 export interface ApiEndpoints {
   /** List/index endpoint */
   index?: string;
 
-  /** Show single item endpoint (can be function for dynamic ID) */
-  show?: string | ((id: string | number) => string);
+  /** Show single item endpoint */
+  show?: string;
 
   /** Create endpoint */
   create?: string;
 
-  /** Update endpoint (can be function for dynamic ID) */
-  update?: string | ((id: string | number) => string);
+  /** Update endpoint */
+  update?: string;
 
-  /** Delete endpoint (can be function for dynamic ID) */
-  delete?: string | ((id: string | number) => string);
+  /** Delete endpoint */
+  delete?: string;
+
+  
 }
 
 /**
@@ -71,7 +72,7 @@ export interface ApiCallOptions extends ExtendedCallOptions {
   /** Use JSON instead of FormData for create/update */
   useJson?: boolean;
 
-  /** Use JSON instead of FormData for create/update */
+  /** Use POST instead of the default method */
   usePost?: boolean;
 }
 
@@ -100,6 +101,7 @@ const DEFAULT_RETRY_CONFIG: RetryConfig = {
 
 /**
  * Base API Service providing standard CRUD operations.
+ * All endpoints default to POST with Params in the body.
  * Extend this class and define endpoints for feature-specific services.
  *
  * @example
@@ -108,19 +110,11 @@ const DEFAULT_RETRY_CONFIG: RetryConfig = {
  *   protected get endpoints() {
  *     return {
  *       index: '/api/products',
- *       show: (id: string) => `/api/products/${id}`,
+ *       show: '/api/products/show',
  *       create: '/api/products',
- *       update: (id: string) => `/api/products/${id}`,
- *       delete: (id: string) => `/api/products/${id}`,
+ *       update: '/api/products/update',
+ *       delete: '/api/products/delete',
  *     };
- *   }
- *
- *   // Add custom methods for non-CRUD operations
- *   async getProductStats(productId: string) {
- *     return this.custom({
- *       url: `/api/products/${productId}/stats`,
- *       method: CrudType.GET,
- *     });
  *   }
  * }
  * ```
@@ -144,20 +138,11 @@ export default abstract class BaseApiService extends ServicesInterface {
   }
 
   /**
-   * Resolves an endpoint that can be either a string or a function.
+   * Resolves a string endpoint.
    */
-  private resolveEndpoint(
-    endpoint: string | ((id: string | number) => string) | undefined,
-    id?: string | number,
-  ): string {
+  private resolveEndpoint(endpoint: string | undefined): string {
     if (!endpoint) {
       throw new Error("Endpoint not configured");
-    }
-    if (typeof endpoint === "function") {
-      if (id === undefined) {
-        throw new Error("ID required for dynamic endpoint");
-      }
-      return endpoint(id);
     }
     return endpoint;
   }
@@ -177,16 +162,14 @@ export default abstract class BaseApiService extends ServicesInterface {
   // =========================================================================
 
   /**
-   * Fetch list of items (GET request).
+   * Fetch list of items (POST request with Params in body).
    */
   async index(params?: Params, options?: ApiCallOptions): Promise<ApiResponse> {
     const url = this.resolveEndpoint(this.endpoints.index);
-    // options.usePost = options?.usePost ? options?.usePost : true;
-    // const mergedOptions = this.mergeOptions(options);
 
     const mergedOptions = this.mergeOptions({
       ...options,
-      usePost: options?.usePost ? options?.usePost : true,
+      usePost: options?.usePost ?? true,
     });
     return this.call({
       url,
@@ -197,20 +180,17 @@ export default abstract class BaseApiService extends ServicesInterface {
   }
 
   /**
-   * Fetch single item by ID (GET request).
+   * Fetch single item (POST request with Params in body).
+   * The ID should be included in the Params.
    */
   async show(
-    id: string | number,
     params?: Params,
     options?: ApiCallOptions,
   ): Promise<ApiResponse> {
-    // const url = this.resolveEndpoint(this.endpoints.show, id);
-    const url = options?.usePost
-      ? this.resolveEndpoint(this.endpoints.show, "")
-      : this.resolveEndpoint(this.endpoints.show, id);
+    const url = this.resolveEndpoint(this.endpoints.show);
     const mergedOptions = this.mergeOptions({
       ...options,
-      usePost: options?.usePost ? options.usePost : true,
+      usePost: options?.usePost ?? true,
     });
 
     return this.call({
@@ -237,17 +217,17 @@ export default abstract class BaseApiService extends ServicesInterface {
   }
 
   /**
-   * Update existing item by ID (POST with FormData, PUT, or PATCH).
+   * Update existing item (POST request with Params in body).
+   * The ID should be included in the Params.
    */
   async update(
-    id: string | number,
     params?: Params,
     options?: ApiCallOptions,
   ): Promise<ApiResponse> {
-    const url = this.resolveEndpoint(this.endpoints.update, id);
+    const url = this.resolveEndpoint(this.endpoints.update);
     const mergedOptions = this.mergeOptions({
       ...options,
-      usePost: options?.usePost ? options?.usePost : true,
+      usePost: options?.usePost ?? true,
     });
 
     let method: CrudType = CrudType.FormData;
@@ -266,20 +246,17 @@ export default abstract class BaseApiService extends ServicesInterface {
   }
 
   /**
-   * Delete item by ID (DELETE request).
+   * Delete item (POST request with Params in body).
+   * The ID should be included in the Params.
    */
   async delete(
-    id: string | number,
     params?: Params,
     options?: ApiCallOptions,
   ): Promise<ApiResponse> {
-    const url = options?.usePost
-      ? this.resolveEndpoint(this.endpoints.delete, "")
-      : this.resolveEndpoint(this.endpoints.delete, id);
-    // const mergedOptions = this.mergeOptions(options);
+    const url = this.resolveEndpoint(this.endpoints.delete);
     const mergedOptions = this.mergeOptions({
       ...options,
-      usePost: options?.usePost ? options?.usePost : true,
+      usePost: options?.usePost ?? true,
     });
 
     return this.call({

@@ -1,6 +1,6 @@
 // import type { ValidationError } from "@/base/Presentation/Utils/class_validation";
 
-import type { ValidationError } from "@/base/Presentation/Utils/ClassValidation";
+import type { ValidationError } from "@/base/Presentation/Utils/classValidation";
 
 export default interface Params {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,10 +1,17 @@
 import type Params from "@/base/Core/Params/params";
+import { ClassValidation } from "@/base/Presentation/Utils/classValidation";
 
 /**
- * Parameters for creating/updating employee email
+ * Parameters for deleting an employee email
  */
 export default class DeleteParams implements Params {
   public employeeId?: number;
+
+
+   public static readonly validation = new ClassValidation().setRules({
+    employeeId: { required: true, minLength: 2, maxLength: 100 },
+  });
+    
 
   constructor(employeeId?: number) {
     this.employeeId = employeeId;
@@ -19,4 +26,15 @@ export default class DeleteParams implements Params {
 
     return map;
   }
+
+  validate() {
+    return DeleteParams.validation.validate(this);
+  }
+
+  validateOrThrow() {
+    return DeleteParams.validation.validateOrThrow(this);
+  }
+
+ 
 }
+

@@ -1,9 +1,6 @@
 import BaseRepository from "@/base/Domain/Repositories/baseRepository";
 import EmailModel from "../../core/models/email.model";
 import EmailApiService from "../api/email.api-service";
-import type { DataState } from "@/base/Core/NetworkStructure/Resources/dataState/dataState";
-import type Params from "@/base/Core/Params/params";
-import { DataFailed } from "@/base/Core/NetworkStructure/Resources/dataState/dataState";
 
 /**
  * Email Repository for API data operations
@@ -52,25 +49,17 @@ export default class EmailRepository extends BaseRepository<
    * @returns Array of EmailModel instances
    */
   protected parseList(data: any): EmailModel[] {
-    return data.map((item: any) => this.parseItem(item));
+    if (!Array.isArray(data)) return [];
+    const results: EmailModel[] = [];
+    for (const item of data) {
+      try {
+        results.push(this.parseItem(item));
+      } catch {
+        // Skip items that fail to parse
+      }
+    }
+    return results;
   }
 
-  /**
-   * Execute a custom email action
-   * @param params - Action parameters
-   * @returns DataState with EmailModel result
-   */
-  async executeEmailAction(params: Params): Promise<DataState<EmailModel>> {
-    try {
-      return this.executeCustom(
-        () => this.apiService.executeEmailAction(params),
-        (data) => this.parseItem(data),
-      );
-    } catch (error) {
-      const errorMessage = `Email action failed: ${error instanceof Error ? error.message : 'Unknown error'}`;
-      return new DataFailed({
-        error: error instanceof Error ? error : new Error(errorMessage)
-      });
-    }
-  }
+  
 }

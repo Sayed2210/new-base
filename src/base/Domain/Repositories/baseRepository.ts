@@ -141,7 +141,6 @@ export default abstract class BaseRepository<T, TList = T[]> {
     const retryFn = () => this.index(params, options);
 
     try {
-      console.log(options, "options repo");
       const httpResponse = await this.apiService.index(params, options);
       return this.processListResponse(httpResponse, retryFn);
     } catch (error) {
@@ -153,14 +152,13 @@ export default abstract class BaseRepository<T, TList = T[]> {
    * Fetch single item by ID.
    */
   async show(
-    id: string | number,
     params?: Params,
     options?: ApiCallOptions,
   ): Promise<DataState<T>> {
-    const retryFn = () => this.show(id, params, options);
+    const retryFn = () => this.show(params, options);
 
     try {
-      const httpResponse = await this.apiService.show(id, params, options);
+      const httpResponse = await this.apiService.show(params, options);
       return this.processItemResponse(httpResponse, retryFn);
     } catch (error) {
       return this.handleError(error, retryFn);
@@ -188,14 +186,13 @@ export default abstract class BaseRepository<T, TList = T[]> {
    * Update existing item.
    */
   async update(
-    id: string | number,
-    params: Params,
+    params?: Params,
     options?: ApiCallOptions,
   ): Promise<DataState<T>> {
-    const retryFn = () => this.update(id, params, options);
+    const retryFn = () => this.update(params, options);
 
     try {
-      const httpResponse = await this.apiService.update(id, params, options);
+      const httpResponse = await this.apiService.update(params, options);
       return this.processItemResponse(httpResponse, retryFn);
     } catch (error) {
       return this.handleError(error, retryFn);
@@ -206,14 +203,13 @@ export default abstract class BaseRepository<T, TList = T[]> {
    * Delete item by ID.
    */
   async delete(
-    id: string | number,
     params?: Params,
     options?: ApiCallOptions,
   ): Promise<DataState<void>> {
-    const retryFn = () => this.delete(id, params, options);
+    const retryFn = () => this.delete(params, options);
 
     try {
-      const httpResponse = await this.apiService.delete(id, params, options);
+      const httpResponse = await this.apiService.delete(params, options);
       return this.processVoidResponse(httpResponse);
     } catch (error) {
       return this.handleError(error, retryFn);

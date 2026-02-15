@@ -37,11 +37,10 @@ describe('EmailApiService', () => {
             expect(endpoints.index).toBe('/api/emails');
         });
 
-        it('should have show endpoint as function', () => {
+        it('should have show endpoint as string', () => {
             const endpoints = (service as any).endpoints;
-            expect(typeof endpoints.show).toBe('function');
-            expect(endpoints.show(123)).toBe('/api/emails/123');
-            expect(endpoints.show('abc')).toBe('/api/emails/abc');
+            expect(typeof endpoints.show).toBe('string');
+            expect(endpoints.show).toBe('/api/emails');
         });
 
         it('should have create endpoint', () => {
@@ -49,17 +48,16 @@ describe('EmailApiService', () => {
             expect(endpoints.create).toBe('/api/emails');
         });
 
-        it('should have update endpoint as function', () => {
+        it('should have update endpoint as string', () => {
             const endpoints = (service as any).endpoints;
-            expect(typeof endpoints.update).toBe('function');
-            expect(endpoints.update(456)).toBe('/api/emails/456');
-            expect(endpoints.update('xyz')).toBe('/api/emails/xyz');
+            expect(typeof endpoints.update).toBe('string');
+            expect(endpoints.update).toBe('/api/emails');
         });
 
-        it('should have delete endpoint as function', () => {
+        it('should have delete endpoint as string', () => {
             const endpoints = (service as any).endpoints;
-            expect(typeof endpoints.delete).toBe('function');
-            expect(endpoints.delete(789)).toBe('/api/emails/789');
+            expect(typeof endpoints.delete).toBe('string');
+            expect(endpoints.delete).toBe('/api/emails');
         });
     });
 
@@ -109,13 +107,13 @@ describe('EmailApiService', () => {
             expect(endpoints.create).toBe(apiNames.AddMail);
         });
 
-        it('should construct dynamic endpoints with ID correctly', () => {
+        it('should have all endpoints as plain strings', () => {
             const apiNames = ApiNames.instance;
             const endpoints = (service as any).endpoints;
 
-            expect(endpoints.show(100)).toBe(`${apiNames.ShowMail}/100`);
-            expect(endpoints.update(200)).toBe(`${apiNames.EditMail}/200`);
-            expect(endpoints.delete(300)).toBe(`${apiNames.DeleteMail}/300`);
+            expect(endpoints.show).toBe(apiNames.ShowMail);
+            expect(endpoints.update).toBe(apiNames.EditMail);
+            expect(endpoints.delete).toBe(apiNames.DeleteMail);
         });
     });
 
@@ -232,38 +230,12 @@ describe('EmailApiService', () => {
         });
 
         describe('endpoint edge cases', () => {
-            it('should handle very large ID numbers', () => {
-                const endpoints = (service as any).endpoints;
-                const largeId = 999999999;
-
-                expect(endpoints.show(largeId)).toBe(`/api/emails/${largeId}`);
-                expect(endpoints.update(largeId)).toBe(`/api/emails/${largeId}`);
-                expect(endpoints.delete(largeId)).toBe(`/api/emails/${largeId}`);
-            });
-
-            it('should handle ID as string', () => {
-                const endpoints = (service as any).endpoints;
-                const stringId = 'abc123';
-
-                expect(endpoints.show(stringId)).toBe(`/api/emails/${stringId}`);
-                expect(endpoints.update(stringId)).toBe(`/api/emails/${stringId}`);
-                expect(endpoints.delete(stringId)).toBe(`/api/emails/${stringId}`);
-            });
-
-            it('should handle empty string ID', () => {
+            it('should have all endpoints as plain strings', () => {
                 const endpoints = (service as any).endpoints;
 
-                expect(endpoints.show('')).toBe('/api/emails');
-                expect(endpoints.update('')).toBe('/api/emails');
-                expect(endpoints.delete('')).toBe('/api/emails');
-            });
-
-            it('should handle zero ID', () => {
-                const endpoints = (service as any).endpoints;
-
-                expect(endpoints.show(0)).toBe('/api/emails/0');
-                expect(endpoints.update(0)).toBe('/api/emails/0');
-                expect(endpoints.delete(0)).toBe('/api/emails/0');
+                expect(typeof endpoints.show).toBe('string');
+                expect(typeof endpoints.update).toBe('string');
+                expect(typeof endpoints.delete).toBe('string');
             });
         });
 

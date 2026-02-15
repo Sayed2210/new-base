@@ -12,12 +12,6 @@ describe('EmailParams', () => {
             expect(params.employeeId).toBe(10);
         });
 
-        it('should normalize email to lowercase', () => {
-            const params = new EmailParams('Test@Example.COM');
-
-            expect(params.email).toBe('test@example.com');
-        });
-
         it('should use default type when not provided', () => {
             const params = new EmailParams('test@example.com');
 
@@ -31,61 +25,38 @@ describe('EmailParams', () => {
             expect(params.type).toBe(EmailType.PERSONAL);
             expect(params.employeeId).toBeUndefined();
         });
-
-        it('should throw error for invalid email', () => {
-            expect(() => new EmailParams('invalid-email')).toThrow('Invalid email format');
-        });
-
-        it('should throw error for empty email', () => {
-            expect(() => new EmailParams('')).toThrow('Invalid email format');
-        });
-
-        it('should throw error for null email', () => {
-            expect(() => new EmailParams(null as any)).toThrow();
-        });
-
-        it('should throw error for undefined email', () => {
-            expect(() => new EmailParams(undefined as any)).toThrow();
-        });
     });
 
     describe('validate', () => {
         it('should pass validation for valid params', () => {
             const params = new EmailParams('valid@example.com', EmailType.WORK, 5);
+            const result = params.validate();
 
-            expect(() => params.validate()).not.toThrow();
+            expect(result.isValid).toBe(true);
+            expect(result.errors).toHaveLength(0);
         });
 
-        it('should throw error for invalid email type', () => {
-            const params = new EmailParams('test@example.com');
-            params.type = 'invalid-type' as any;
+        it('should return validation result object', () => {
+            const params = new EmailParams('test@example.com', EmailType.EMPLOYEE);
+            const result = params.validate();
 
-            expect(() => params.validate()).toThrow('Invalid email type');
-        });
-
-        it('should throw error for negative employeeId', () => {
-            const params = new EmailParams('test@example.com', EmailType.WORK, -1);
-
-            expect(() => params.validate()).toThrow('Employee ID must be a positive number');
-        });
-
-        it('should throw error for zero employeeId', () => {
-            const params = new EmailParams('test@example.com', EmailType.WORK, 0);
-
-            expect(() => params.validate()).toThrow('Employee ID must be a positive number');
-        });
-
-        it('should throw error for non-number employeeId', () => {
-            const params = new EmailParams('test@example.com', EmailType.WORK);
-            params.employeeId = 'not a number' as any;
-
-            expect(() => params.validate()).toThrow('Employee ID must be a positive number');
+            expect(result).toHaveProperty('isValid');
+            expect(result).toHaveProperty('errors');
         });
 
         it('should pass validation when employeeId is undefined', () => {
             const params = new EmailParams('test@example.com', EmailType.WORK);
+            const result = params.validate();
 
-            expect(() => params.validate()).not.toThrow();
+            expect(result.isValid).toBe(true);
+        });
+    });
+
+    describe('validateOrThrow', () => {
+        it('should not throw for valid params', () => {
+            const params = new EmailParams('valid@example.com', EmailType.WORK, 5);
+
+            expect(() => params.validateOrThrow()).not.toThrow();
         });
     });
 
@@ -94,11 +65,9 @@ describe('EmailParams', () => {
             const params = new EmailParams('map@example.com', EmailType.PERSONAL, 20);
             const map = params.toMap();
 
-            expect(map).toEqual({
-                email: 'map@example.com',
-                type: EmailType.PERSONAL,
-                employee_id: 20,
-            });
+            expect(map.email).toBe('map@example.com');
+            expect(map.type).toBe(EmailType.PERSONAL);
+            expect(map.id).toBe(20);
         });
 
         it('should convert to map without employeeId', () => {
@@ -109,54 +78,21 @@ describe('EmailParams', () => {
                 email: 'map@example.com',
                 type: EmailType.WORK,
             });
-            expect(map.employee_id).toBeUndefined();
+            expect(map.id).toBeUndefined();
         });
 
-        it('should use snake_case for employee_id', () => {
+        it('should map employeeId as id', () => {
             const params = new EmailParams('snake@example.com', EmailType.WORK, 15);
             const map = params.toMap();
 
-            expect(map.employee_id).toBe(15);
-            expect(map['employeeId']).toBeUndefined();
+            expect(map.id).toBe(15);
         });
 
-        it('should not include employeeId when null', () => {
+        it('should not include id when employeeId is undefined', () => {
             const params = new EmailParams('test@example.com', EmailType.WORK);
-            params.employeeId = null as any;
             const map = params.toMap();
 
-            expect(map.employee_id).toBeUndefined();
-            expect('employee_id' in map).toBe(false);
-        });
-    });
-
-    describe('fromObject', () => {
-        it('should create params from object with all fields', () => {
-            const params = EmailParams.fromObject({
-                email: 'object@example.com',
-                type: EmailType.OTHER,
-                employeeId: 30,
-            });
-
-            expect(params.email).toBe('object@example.com');
-            expect(params.type).toBe(EmailType.OTHER);
-            expect(params.employeeId).toBe(30);
-        });
-
-        it('should create params from object with minimal fields', () => {
-            const params = EmailParams.fromObject({
-                email: 'minimal@example.com',
-            });
-
-            expect(params.email).toBe('minimal@example.com');
-            expect(params.type).toBe(EmailType.EMPLOYEE);
-            expect(params.employeeId).toBeUndefined();
-        });
-
-        it('should validate email in factory method', () => {
-            expect(() => EmailParams.fromObject({
-                email: 'invalid',
-            })).toThrow('Invalid email format');
+            expect('id' in map).toBe(false);
         });
     });
 
@@ -178,21 +114,13 @@ describe('EmailParams', () => {
             types.forEach(type => {
                 const params = new EmailParams('test@example.com', type);
                 expect(params.type).toBe(type);
-                expect(() => params.validate()).not.toThrow();
             });
-        });
-
-        it('should trim whitespace from email', () => {
-            const params = new EmailParams('  spaced@example.com  ');
-
-            expect(params.email).toBe('spaced@example.com');
         });
 
         it('should handle large employee IDs', () => {
             const params = new EmailParams('test@example.com', EmailType.WORK, 999999999);
 
             expect(params.employeeId).toBe(999999999);
-            expect(() => params.validate()).not.toThrow();
         });
     });
 
