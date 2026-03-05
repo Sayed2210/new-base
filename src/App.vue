@@ -3,10 +3,10 @@ import UnifiedDialog from "@/base/Presentation/Dialogs/UnifiedDialog.vue";
 </script>
 
 <template>
-  <div>
+  <main>
     <UnifiedDialog />
     <RouterView />
-  </div>
+  </main>
 </template>
 
 <style scoped>

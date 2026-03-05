@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import UploadAppend from '@/shared/icons/UploadAppend.vue'
-import IconAdd from '@/shared/icons/IconAdd.vue'
-import IconMinus from '@/shared/icons/IconMinus.vue'
-
+import UploadAppend from "@/shared/icons/UploadAppend.vue";
+import IconAdd from "@/shared/icons/IconAdd.vue";
+import IconMinus from "@/shared/icons/IconMinus.vue";
 
 // Props
 const { modelValue, withImage = false } = defineProps<{
@@ -25,7 +24,7 @@ watch(
   (newVal) => {
     inputs.value = [...newVal];
   },
-  { deep: true }
+  { deep: true },
 );
 
 // Sync back to parent
@@ -34,7 +33,7 @@ watch(
   (newVal) => {
     emit("update:modelValue", newVal);
   },
-  { deep: true }
+  { deep: true },
 );
 
 // Add new input
@@ -61,64 +60,9 @@ const onFileChange = (event: Event, index: number) => {
 };
 </script>
 
-
 <template>
-  <div>
-    <div
-      class="input-append"
-      v-for="(input, index) in inputs"
-      :key="index"
-    >
-      <!-- Add button for first row -->
-      <button
-        type="button"
-        class="btn-add"
-        :class="{ added: inputs.length > 1 }"
-        v-if="index === 0"
-        @click="addInput"
-      >
-        <IconAdd />
-      </button>
-
-      <!-- Remove button for all other rows -->
-      <button
-        type="button"
-        class="btn-minus"
-        v-if="index !== 0"
-        @click="removeInput(index)"
-      >
-        <IconMinus />
-      </button>
-
-      <!-- Title Input -->
-      <div class="input-wrapper">
-        <label for="">Title</label>
-        <input
-          type="text"
-          v-model="input.title"
-          placeholder="Enter Title"
-        />
-      </div>
-
-      <!-- File Input -->
-      <div class="file-append" v-if="withImage">
-        <input
-          type="file"
-          hidden
-          :id="`file${index}`"
-          :name="`file${index}`"
-          accept="image/*"
-          @change="onFileChange($event, index)"
-        />
-        <label :for="`file${index}`" v-if="!input.img">
-          <UploadAppend />
-        </label>
-        <div class="img-preview" v-if="input.img">
-          <img :src="input.img" alt="Preview" />
-        </div>
-      </div>
-
-
-    </div>
+  <div class="input-wrapper">
+    <label for="">Title</label>
+    <input type="text" v-model="input.title" placeholder="Enter Title" />
   </div>
 </template>

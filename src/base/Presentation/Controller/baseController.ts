@@ -136,6 +136,18 @@ export default abstract class BaseController<T, TList = T[]> {
     return DEFAULT_CONFIG;
   }
 
+  /**
+   * Merges controller config into API call options.
+   * Caller-supplied options always take priority over config defaults.
+   */
+  private mergeOptions(options?: ApiCallOptions): ApiCallOptions {
+    return {
+      showErrorDialog: this.config.showErrorDialog ?? false,
+      showLoadingDialog: this.config.showLoadingDialog ?? false,
+      ...options,
+    };
+  }
+
   // =========================================================================
   // Constructor
   // =========================================================================
@@ -232,7 +244,7 @@ export default abstract class BaseController<T, TList = T[]> {
     }
 
     try {
-      const result = await this.repository.index(params, options);
+      const result = await this.repository.index(params, this.mergeOptions(options));
       this.setListState(result);
       this.handleListResponse(result);
       return result;
@@ -256,7 +268,7 @@ export default abstract class BaseController<T, TList = T[]> {
     this.startPaginationLoading();
 
     try {
-      const result = await this.repository.index(params, options);
+      const result = await this.repository.index(params, this.mergeOptions(options));
 
       if (
         result instanceof DataSuccess &&
@@ -320,7 +332,7 @@ export default abstract class BaseController<T, TList = T[]> {
     }
 
     try {
-      const result = await this.repository.show(params, options);
+      const result = await this.repository.show(params, this.mergeOptions(options));
       this.setItemState(result);
       this.handleItemResponse(result);
       return result;
@@ -349,13 +361,14 @@ export default abstract class BaseController<T, TList = T[]> {
       this.showLoadingDialog("Creating...");
     }
 
+
     params.validate();
     if (!params.validate().isValid) {
       params.validateOrThrow();
       return;
     }
     try {
-      const result = await this.repository.create(params, options);
+      const result = await this.repository.create(params, this.mergeOptions(options));
       this.setItemState(result);
       this.handleItemResponse(result, "Created successfully");
       return result;
@@ -391,7 +404,7 @@ export default abstract class BaseController<T, TList = T[]> {
     }
 
     try {
-      const result = await this.repository.update(params, options);
+      const result = await this.repository.update(params, this.mergeOptions(options));
       this.setItemState(result);
       this.handleItemResponse(result, "Updated successfully");
       return result;
@@ -426,7 +439,7 @@ export default abstract class BaseController<T, TList = T[]> {
       return;
     }
     try {
-      const result = await this.repository.delete(params, options);
+      const result = await this.repository.delete(params, this.mergeOptions(options));
 
       // Reset item state on successful delete
       if (result instanceof DataSuccess) {

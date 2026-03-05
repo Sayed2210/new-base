@@ -1,9 +1,9 @@
 import type Params from "@/base/Core/Params/params";
 import ServicesInterface, {
-    CrudType,
-    type ApiResponse,
-    type ExtendedCallOptions,
-    type ProgressCallback
+  CrudType,
+  type ApiResponse,
+  type ExtendedCallOptions,
+  type ProgressCallback
 } from './apiServiceInterface';
 import { env } from '@/base/Core/Config/index';
 
@@ -27,7 +27,7 @@ export interface ApiEndpoints {
   /** Delete endpoint */
   delete?: string;
 
-  
+
 }
 
 /**
@@ -206,7 +206,11 @@ export default abstract class BaseApiService extends ServicesInterface {
    */
   async create(params: Params, options?: ApiCallOptions): Promise<ApiResponse> {
     const url = this.resolveEndpoint(this.endpoints.create);
+    console.log(options, 'options');
     const mergedOptions = this.mergeOptions(options);
+    console.log(mergedOptions, 'mergedOptions');
+
+
 
     return this.call({
       url,
@@ -278,14 +282,18 @@ export default abstract class BaseApiService extends ServicesInterface {
     config: CustomEndpointConfig,
     options?: ApiCallOptions,
   ): Promise<ApiResponse<T>> {
+    console.log(options, 'options');
     const mergedOptions = this.mergeOptions(options);
 
+    console.log(mergedOptions, 'mergedOptions');
     return this.call({
       url: config.url,
       type: config.method,
       params: config.params,
       details: config.queryParams,
       headers: config.headers,
+      showErrorDialog: mergedOptions.showErrorDialog,
+      showLoadingDialog: mergedOptions.showLoadingDialog,
       ...mergedOptions,
     }) as Promise<ApiResponse<T>>;
   }
