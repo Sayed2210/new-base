@@ -21,6 +21,8 @@ export default class LoginApiService extends BaseApiService {
     return LoginApiService.instance;
   }
 
+
+
   protected get endpoints(): Partial<ApiEndpoints> {
     return {
       index: this.apiNames.IndexMail,
@@ -30,10 +32,8 @@ export default class LoginApiService extends BaseApiService {
       delete: this.apiNames.DeleteMail,
     };
   }
-  create(params: Params): Promise<ApiResponse> {
-    return this.customPost(this.endpoints.create || "", params);
+
+  async login(params: Params): Promise<ApiResponse> {
+    return this.customPost(this.apiNames.loginEmployee, params);
   }
-  // executeEmailAction(params: Params): Promise<ApiResponse> {
-  //   return this.customPost(this.endpoints.create || "", params);
-  // }
 }

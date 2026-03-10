@@ -1,9 +1,4 @@
 <script lang="ts" setup>
-/**
- * UnifiedDialog Component
- * Single dialog component handling all dialog types with transitions
- */
-
 import { computed, ref, watch, onMounted, onUnmounted } from "vue";
 import { dialogManager } from "./dialog.manager";
 import { DialogType, DIALOG_ICONS, DIALOG_COLORS } from "./dialog.types";
@@ -95,7 +90,7 @@ function closeWithAnimation() {
   setTimeout(() => {
     isVisible.value = false;
     isClosing.value = false;
-  }, 200);
+  }, 5000);
 }
 
 function handleClose() {
@@ -105,7 +100,7 @@ function handleClose() {
   closeWithAnimation();
   setTimeout(() => {
     dialogManager.closeDialog();
-  }, 200);
+  }, 5000);
 }
 
 function handleBackdropClick() {

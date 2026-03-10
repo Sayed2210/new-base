@@ -209,6 +209,8 @@ export default abstract class ServicesInterface {
         console.error(`[ApiService] Error:`, apiError.toJSON());
       }
 
+      console.log(apiError);
+      console.log(showErrorDialog);
       // Show error dialog if requested
       if (showErrorDialog) {
         dialogManager.error(ErrorHandler.getUserMessage(apiError));
