@@ -12,12 +12,24 @@ const loadingProgress = computed(() => dialogManager.loadingProgress.value);
 // Local state
 const isVisible = ref(false);
 const isClosing = ref(false);
+let autoCloseTimer: ReturnType<typeof setTimeout> | null = null;
 
 // Watch for dialog changes
 watch(currentDialog, (newDialog) => {
   if (newDialog) {
     isVisible.value = true;
     isClosing.value = false;
+    
+    // Clear existing timer
+    if (autoCloseTimer) clearTimeout(autoCloseTimer);
+    
+    // Auto-close logic
+    const duration = newDialog.duration ?? 3000;
+    if (duration > 0) {
+      autoCloseTimer = setTimeout(() => {
+        handleClose();
+      }, duration);
+    }
   }
 });
 
@@ -88,6 +100,11 @@ const showActions = computed(() => {
 function closeWithAnimation() {
   isClosing.value = true;
   isVisible.value = false;
+  
+  if (autoCloseTimer) {
+    clearTimeout(autoCloseTimer);
+    autoCloseTimer = null;
+  }
 }
 
 function handleAfterLeave() {
