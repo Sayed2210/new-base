@@ -9,10 +9,13 @@ import type EmailModel from "@/modules/employee-email/core/models/email.model";
 import FilterEmailParams from "../../core/params/filter.email.params";
 import Pagination from "@/shared/HelpersComponents/Pagination.vue";
 import DeleteEmailParams from "../../core/params/deleteParams";
+import { useRoute, useRouter } from "vue-router";
+import { debounce } from "@/base/Presentation/Utils/debouced";
 
 // Controller instance
 const controller = EmailController.getInstance();
-
+const router = useRouter();
+const route = useRoute();
 // Table headers
 const headers: TableHeader[] = [
   { key: "email", label: "Email", width: "50%", sortable: true },
@@ -21,13 +24,39 @@ const headers: TableHeader[] = [
 
 // Pagination state
 const perPage = ref(10);
+const word = ref("");
 
-const fetchEmails = async (page: number = 1) => {
-  await controller.fetchList(new FilterEmailParams("", page, perPage.value));
+const fetchEmails = async (page: number = 1, word: string = "") => {
+  await controller.fetchList(
+    new FilterEmailParams(
+      word,
+      route.query.page ? Number(route.query.page) : page,
+      perPage.value,
+    ),
+  );
 };
+
+const Search = debounce(() => {
+  router.push({
+    query: {
+      ...route.query,
+      page: Number(route.query.page ?? 1),
+      word: word.value || undefined,
+    },
+  });
+
+  fetchEmails(1, word.value);
+});
 
 const onPageChange = (page: number) => {
   fetchEmails(page);
+  router.push({
+    query: {
+      ...route.query,
+      page: String(page),
+      word: word.value,
+    },
+  });
 };
 
 const onPerPageChange = (count: number) => {
@@ -37,7 +66,14 @@ const onPerPageChange = (count: number) => {
 
 // Fetch emails on component mount
 onMounted(async () => {
-  await fetchEmails();
+  if (route.query.word) {
+    word.value = String(route.query.word);
+  }
+
+  await fetchEmails(
+    route.query.page ? Number(route.query.page) : 1,
+    word.value,
+  );
 });
 
 const deleteEmail = async (id: number) => {
@@ -51,6 +87,19 @@ const deleteEmail = async (id: number) => {
     <div class="index-header">
       <h2>Employee Email Management</h2>
       <router-link to="/emails/add" class="add-btn">Add Email</router-link>
+    </div>
+    <div class="input-search col-span-1">
+      <!--      <img alt="search" src="../../../../../../../assets/images/search-normal.png" />-->
+      <span class="icon-remove" @click="((word = ''), Search())">
+        <Search />
+      </span>
+      <input
+        v-model="word"
+        :placeholder="'search'"
+        class="input"
+        type="text"
+        @input="Search"
+      />
     </div>
 
     <DataStatusBuilder

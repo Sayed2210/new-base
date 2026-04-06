@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { EmailController, EmailParams } from "@/modules/employee-email";
 
 import EmailForm from "./EmailForm.vue";
-import router from "@/router";
 import AppButton from "@/shared/HelpersComponents/AppButton.vue";
 import IconAccept from "@/shared/icons/IconAccept.vue";
-
+import HandleFilesUpload from "@/shared/FormInputs/HandleFilesUpload.vue";
+import Sys from "@/assets/images/app/system-failed.png";
 // Controller instance
 const controller = EmailController.getInstance();
 
@@ -45,6 +45,12 @@ const updateData = (updatedParams: EmailParams) => {
   params.value = updatedParams;
   // saveEmail();
 };
+
+const UploadedFiles = ref<string[]>([]);
+const handleFilesChange = (files: any) => {
+  UploadedFiles.value = files.map((f: any) => f);
+  console.log(UploadedFiles.value);
+};
 </script>
 
 <template>
@@ -65,6 +71,17 @@ const updateData = (updatedParams: EmailParams) => {
       </template>
     </AppButton>
 
+    <HandleFilesUpload
+      :label="$t('contract')"
+      accept=".pdf,.doc,.docx,.xls,.xlsx,image/*"
+      :max-files="2"
+      :multiple="false"
+      @change="handleFilesChange"
+      className="input-file"
+      :index="1"
+      :file="[Sys, Sys]"
+    />
+
     <!-- Error Display -->
     <div v-if="controller.errorMessage.value" class="error">
       {{ controller.errorMessage.value }}
@@ -73,6 +90,12 @@ const updateData = (updatedParams: EmailParams) => {
 </template>
 
 <style scoped>
+:deep(.input-file) {
+  border: 1px solid #d9dbe9 !important;
+  padding: 11px;
+  border-radius: 20px !important;
+  cursor: pointer;
+}
 .email-crud-example {
   padding: 20px;
   /* max-width: 800px; */
