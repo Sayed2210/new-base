@@ -209,7 +209,7 @@ export default abstract class BaseApiService extends ServicesInterface {
     const mergedOptions = this.mergeOptions({
       ...options,
       enableRetry: isAutoRetry,
-      
+
     });
 
 
@@ -284,9 +284,17 @@ export default abstract class BaseApiService extends ServicesInterface {
   async custom<T = any>(
     config: CustomEndpointConfig,
     options?: ApiCallOptions,
+    isAutoRetry?: boolean,
   ): Promise<ApiResponse<T>> {
 
-    const mergedOptions = this.mergeOptions(options);
+
+    const mergedOptions = this.mergeOptions({
+      ...options,
+      enableRetry: isAutoRetry,
+
+    });
+
+    console.log(mergedOptions, "mergedOptions");
 
 
     return this.call({

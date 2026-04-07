@@ -3,7 +3,7 @@ import type { ControllerConfig } from "@/base/Presentation/Controller/baseContro
 import type LoginModel from "../../core/models/login.model";
 import LoginRepository from "../../data/repositories/login.repository";
 import type Params from "@/base/Core/Params/params";
-import type { ApiResponse } from "@/base/Data/ApiService/apiServiceInterface";
+import { DataState, DataFailed } from "@/base/Core/NetworkStructure/Resources/dataState/dataState";
 
 /**
  * Email Controller for managing employee emails
@@ -50,7 +50,26 @@ export default class LoginController extends BaseController<
     return LoginController.instance;
   }
 
-  async login(params: Params): Promise<ApiResponse> {
-    return this.repository.login(params);
+  async login(params: Params): Promise<DataState<LoginModel>> {
+    this.setItemLoading();
+    if (this.config.showLoadingDialog) {
+      this.showLoadingDialog("Logging in...");
+    }
+
+    try {
+      const response = await this.repository.login(params);
+      this.setItemState(response);
+      
+      this.handleItemResponse(response, "Logged in successfully");
+      
+      return response;
+    } catch (error: any) {
+      const failed = new DataFailed<LoginModel>({ error });
+      this.setItemState(failed);
+      this.handleErrorResponse(failed);
+      return failed;
+    } finally {
+      this.hideLoadingDialog();
+    }
   }
 }
