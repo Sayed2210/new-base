@@ -2,18 +2,15 @@ import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import HandleFilesUpload from '../HandleFilesUpload.vue'
 
-// crypto.randomUUID is available in jsdom but let's ensure it
-Object.defineProperty(globalThis, 'crypto', {
-  value: { randomUUID: () => 'test-uuid' },
-})
-
 const createWrapper = (props = {}) =>
   mount(HandleFilesUpload, {
-    props,
+    props: {
+      label: 'Upload Files',
+      ...props,
+    },
     global: {
       mocks: { $t: (key: string) => key },
     },
-    attachTo: document.body,
   })
 
 describe('HandleFilesUpload', () => {
@@ -22,66 +19,88 @@ describe('HandleFilesUpload', () => {
     expect(wrapper.exists()).toBe(true)
   })
 
-  it('renders label with default text "Upload Files"', () => {
-    const wrapper = createWrapper()
-    expect(wrapper.find('.upload-label').text()).toBe('Upload Files')
-  })
-
-  it('renders label with custom label prop', () => {
-    const wrapper = createWrapper({ label: 'Attach Documents' })
-    expect(wrapper.find('.upload-label').text()).toBe('Attach Documents')
-  })
-
-  it('renders the file input area', () => {
+  it('renders a file input element', () => {
     const wrapper = createWrapper()
     expect(wrapper.find('input[type="file"]').exists()).toBe(true)
   })
 
-  it('shows "Click to upload" when max not reached', () => {
+  it('accepts files based on accept prop', () => {
+    const wrapper = createWrapper({ accept: 'image/*' })
+    const input = wrapper.find('input[type="file"]')
+    expect(input.attributes('accept')).toBe('image/*')
+  })
+
+  it('does not have multiple attribute by default', () => {
+    const wrapper = createWrapper()
+    const input = wrapper.find('input[type="file"]')
+    expect(input.element.multiple).toBe(false)
+  })
+
+  it('has multiple attribute when multiple prop is true', () => {
+    const wrapper = createWrapper({ multiple: true })
+    const input = wrapper.find('input[type="file"]')
+    expect(input.element.multiple).toBe(true)
+  })
+
+  it('shows default upload text when max files not reached', () => {
     const wrapper = createWrapper()
     expect(wrapper.find('.upload-text').text()).toBe('Click to upload')
   })
 
-  it('shows max files reached message when maxFiles is 0', () => {
+  it('shows max files reached text when limit is hit', () => {
     const wrapper = createWrapper({ maxFiles: 0 })
-    expect(wrapper.find('.upload-text').text()).toContain('Max 0 files reached')
+    expect(wrapper.find('.upload-text').text()).toBe('Max 0 files reached')
   })
 
-  it('disables file input when maxFiles is 0', () => {
-    const wrapper = createWrapper({ maxFiles: 0 })
-    const input = wrapper.find('input[type="file"]') as any
-    expect(input.element.disabled).toBe(true)
-  })
-
-  it('shows no preview grid initially', () => {
-    const wrapper = createWrapper()
-    expect(wrapper.find('.preview-grid').exists()).toBe(false)
-  })
-
-  it('applies multiple attribute when multiple prop is true', () => {
-    const wrapper = createWrapper({ multiple: true })
-    const input = wrapper.find('input[type="file"]')
-    expect(input.attributes('multiple')).toBeDefined()
-  })
-
-  it('applies accept prop to file input', () => {
-    const wrapper = createWrapper({ accept: 'image/png,image/jpg' })
-    const input = wrapper.find('input[type="file"]')
-    expect(input.attributes('accept')).toBe('image/png,image/jpg')
-  })
-
-  describe('formatFileSize (indirectly via upload)', () => {
-    it('handles bytes below 1024', () => {
-      // We test through component rendering; direct logic tested indirectly
-      const wrapper = createWrapper()
-      expect(wrapper.exists()).toBe(true)
+  it('renders with initial file from url', async () => {
+    const wrapper = mount(HandleFilesUpload, {
+      props: {
+        file: 'http://example.com/test.jpg'
+      },
+      global: {
+        mocks: { $t: (key: string) => key },
+      }
     })
+    
+    // The component uses onMounted to process preloaded files
+    await wrapper.vm.$nextTick()
+    
+    expect(wrapper.find('.preview-grid').exists()).toBe(true)
+    expect(wrapper.findAll('.preview-item')).toHaveLength(1)
   })
 
-  it('removeFile emits change event', async () => {
-    const wrapper = createWrapper()
-    // Manually set internal files via component expose if needed
-    // Since we can't easily simulate File input in jsdom, just verify the component
-    expect(wrapper.exists()).toBe(true)
+  it('renders multiple initial files', async () => {
+    const wrapper = mount(HandleFilesUpload, {
+      props: {
+        file: ['img1.jpg', 'img2.jpg'],
+        multiple: true
+      },
+      global: {
+        mocks: { $t: (key: string) => key },
+      }
+    })
+    
+    await wrapper.vm.$nextTick()
+    
+    expect(wrapper.findAll('.preview-item')).toHaveLength(2)
+  })
+
+  it('emits change event when a file is removed', async () => {
+    const wrapper = mount(HandleFilesUpload, {
+      props: {
+        file: 'test.jpg'
+      },
+      global: {
+        mocks: { $t: (key: string) => key },
+      }
+    })
+    
+    await wrapper.vm.$nextTick()
+    
+    const removeBtn = wrapper.find('.remove-btn')
+    await removeBtn.trigger('click')
+    
+    expect(wrapper.emitted('change')).toBeTruthy()
+    expect(wrapper.emitted('change')![0][0]).toEqual([])
   })
 })

@@ -165,7 +165,7 @@ describe('EmailRepository', () => {
             const params = { email: 'test@example.com' };
             await repository.create(params as any);
 
-            expect(mockApiService.create).toHaveBeenCalledWith(params, undefined);
+            expect(mockApiService.create).toHaveBeenCalledWith(params, undefined, undefined);
         });
     });
 
@@ -197,7 +197,7 @@ describe('EmailRepository', () => {
             const params = { toMap: () => ({ id: 15, email: 'update@example.com' }), validate: () => ({ isValid: true, errors: [] }), validateOrThrow: () => {} };
             await repository.update(params as any);
 
-            expect(mockApiService.update).toHaveBeenCalledWith(params, undefined);
+            expect(mockApiService.update).toHaveBeenCalledWith(params, undefined, undefined);
         });
     });
 
