@@ -1,9 +1,11 @@
 import BaseController from "@/base/Presentation/Controller/baseController";
 import type { ControllerConfig } from "@/base/Presentation/Controller/baseController";
-import type LoginModel from "../../core/models/login.model";
+import type LoginModel from "../../core/models/user.model";
 import LoginRepository from "../../data/repositories/login.repository";
 import type Params from "@/base/Core/Params/params";
-import type { ApiResponse } from "@/base/Data/ApiService/apiServiceInterface";
+import { DataState, DataFailed } from "@/base/Core/NetworkStructure/Resources/dataState/dataState";
+import { useUserStore } from "@/stores/user";
+import router from "@/router";
 
 /**
  * Email Controller for managing employee emails
@@ -20,6 +22,9 @@ export default class LoginController extends BaseController<
   protected get repository() {
     return LoginRepository.getInstance();
   }
+
+  //user Store
+  private userStore = useUserStore();
 
   /**
    * Controller configuration
@@ -50,7 +55,27 @@ export default class LoginController extends BaseController<
     return LoginController.instance;
   }
 
-  async login(params: Params): Promise<ApiResponse> {
-    return this.repository.login(params);
+  async login(params: Params): Promise<DataState<LoginModel>> {
+    this.setItemLoading();
+    if (this.config.showLoadingDialog) {
+      this.showLoadingDialog("Logging in...");
+    }
+
+    try {
+      const response = await this.repository.login(params);
+      this.setItemState(response);
+
+      this.handleItemResponse(response, "Logged in successfully");
+      if (response.data) this.userStore.setUser(response.data);
+      router.push("/")
+      return response;
+    } catch (error: any) {
+      const failed = new DataFailed<LoginModel>({ error });
+      this.setItemState(failed);
+      this.handleErrorResponse(failed);
+      return failed;
+    } finally {
+      this.hideLoadingDialog();
+    }
   }
 }

@@ -205,13 +205,13 @@ export default abstract class BaseApiService extends ServicesInterface {
     isAutoRetry?: boolean,
   ): Promise<ApiResponse> {
     const url = this.resolveEndpoint(this.endpoints.create);
-    console.log(options, "options");
+
     const mergedOptions = this.mergeOptions({
       ...options,
       enableRetry: isAutoRetry,
-      
+
     });
-    console.log(mergedOptions, "mergedOptions");
+
 
     return this.call({
       url,
@@ -284,11 +284,19 @@ export default abstract class BaseApiService extends ServicesInterface {
   async custom<T = any>(
     config: CustomEndpointConfig,
     options?: ApiCallOptions,
+    isAutoRetry?: boolean,
   ): Promise<ApiResponse<T>> {
-    console.log(options, "options");
-    const mergedOptions = this.mergeOptions(options);
+
+
+    const mergedOptions = this.mergeOptions({
+      ...options,
+      enableRetry: isAutoRetry,
+
+    });
 
     console.log(mergedOptions, "mergedOptions");
+
+
     return this.call({
       url: config.url,
       type: config.method,
