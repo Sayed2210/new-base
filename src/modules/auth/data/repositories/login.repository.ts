@@ -1,10 +1,10 @@
 import BaseRepository, {
   type RepositoryConfig,
 } from "@/base/Domain/Repositories/baseRepository";
-import LoginModel from "../../core/models/login.model";
+import LoginModel from "../../core/models/user.model";
 import LoginApiService from "../api/login.api-service";
 import type Params from "@/base/Core/Params/params";
-import type { ApiResponse } from "@/base/Data/ApiService/apiServiceInterface";
+import type { DataState } from "@/base/Core/NetworkStructure/Resources/dataState/dataState";
 
 /**
  * Email Repository for API data operations
@@ -50,7 +50,10 @@ export default class LoginRepository extends BaseRepository<
     return data.map((item) => this.parseItem(item));
   }
 
-  async login(params: Params): Promise<ApiResponse> {
-    return this.apiService.login(params);
+  async login(params: Params): Promise<DataState<LoginModel>> {
+    return this.executeCustom(
+      () => this.apiService.login(params),
+      (data) => this.parseItem(data)
+    );
   }
 }

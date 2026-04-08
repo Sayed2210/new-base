@@ -9,10 +9,7 @@ import { createI18n } from "vue-i18n";
 import ar from "./locales/ar.json";
 import en from "./locales/en.json";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
-import ToastService from 'primevue/toastservice';
-
-const pinia = createPinia();
-pinia.use(piniaPluginPersistedstate);
+import ToastService from "primevue/toastservice";
 
 const i18n = createI18n({
   locale: "en",
@@ -22,6 +19,7 @@ const i18n = createI18n({
     ar,
   },
 });
+const pinia = createPinia();
 
 createApp(App)
   .use(PrimeVue, {
@@ -30,6 +28,7 @@ createApp(App)
     },
   })
   .use(pinia)
+  .use(pinia.use(piniaPluginPersistedstate))
   .use(router)
   .use(i18n)
   .use(ToastService)

@@ -11,7 +11,7 @@ const controller = LoginController.getInstance();
 
 const login = async () => {
   const params = new LoginParams(email.value, password.value);
-  await controller.create(params);
+  await controller.login(params);
 };
 
 const isPasswordVisible = ref();

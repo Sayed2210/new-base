@@ -654,6 +654,10 @@ export default abstract class BaseController<T, TList = T[]> {
    * Handle list response (override for custom dialogs/notifications).
    */
   protected handleListResponse(_result: DataState<TList>): void {
+    if (_result.hasError) {
+      this.handleErrorResponse(_result);
+    }
+
     // Auto-retry if applicable
     if (this.shouldAutoRetry(_result)) {
       this._autoRetryCount++;
@@ -668,7 +672,9 @@ export default abstract class BaseController<T, TList = T[]> {
     _result: DataState<T>,
     successMessage?: string,
   ): void {
-    if (
+    if (_result.hasError) {
+      this.handleErrorResponse(_result);
+    } else if (
       _result instanceof DataSuccess &&
       this.config.showSuccessDialog &&
       successMessage
