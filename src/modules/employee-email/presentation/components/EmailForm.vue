@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { EmailModel, EmailParams, EmailType } from "@/modules/employee-email";
 import TitleInterface from "@/base/Data/Models/titleInterface";
-import { useRoute } from "vue-router";
 import UpdatedCustomInputSelect from "@/shared/FormInputs/UpdatedCustomInputSelect.vue";
+
+import { onBeforeRouteLeave, useRoute } from "vue-router";
+import { useFormsStore } from "@/stores/formsStore";
+onBeforeRouteLeave((to, from) => {
+  const savedData = FormStore.getFormData(formKey);
+  if (savedData && to.path !== from.path) {
+    FormStore.showReturnWarning(formKey);
+  }
+});
 
 const emit = defineEmits<{
   updateData: [params: EmailParams];
@@ -41,9 +49,18 @@ watch(
 
 const updateType = (type: TitleInterface<EmailType>) => {
   formType.value = type;
+  updateData();
 };
+const FormStore = useFormsStore();
+const route = useRoute();
 
+const formKey = route.fullPath;
 const updateData = () => {
+  FormStore.setFormData(formKey, {
+    email: formEmail.value,
+    type: formType.value?.id,
+    id: editingId.value || undefined,
+  });
   const params = new EmailParams(
     formEmail.value,
     formType.value?.id as EmailType,
@@ -51,7 +68,18 @@ const updateData = () => {
   );
   emit("updateData", params);
 };
-const route = useRoute();
+
+onMounted(() => {
+  const saved = FormStore.getFormData(formKey);
+
+  if (saved) {
+    formEmail.value = saved.email;
+
+    formType.value = emailTypes.find((t) => t.id === saved.type) ?? null;
+
+    editingId.value = saved.id ?? null;
+  }
+});
 </script>
 
 <template>

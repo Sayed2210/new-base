@@ -4,11 +4,12 @@ import PrimeVue from "primevue/config";
 import { createPinia } from "pinia";
 import router from "./router";
 import App from "./App.vue";
-import Aura from '@primeuix/themes/aura';
+import Aura from "@primeuix/themes/aura";
 import { createI18n } from "vue-i18n";
 import ar from "./locales/ar.json";
 import en from "./locales/en.json";
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
+import ToastService from "primevue/toastservice";
 
 const i18n = createI18n({
   locale: "en",
@@ -18,15 +19,17 @@ const i18n = createI18n({
     ar,
   },
 });
-const pinia = createPinia()
+const pinia = createPinia();
 
 createApp(App)
   .use(PrimeVue, {
     theme: {
-      preset: Aura
-    }
+      preset: Aura,
+    },
   })
+  .use(pinia)
   .use(pinia.use(piniaPluginPersistedstate))
   .use(router)
   .use(i18n)
+  .use(ToastService)
   .mount("#app");

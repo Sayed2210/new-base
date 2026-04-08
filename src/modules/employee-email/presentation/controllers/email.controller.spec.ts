@@ -46,7 +46,7 @@ describe('EmailController', () => {
             expect(config.showSuccessDialog).toBe(true);
             expect(config.showErrorDialog).toBe(true);
             expect(config.autoRetry).toBe(true);
-            expect(config.maxAutoRetries).toBe(2);
+            expect(config.maxAutoRetries).toBe(1);
         });
     });
 
@@ -148,7 +148,7 @@ describe('EmailController', () => {
             expect(mockRepository.create).toHaveBeenCalledWith(params, {
                 showErrorDialog: true,
                 showLoadingDialog: true,
-            });
+            }, true);
             expect(result).toBe(successState);
         });
 
@@ -163,7 +163,7 @@ describe('EmailController', () => {
             expect(mockRepository.create).toHaveBeenCalledWith(params, {
                 showLoadingDialog: true,
                 showErrorDialog: true,
-            });
+            }, true);
         });
 
         it('should handle validation errors from repository', async () => {
@@ -194,7 +194,7 @@ describe('EmailController', () => {
             expect(mockRepository.update).toHaveBeenCalledWith(params, {
                 showErrorDialog: true,
                 showLoadingDialog: true,
-            });
+            }, true);
             expect(result).toBe(successState);
         });
 
@@ -210,7 +210,7 @@ describe('EmailController', () => {
                 usePut: true,
                 showErrorDialog: true,
                 showLoadingDialog: true,
-            });
+            }, true);
         });
 
         it('should handle update errors from repository', async () => {

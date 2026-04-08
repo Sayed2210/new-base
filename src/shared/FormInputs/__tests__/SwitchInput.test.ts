@@ -68,11 +68,17 @@ describe('SwitchInput', () => {
   })
 
   it('emits update:value with empty string for enabled field in switch_reverse mode', async () => {
-    const fields = [{ key: 'f', label: 'L', placeholder: 'P', value: 'hello', enabled: true }]
-    const wrapper = createWrapper({ fields, switch_reverse: true })
-    // Trigger the watcher
-    fields[0].enabled = false
-    await wrapper.setProps({ fields: [...fields] })
+    const initialFields = [{ key: 'f', label: 'L', placeholder: 'P', value: 'hello', enabled: true }]
+    const wrapper = createWrapper({ fields: initialFields, switch_reverse: true })
+    
+    // Trigger the watcher by passing a new fields array with a changed state
+    const updatedFields = [{ key: 'f', label: 'L', placeholder: 'P', value: 'hello', enabled: false }]
+    await wrapper.setProps({ fields: updatedFields })
+    
+    // Wait for the watcher to fire and emit
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    
     const emitted = wrapper.emitted('update:value')
     expect(emitted).toBeTruthy()
   })

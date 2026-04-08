@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import UnifiedDialog from "@/base/Presentation/Dialogs/UnifiedDialog.vue";
+import ToastContainer from "@/base/Presentation/Dialogs/ToastContainer.vue";
 </script>
 
 <template>
   <div>
     <UnifiedDialog />
+    <ToastContainer position="top-right" />
     <RouterView />
   </div>
 </template>

@@ -5,6 +5,7 @@ import { computed, ref, watch, toRefs } from "vue";
 import type Params from "@/base/Core/Params/params";
 import ValidationService from "@/base/Presentation/Utils/validationService";
 import IconBackStage from "@/shared/icons/IconBackStage.vue";
+import PlusIcon from "@/shared/icons/PlusIcon.vue";
 import TitleInterface from "@/base/Data/Models/titleInterface";
 import type BaseController from "@/base/Presentation/Controller/baseController";
 
@@ -188,6 +189,9 @@ async function reloadData(): Promise<void> {
       </div>
 
       <div class="flex items-center gap-2">
+        <div v-if="onclick" class="add-dialog" @click="onclick">
+          <PlusIcon />
+        </div>
         <label :class="{ required: required }" class="input-label">
           <span v-if="required" class="text-red-500">*</span>
           {{ $t(label ?? "") }}
