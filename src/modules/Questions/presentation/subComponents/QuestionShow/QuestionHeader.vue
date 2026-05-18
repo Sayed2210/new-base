@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import FaqImg from '@/assets/images/faq-image.png';
   import EditIcon from '@/shared/icons/Privacy/EditIcon.vue';
+
+    
 </script>
 
 <template>
