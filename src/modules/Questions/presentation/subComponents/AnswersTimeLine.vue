@@ -2,11 +2,15 @@
   import HandleFilesUpload from '@/shared/FormInputs/HandleFilesUpload.vue';
   import DeletIcon from '@/shared/icons/DropListIcons/DeletIcon.vue';
   import UploadFileIcon from '@/shared/icons/UploadFileIcon.vue';
-  import { onMounted, ref } from 'vue';
+  import { onMounted, ref, watch } from 'vue';
   import Checkbox from 'primevue/checkbox';
   import AddNewAnswerIcon from '@/shared/icons/AddNewAnswerIcon.vue';
+  import { QuestionTypeEnum } from '../../core/constant/question.type.enum';
 
   const emit = defineEmits(['update:data']);
+  const { questionType } = defineProps<{
+    questionType: QuestionTypeEnum;
+  }>();
   const Answers = ref([
     {
       answer: '',
@@ -15,8 +19,35 @@
     },
   ]);
 
+  watch(
+    () => questionType,
+    (newValue) => {
+      newValue == QuestionTypeEnum.true_false
+        ? (Answers.value = [
+            {
+              answer: '',
+              isCorrect: false,
+              file: '',
+            },
+            {
+              answer: '',
+              isCorrect: false,
+              file: '',
+            },
+          ])
+        : (Answers.value = [
+            {
+              answer: '',
+              isCorrect: false,
+              file: '',
+            },
+          ]);
+    },
+  );
+
   const addNewAnswer = () => {
     Answers.value.push({ answer: '', isCorrect: false, file: '' });
+
     UpdateData();
   };
 
@@ -44,7 +75,6 @@
     });
     Answers.value[index]!.isCorrect = true;
     UpdateData();
-
   };
 </script>
 
@@ -99,7 +129,10 @@
               @change="setCorrect(index)"
             />
           </div>
-          <div class="delete-icon-container" v-if="Answers.length > 1">
+          <div
+            class="delete-icon-container"
+            v-if="Answers.length > 1 && questionType !== QuestionTypeEnum.true_false"
+          >
             <button type="button" class="delete-btn" @click="DeleteItem(index)">
               <DeletIcon />
             </button>
@@ -107,7 +140,11 @@
         </div>
       </div>
 
-      <div class="add-row" @click="addNewAnswer" v-if="Answers.length - 1 == index">
+      <div
+        class="add-row"
+        @click="addNewAnswer"
+        v-if="Answers.length - 1 == index && questionType !== QuestionTypeEnum.true_false"
+      >
         <div class="add-icon">
           <AddNewAnswerIcon />
           <span class="add-text">{{ $t('add_another_answer') }}</span>

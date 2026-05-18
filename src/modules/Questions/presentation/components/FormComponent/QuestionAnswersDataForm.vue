@@ -15,10 +15,13 @@
   import QuestionSolutionSteps from '../../subComponents/QuestionSolutionSteps.vue';
   import SolutionStepsParams from '@/modules/Questions/core/params/subParams/soluation.steps.params';
   import QuestionSolutionHints from '../../subComponents/QuestionSolutionHints.vue';
+  import { QuestionTypeEnum } from '@/modules/Questions/core/constant/question.type.enum';
 
   const emit = defineEmits(['updateData']);
   const route = useRoute();
-
+  const { questionType } = defineProps<{
+    questionType: QuestionTypeEnum;
+  }>();
   const updateData = () => {
     let params: any;
     if (route.params.id) {
@@ -104,7 +107,7 @@
         </template>
       </AccordionHeader>
       <AccordionContent>
-        <AnswersTimeLine @update:data="GetAnswers" />
+        <AnswersTimeLine :questionType="questionType" @update:data="GetAnswers" />
         <QuestionClarification @update-data="GetClarification" />
         <QuestionSolutionSteps @update-data="GetSolutionSteps" />
         <QuestionSolutionHints @update-data="GetSolutionHints" />

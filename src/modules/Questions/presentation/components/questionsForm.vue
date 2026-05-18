@@ -189,6 +189,6 @@
     </header>
 
     <BasicQuestionDataForm @updateData="GetAllBasicData" />
-    <QuestionAnswersDataForm @updateData="GetAllAnswers" />
+    <QuestionAnswersDataForm :questionType="BasicData?.questionType" @updateData="GetAllAnswers" />
   </div>
 </template>
