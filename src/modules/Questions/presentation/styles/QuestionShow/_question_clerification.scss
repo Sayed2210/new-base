@@ -2,7 +2,9 @@
 @use '../../../../../styles/mixins/flex' as *;
 @use '../../../../../styles/mixins/grid' as *;
 
-.question-clarification-wrapper {
+.question-clarification-wrapper,
+.question-solution-hint-wrapper,
+.question-solution-steps-wrapper {
   padding: $XsSize3;
   background-color: var(--gray-soft);
   border-radius: $MdSize;
@@ -13,7 +15,9 @@
     gap: $XsSize2;
   }
 
-  .question-clarification-header {
+  .question-clarification-header,
+  .question-solution-hint-header,
+  .question-solution-steps-header {
     @include flex-row(wrap, start, center);
 
     gap: $XsSize2;
@@ -63,7 +67,9 @@
     line-height: 1.7;
   }
 
-  .question-clarification-img {
+  .question-clarification-img,
+  .question-solution-hint-img,
+  .question-solution-steps-img {
     max-width: calc($XlSize4 * 2);
     height: $XlSize4;
     overflow: hidden;
