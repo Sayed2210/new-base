@@ -1,0 +1,35 @@
+import type { RouteRecordRaw } from '@/router/types';
+import EmployeeIcon from '@/shared/icons/BreadcrumbIcons/EmployeeIcon.vue';
+
+export const ArticlesRoutes: RouteRecordRaw[] = [
+  {
+    path: 'Articles',
+    name: 'Articles',
+    component: () => import('@/views/Articles/IndexArticles.vue'),
+    meta: {
+      breadcrumb: 'Articles',
+      icon: EmployeeIcon,
+    },
+  },
+  {
+    path: 'articles/add',
+    name: 'Add article',
+    component: () => import('@/views/Articles/AddArticles.vue'),
+    meta: {
+      breadcrumb: 'Add article',
+      icon: EmployeeIcon,
+      parent: 'Articles',
+    },
+  },
+  {
+    path: 'articles/edit/:id',
+    name: 'Edit article',
+    component: () => import('@/views/Articles/EditArticles.vue'),
+    props: true,
+    meta: {
+      breadcrumb: 'Edit article',
+      icon: EmployeeIcon,
+      parent: 'Articles',
+    },
+  },
+];
