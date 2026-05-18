@@ -66,3 +66,13 @@
     </div>
   </div>
 </template>
+
+
+<style lang="scss" scoped>
+.question-show-page{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+</style>

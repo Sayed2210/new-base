@@ -4,7 +4,6 @@
 
 .question-answers-wrapper {
   @include flex(column, wrap, center, start);
-
   padding: $MdSize;
   border: 1px solid var(--border-color);
   border-radius: $XlSize;
@@ -45,7 +44,6 @@
           font-family: 'Medium';
           color: var(--second-text);
         }
-
         .answer {
           font-size: $MdSize;
           font-family: 'Light';
