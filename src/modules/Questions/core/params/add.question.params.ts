@@ -12,16 +12,16 @@ import type SolutionStepsParams from './subParams/soluation.steps.params';
  * Parameters for adding a new employee
  */
 export default class AddquestionsParams implements Params {
-  public title: string;
-  public image: string[];
-  public questionType: QuestionTypeEnum;
-  public subjectId: number | null;
-  public topics: number[];
-  public questionSequenceId: number | null;
-  public difficultyLevel: QuestionDifficultyEnum | null;
-  public skills: QuestionSkillParams[];
-  public questionSource: QuestionSourceParams;
-  public answers: AnswersParams[];
+  public title?: string;
+  public image?: string[];
+  public questionType?: QuestionTypeEnum;
+  public subjectId?: number | null;
+  public topics?: number[];
+  public questionSequenceId?: number | null;
+  public difficultyLevel?: QuestionDifficultyEnum | null;
+  public skills?: QuestionSkillParams[];
+  public questionSource?: QuestionSourceParams;
+  public answers?: AnswersParams[];
   public isQuestionClarification?: boolean;
   public questionClarification?: QuestionClarificationParams;
   public isSolutionSteps?: boolean;
@@ -42,16 +42,16 @@ export default class AddquestionsParams implements Params {
   });
 
   constructor(data: {
-    title: string;
-    image: string[];
-    questionType: QuestionTypeEnum;
-    subjectId: number | null;
-    topics: number[];
-    questionSequenceId: number | null;
-    difficultyLevel: QuestionDifficultyEnum | null;
-    skills: QuestionSkillParams[];
-    questionSource: QuestionSourceParams;
-    answers: AnswersParams[];
+    title?: string;
+    image?: string[];
+    questionType?: QuestionTypeEnum;
+    subjectId?: number | null;
+    topics?: number[];
+    questionSequenceId?: number | null;
+    difficultyLevel?: QuestionDifficultyEnum | null;
+    skills?: QuestionSkillParams[];
+    questionSource?: QuestionSourceParams;
+    answers?: AnswersParams[];
     isQuestionClarification?: boolean;
     questionClarification?: QuestionClarificationParams;
     isSolutionSteps?: boolean;

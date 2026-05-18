@@ -141,6 +141,9 @@
   "faq_details": "FAQ Details",
   "question": "Question",
   "answer": "Answer",
+  "write_the_answer": "Write the answer...",
+  "correct_answer": "Correct Answer",
+  "add_new_answer": "Add a new answer",
   "enter_question": "Enter Question",
   "enter_answer": "Enter Answer",
   "reset": "Reset",
@@ -261,5 +264,7 @@
   "add_privacy": "Add Privacy",
   "Add terms and conditions for using the platform": "Add terms and conditions for using the platform",
   "continue_to_login": "Continue to login",
-  "employee_ref_number": "Employee Ref Number"
+  "employee_ref_number": "Employee Ref Number",
+  "add_your_answer": "Add Your Answer",
+  "add_another_answer": "Add Another Answer"
 }

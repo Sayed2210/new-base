@@ -97,5 +97,8 @@
   "edit_document_type": "تعديل نوع الوثيقة",
   "manage_and_organize_your_document_categories": "إدارة وتنظيم فئات الوثائق الخاصة بك",
   "document_type_name": "اسم نوع الوثيقة",
-  "is_master": "هل هو نوع رئيسي؟"
+  "is_master": "هل هو نوع رئيسي؟",
+  "write_the_answer": "اكتب الإجابة...",
+  "correct_answer": "الإجابة الصحيحة",
+  "add_new_answer": "إضافة إجابة جديدة"
 }

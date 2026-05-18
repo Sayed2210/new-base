@@ -93,9 +93,8 @@
   }
 
   function ensureSingle(value: unknown): TitleInterface<number> | null {
-    // console.log(value , "single");
-    if (value instanceof TitleInterface) {
-      return value;
+    if (value != null && typeof value === 'object' && 'id' in value) {
+      return value as TitleInterface<number>;
     }
     return null;
   }

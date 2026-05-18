@@ -46,43 +46,43 @@
     <div class="form-group">
       <div class="input">
         <UpdatedCustomInputSelect
-          id="doc-subject"
+          id="subject"
           :label="`Subject`"
           :params="indexDocumentTypeParams"
           :controller="documentTypeController"
-          :model-value="SelectedSubject"
+          v-model="SelectedSubject"
           placeholder="Subject"
           @update:model-value="updateData"
         />
       </div>
       <div class="input">
         <UpdatedCustomInputSelect
-          id="doc-subject"
+          id="question-sequence"
           :label="`question sequence`"
           :params="indexDocumentTypeParams"
           :controller="documentTypeController"
-          :model-value="SelectedQuestionSequence"
+          v-model="SelectedQuestionSequence"
           placeholder="Question sequence"
           @update:model-value="updateData"
         />
       </div>
       <div class="input">
         <UpdatedCustomInputSelect
-          id="doc-subject"
+          id="topics"
           :label="`topics`"
           :params="indexDocumentTypeParams"
           :controller="documentTypeController"
-          :model-value="SelectedTopic"
+          v-model="SelectedTopic"
           placeholder="Topics"
           @update:model-value="updateData"
         />
       </div>
       <div class="input">
         <UpdatedCustomInputSelect
-          id="doc-subject"
+          id="difficulty-level"
           :label="`Difficulty level`"
-          :static-options="DifficultLevels"
-          :model-value="SelectedDifficultyLevel"
+          :static-options="DifficultLevels as TitleInterface<number>[]"
+          v-model="SelectedDifficultyLevel as TitleInterface<number>"
           placeholder="Difficulty level"
           @update:model-value="updateData"
         />
@@ -90,11 +90,11 @@
     </div>
     <div class="new-form-group">
       <UpdatedCustomInputSelect
-        id="doc-subject"
+        id="skills"
         :label="`skill`"
         :params="indexDocumentTypeParams"
         :controller="documentTypeController"
-        :model-value="SelectedSkill"
+        v-model="SelectedSkill"
         placeholder="Subject Type"
         @update:model-value="updateData"
       />

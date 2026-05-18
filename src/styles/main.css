@@ -10617,7 +10617,7 @@ body::-webkit-scrollbar-thumb:hover {
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: var(--xs-size-2);
+  gap: 6px;
 }
 .questions-details-form-card .form-fields .field-group.disabled {
   cursor: not-allowed;
@@ -10642,6 +10642,7 @@ body::-webkit-scrollbar-thumb:hover {
   justify-content: flex-start;
   align-items: center;
   gap: var(--xs-size-4);
+  padding: 14px !important;
 }
 .questions-details-form-card .form-fields .field-group .gender-group .input-field .p-radiobutton-box {
   background: none !important;
@@ -12108,4 +12109,8 @@ body div {
 .questions-details-form-card .p-accordionpanel:not(.p-accordionpanel-active, .p-disabled) > .p-accordionheader:hover svg path {
   stroke: var(--PrimaryColor) !important;
   fill: var(--white) !important;
+}
+
+.is-correct-section .p-checkbox-box {
+  border-radius: 5px !important;
 }/*# sourceMappingURL=main.css.map */

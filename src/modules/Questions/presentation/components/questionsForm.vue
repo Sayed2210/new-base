@@ -13,6 +13,7 @@
   // import EditquestionsParams from '../../core/params/edit.question.params';
   import AddquestionsParams from '../../core/params/add.question.params';
   import BasicQuestionDataForm from './FormComponent/BasicQuestionDataForm.vue';
+  import QuestionAnswersDataForm from './FormComponent/QuestionAnswersDataForm.vue';
 
   const emit = defineEmits(['updateData']);
 
@@ -111,10 +112,6 @@
     }
   });
 
-  // const handleImageChange = (file: any) => {
-  //   UploadedImage.value = file[0]?.base64;
-  //   updateData();
-  // };
   const GetAllBasicData = (data: AddquestionsParams) => {
     console.log(data, 'GetAllBasicData');
   };
@@ -131,5 +128,6 @@
     </header>
 
     <BasicQuestionDataForm @updateData="GetAllBasicData" />
+    <QuestionAnswersDataForm />
   </div>
 </template>

@@ -21,10 +21,16 @@
 
   const emit = defineEmits(['updateData']);
   const route = useRoute();
+  const selectedDifficultyLevel = ref<number | null>(null);
+  const SelectedSkill = ref<number | null>(null);
+  const SelectedTopic = ref<number | null>(null);
+  const SelectedQuestionSequence = ref<number | null>(null);
+  const SelectedSubject = ref<number | null>(null);
+  const title = ref<string>('');
+
   const { loading } = defineProps<{
     loading?: boolean;
   }>();
-  const title = ref<string>('');
 
   const updateData = () => {
     let params: any;
@@ -111,13 +117,9 @@
   const selectedTab = ref<number | null>(null);
   const selectTab = (tab: number) => {
     selectedTab.value = tab;
+    updateData();
   };
 
-  const selectedDifficultyLevel = ref<number | null>(null);
-  const SelectedSkill = ref<number | null>(null);
-  const SelectedTopic = ref<number | null>(null);
-  const SelectedQuestionSequence = ref<number | null>(null);
-  const SelectedSubject = ref<number | null>(null);
   const getQuestionCOntent = (data: {
     selectedDifficultyLevel: number;
     SelectedSkill: number;
@@ -130,6 +132,7 @@
     SelectedTopic.value = data.SelectedTopic;
     SelectedQuestionSequence.value = data.SelectedQuestionSequence;
     SelectedSubject.value = data.SelectedSubject;
+    updateData();
   };
 
   const questionSource = ref<string>('');
@@ -137,6 +140,7 @@
   const GetQuestionSource = (data: { documentId: number; questionSource: string }) => {
     SelectedDocumet.value = data.documentId;
     questionSource.value = data.questionSource;
+    updateData();
   };
 </script>
 
@@ -195,10 +199,7 @@
             :selected-tab="selectedTab"
             @update:modelValue="selectTab"
           />
-          <QuestionContantTabs
-            class="field-group col-span-2"
-            @update:modelValue="getQuestionCOntent"
-          />
+          <QuestionContantTabs class="field-group col-span-2" @updateData="getQuestionCOntent" />
           <QuestionSource @update:modelValue="GetQuestionSource" class="field-group col-span-2" />
         </div>
       </AccordionContent>

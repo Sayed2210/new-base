@@ -208,3 +208,9 @@ body {
     fill: var(--white) !important;
   }
 }
+
+.is-correct-section {
+  .p-checkbox-box {
+    border-radius: 5px !important;
+  }
+}
