@@ -1,3 +1,4 @@
+# QuestionShowPage.vue ```vue
 <script setup lang="ts">
   import { computed, onMounted } from 'vue';
   import questionsController from '../controllers/questions.controller';
@@ -64,21 +65,5 @@
         :logs="showState?.data?.questionLogHistory"
       />
     </div>
-    <QuestionReviewProcedures />
   </div>
 </template>
-
-<style lang="scss" scoped>
-  .question-show-page {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-  }
-
-  .solution-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-</style>

@@ -34,6 +34,7 @@
 
 <template>
   <div class="question-info-wrapper">
+    <!-- Dynamic Info List -->
     <div class="question-info-categories">
       <div class="question-info-item">
         <label>Question Type :</label>
