@@ -32,4 +32,15 @@ export const questionsRoutes: RouteRecordRaw[] = [
       parent: 'Questions',
     },
   },
+  {
+    path: 'questions/show/:id',
+    name: 'Show question',
+    component: () => import('@/views/Questions/ShowQuestion.vue'),
+    props: true,
+    meta: {
+      breadcrumb: 'Show question',
+      icon: EmployeeIcon,
+      parent: 'Questions',
+    },
+  },
 ];

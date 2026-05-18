@@ -99,6 +99,7 @@
   --Gray-3: #64748b;
   --gray-5: #5d5d5d;
   --Gray-6: #4b4b4b;
+  --gray-7: #303030;
   --breadcrumb-separator: #a5a5a5;
   --GrayText-1: #475569;
   --GrayText: #475569;
@@ -267,7 +268,7 @@
   --danger-border-light: #fecaca;
   --in-active-color: #d99100;
   --badge-bg: #4faf7c0f;
-  --sidebar-auth-bg:#24385C;
+  --sidebar-auth-bg: #24385c;
 }
 
 /* =============================================================================
@@ -451,7 +452,7 @@ $TitleColor: var(--title-color);
 $SecondText: var(--second-text);
 $SoftBlack: var(--black-soft);
 $BadgeBg: var(--badge-bg);
-$SidebarAuthbg:var(--sidebar-auth-bg);
+$SidebarAuthbg: var(--sidebar-auth-bg);
 
 /* Sizes */
 $XsSize5: var(--xs-size-5); //4px
