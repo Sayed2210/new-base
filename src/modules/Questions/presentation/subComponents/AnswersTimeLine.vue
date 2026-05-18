@@ -5,7 +5,6 @@
   import { onMounted, ref } from 'vue';
   import Checkbox from 'primevue/checkbox';
   import AddNewAnswerIcon from '@/shared/icons/AddNewAnswerIcon.vue';
-  import { item } from '@primeuix/themes/aura/breadcrumb';
 
   const emit = defineEmits(['update:data']);
   const Answers = ref([

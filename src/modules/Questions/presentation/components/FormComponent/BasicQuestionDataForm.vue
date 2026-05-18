@@ -18,12 +18,13 @@
   import QuestionSourceParams from '@/modules/Questions/core/params/subParams/question.source.params';
   import type { QuestionDifficultyEnum } from '@/modules/Questions/core/constant/question.difficulty.enum';
   import QuestionSkillParams from '@/modules/Questions/core/params/subParams/question.skills.params';
+  import type QuestionClarificationParams from '@/modules/Questions/core/params/subParams/question.clarification.params';
 
   const emit = defineEmits(['updateData']);
   const route = useRoute();
   const selectedDifficultyLevel = ref<number | null>(null);
-  const SelectedSkill = ref<number | null>(null);
-  const SelectedTopic = ref<number | null>(null);
+  const SelectedSkill = ref<number[] | null>(null);
+  const SelectedTopic = ref<number[] | null>(null);
   const SelectedQuestionSequence = ref<number | null>(null);
   const SelectedSubject = ref<number | null>(null);
   const title = ref<string>('');
@@ -50,13 +51,12 @@
         difficultyLevel: selectedDifficultyLevel.value
           ? (selectedDifficultyLevel.value as QuestionDifficultyEnum)
           : null,
-        topics: SelectedTopic.value ? [SelectedTopic.value] : [],
+        topics: SelectedTopic.value ? SelectedTopic.value : [],
         questionSequenceId: SelectedQuestionSequence.value ? SelectedQuestionSequence.value : null,
         questionSource: new QuestionSourceParams({
           documentId: SelectedDocumet.value || 0,
           source: questionSource.value || '',
         }),
-        answers: [],
       });
     } else {
       params = new AddquestionsParams({
@@ -73,13 +73,12 @@
         difficultyLevel: selectedDifficultyLevel.value
           ? (selectedDifficultyLevel.value as QuestionDifficultyEnum)
           : null,
-        topics: SelectedTopic.value ? [SelectedTopic.value] : [],
+        topics: SelectedTopic.value ? SelectedTopic.value : [],
         questionSequenceId: SelectedQuestionSequence.value ? SelectedQuestionSequence.value : null,
         questionSource: new QuestionSourceParams({
           documentId: SelectedDocumet.value || 0,
           source: questionSource.value || '',
         }),
-        answers: [],
       });
     }
     emit('updateData', params);
@@ -120,32 +119,31 @@
     updateData();
   };
 
-  const getQuestionCOntent = (data: {
-    selectedDifficultyLevel: number;
-    SelectedSkill: number;
-    SelectedTopic: number;
-    SelectedQuestionSequence: number;
-    SelectedSubject: number;
-  }) => {
-    selectedDifficultyLevel.value = data.selectedDifficultyLevel;
-    SelectedSkill.value = data.SelectedSkill;
-    SelectedTopic.value = data.SelectedTopic;
-    SelectedQuestionSequence.value = data.SelectedQuestionSequence;
-    SelectedSubject.value = data.SelectedSubject;
+  const getQuestionCOntent = (data: AddquestionsParams) => {
+    selectedDifficultyLevel.value = data.difficultyLevel!;
+    SelectedSkill.value = data.skills!.map((item) => {
+      return {
+        skillId: item.skillId,
+        percentage: item?.percentage,
+      };
+    }) as unknown as number[];
+    SelectedTopic.value = data.topics!;
+    SelectedQuestionSequence.value = data.questionSequenceId!;
+    SelectedSubject.value = data.subjectId!;
     updateData();
   };
 
   const questionSource = ref<string>('');
   const SelectedDocumet = ref<number | null>(null);
-  const GetQuestionSource = (data: { documentId: number; questionSource: string }) => {
-    SelectedDocumet.value = data.documentId;
-    questionSource.value = data.questionSource;
+  const GetQuestionSource = (data: QuestionClarificationParams) => {
+    SelectedDocumet.value = data.documentId!;
+    questionSource.value = data.source!;
     updateData();
   };
 </script>
 
 <template>
-  <Accordion value="0" :lazy="true" >
+  <Accordion value="0" :lazy="true">
     <AccordionPanel value="0">
       <AccordionHeader>
         <template #toggleicon>

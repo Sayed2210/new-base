@@ -5,32 +5,23 @@
   import AccordionContent from 'primevue/accordioncontent';
   import Checkbox from 'primevue/checkbox';
   import { ref } from 'vue';
-  import QuestionSource from './QuestionSource.vue';
-  import QuestionClarificationParams from '../../core/params/subParams/question.clarification.params';
   import HandleFilesUpload, { type UploadedFile } from '@/shared/FormInputs/HandleFilesUpload.vue';
   import UploadFileIcon from '@/shared/icons/UploadFileIcon.vue';
+  import SolutionStepsParams from '../../core/params/subParams/soluation.steps.params';
 
   const emit = defineEmits(['updateData']);
   const updateData = () => {
     emit('updateData', {
-      isClarification: isClarification.value,
-      data: new QuestionClarificationParams({
-        documentId: SelectedDocumet.value!,
-        source: questionSource.value!,
-        file: file.value,
-        clarification: description.value,
+      isSolutionSteps: isSolutionSteps.value,
+      data: new SolutionStepsParams({
+        image: file.value,
+        explanation: description.value,
       }),
     });
   };
 
-  const isClarification = ref(false);
-  const questionSource = ref<string>('');
-  const SelectedDocumet = ref<number | null>(null);
-  const GetQuestionSource = (data: QuestionClarificationParams) => {
-    SelectedDocumet.value = data.documentId!;
-    questionSource.value = data.source!;
-    updateData();
-  };
+  const isSolutionSteps = ref(false);
+
   const description = ref('');
   const file = ref();
   const handleFile = (files: UploadedFile[]) => {
@@ -42,17 +33,17 @@
 <template>
   <Accordion
     :pt="{
-      root: `question-clarification ${isClarification ? 'active' : ''}`,
+      root: `question-solution-steps ${isSolutionSteps ? 'active' : ''}`,
     }"
-    @update:value="isClarification = !isClarification"
+    @update:value="isSolutionSteps = !isSolutionSteps"
   >
     <AccordionPanel :value="1">
       <AccordionHeader>
         <template #toggleicon>
-          <div class="question-clarification-header">
-            <div>{{ $t('Is there any Question clarification?') }}</div>
+          <div class="question-solution-steps-header">
+            <div>{{ $t('Is there any Solution steps?') }}</div>
             <Checkbox
-              v-model="isClarification"
+              v-model="isSolutionSteps"
               :binary="true"
               :input-id="`is-correct`"
               name="is-correct"
@@ -61,8 +52,6 @@
         </template>
       </AccordionHeader>
       <AccordionContent>
-        <QuestionSource @updateData="GetQuestionSource" />
-
         <div class="input-wrapper">
           <label for="descreption">{{ $t('Description') }}</label>
           <div class="description-container">
@@ -72,7 +61,7 @@
                 :label="``"
                 accept="image/*"
                 :multiple="true"
-                :index="20"
+                :index="30"
                 :have-content="true"
                 :class="`image-input`"
                 @change="(files) => handleFile(files)"
@@ -85,7 +74,12 @@
                 </template>
               </HandleFilesUpload>
             </div>
-            <textarea name="descreption" id="descreption" v-model="description"></textarea>
+            <textarea
+              name="descreption"
+              id="descreption"
+              v-model="description"
+              @input="updateData"
+            ></textarea>
           </div>
         </div>
       </AccordionContent>
@@ -96,7 +90,7 @@
 <style scoped lang="scss">
   @import '../../../../styles/variables';
   @import '../../../../styles/mixins/flex';
-  .question-clarification {
+  .question-solution-steps {
     border: 1px solid $PrimaryColor;
     border-radius: 50px;
     padding: 10px !important;
@@ -108,10 +102,10 @@
       padding: 5px 0 !important;
     }
     .p-accordioncontent-content {
-      padding: 0 !important;
+      padding: 10px !important;
     }
 
-    .question-clarification-header {
+    .question-solution-steps-header {
       @include flex-row(nowrap, space-between, center);
       gap: 10px;
       width: 100%;
@@ -127,7 +121,6 @@
       gap: 5px;
       width: 100%;
       padding: 0 !important;
-
       .description-container {
         width: 100%;
         border: 1px solid #e6e6e6;

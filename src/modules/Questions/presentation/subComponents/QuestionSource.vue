@@ -3,29 +3,32 @@
   import { DocumentController, IndexDocumentParams } from '@/modules/document';
   import UpdatedCustomInputSelect from '@/shared/FormInputs/UpdatedCustomInputSelect.vue';
   import { ref } from 'vue';
+  import QuestionClarificationParams from '../../core/params/subParams/question.clarification.params';
 
   const { document, source } = defineProps<{
     document?: TitleInterface<number> | null | undefined;
     source?: string | null;
   }>();
+
   const emit = defineEmits(['updateData']);
   const indexDocumentParams = new IndexDocumentParams();
   const documentController = DocumentController.getInstance();
-
   const SelectedSubject = ref<TitleInterface<number> | null>(document ?? null);
-
   const questionSource = ref<string>(source ?? '');
 
   const updateData = () => {
-    emit('updateData', {
-      documentId: SelectedSubject.value?.id,
-      questionSource: questionSource.value,
-    });
+    emit(
+      'updateData',
+      new QuestionClarificationParams({
+        documentId: SelectedSubject.value?.id,
+        source: questionSource.value,
+      }),
+    );
   };
 </script>
 
 <template>
-  <div class="contant_tabs document-tab col-span-2">
+  <div class="contant_tabs document-tab">
     <div class="form-group">
       <div class="input">
         <UpdatedCustomInputSelect
@@ -33,7 +36,7 @@
           :label="`Document Source`"
           :params="indexDocumentParams"
           :controller="documentController"
-          :model-value="SelectedSubject"
+          v-model="SelectedSubject"
           placeholder="Document Source"
           @update:model-value="updateData"
         />

@@ -5,8 +5,8 @@ import type { QuestionDifficultyEnum } from '../constant/question.difficulty.enu
 import type AnswersParams from './subParams/answers.params';
 import type QuestionSkillParams from './subParams/question.skills.params';
 import type QuestionSourceParams from './subParams/question.source.params';
-import type QuestionClarificationParams from './subParams/answers.params';
 import type SolutionStepsParams from './subParams/soluation.steps.params';
+import type QuestionClarificationParams from './subParams/question.clarification.params';
 
 /**
  * Parameters for adding a new employee

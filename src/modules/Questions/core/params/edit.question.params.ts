@@ -5,24 +5,24 @@ import type { QuestionDifficultyEnum } from '../constant/question.difficulty.enu
 import type AnswersParams from './subParams/answers.params';
 import type QuestionSkillParams from './subParams/question.skills.params';
 import type QuestionSourceParams from './subParams/question.source.params';
-import type QuestionClarificationParams from './subParams/answers.params';
 import type SolutionStepsParams from './subParams/soluation.steps.params';
+import type QuestionClarificationParams from './subParams/question.clarification.params';
 
 /**
  * Parameters for adding a new employee
  */
 export default class EditquestionsParams implements Params {
   public id: number;
-  public title: string;
-  public image: string[];
-  public questionType: QuestionTypeEnum;
-  public subjectId: number | null;
-  public topics: number[];
-  public questionSequenceId: number | null;
-  public difficultyLevel: QuestionDifficultyEnum | null;
-  public skills: QuestionSkillParams[];
-  public questionSource: QuestionSourceParams;
-  public answers: AnswersParams[];
+  public title?: string;
+  public image?: string[];
+  public questionType?: QuestionTypeEnum;
+  public subjectId?: number | null;
+  public topics?: number[];
+  public questionSequenceId?: number | null;
+  public difficultyLevel?: QuestionDifficultyEnum | null;
+  public skills?: QuestionSkillParams[];
+  public questionSource?: QuestionSourceParams;
+  public answers?: AnswersParams[];
   public isQuestionClarification?: boolean;
   public questionClarification?: QuestionClarificationParams;
   public isSolutionSteps?: boolean;
@@ -44,16 +44,16 @@ export default class EditquestionsParams implements Params {
 
   constructor(data: {
     id: number;
-    title: string;
-    image: string[];
-    questionType: QuestionTypeEnum;
-    subjectId: number | null;
-    topics: number[];
-    questionSequenceId: number | null;
-    difficultyLevel: QuestionDifficultyEnum | null;
-    skills: QuestionSkillParams[];
-    questionSource: QuestionSourceParams;
-    answers: AnswersParams[];
+    title?: string;
+    image?: string[];
+    questionType?: QuestionTypeEnum;
+    subjectId?: number | null;
+    topics?: number[];
+    questionSequenceId?: number | null;
+    difficultyLevel?: QuestionDifficultyEnum | null;
+    skills?: QuestionSkillParams[];
+    questionSource?: QuestionSourceParams;
+    answers?: AnswersParams[];
     isQuestionClarification?: boolean;
     questionClarification?: QuestionClarificationParams;
     isSolutionSteps?: boolean;

@@ -5,15 +5,17 @@
   import type TitleInterface from '@/base/Data/Models/titleInterface';
   import { ref } from 'vue';
   import { QuestionDifficultyEnum } from '../../core/constant/question.difficulty.enum';
+  import AddquestionsParams from '../../core/params/add.question.params';
+  import QuestionSkillParams from '../../core/params/subParams/question.skills.params';
   const indexDocumentTypeParams = new IndexDocumentTypeParams();
   const documentTypeController = DocumentTypeController.getInstance();
   const emit = defineEmits(['updateData']);
 
   const SelectedSubject = ref<TitleInterface<number> | null>(null);
   const SelectedQuestionSequence = ref<TitleInterface<number> | null>(null);
-  const SelectedTopic = ref<TitleInterface<number> | null>(null);
+  const SelectedTopic = ref<TitleInterface<number>[] | null>(null);
   const SelectedDifficultyLevel = ref<TitleInterface<number> | null>(null);
-  const SelectedSkill = ref<TitleInterface<number> | null>(null);
+  const SelectedSkill = ref<TitleInterface<number>[] | null>(null);
 
   const DifficultLevels = ref<TitleInterface<number>[]>([
     {
@@ -31,13 +33,22 @@
   ]);
 
   const updateData = () => {
-    emit('updateData', {
-      selectedDifficultyLevel: SelectedDifficultyLevel.value?.id,
-      SelectedSkill: SelectedSkill.value?.id,
-      SelectedTopic: SelectedTopic.value?.id,
-      SelectedQuestionSequence: SelectedQuestionSequence.value?.id,
-      SelectedSubject: SelectedSubject.value?.id,
-    });
+    emit(
+      'updateData',
+      new AddquestionsParams({
+        difficultyLevel: SelectedDifficultyLevel.value?.id as QuestionDifficultyEnum,
+        skills:
+          SelectedSkill.value?.map((item) => {
+            return new QuestionSkillParams({
+              skillId: item.id,
+              percentage: 0,
+            });
+          }) || [],
+        topics: SelectedTopic.value?.map((item) => item.id) || [],
+        questionSequenceId: SelectedQuestionSequence.value?.id,
+        subjectId: SelectedSubject.value?.id,
+      }),
+    );
   };
 </script>
 
@@ -73,6 +84,7 @@
           :params="indexDocumentTypeParams"
           :controller="documentTypeController"
           v-model="SelectedTopic"
+          :type="2"
           placeholder="Topics"
           @update:model-value="updateData"
         />
@@ -92,12 +104,54 @@
       <UpdatedCustomInputSelect
         id="skills"
         :label="`skill`"
+        :type="2"
         :params="indexDocumentTypeParams"
         :controller="documentTypeController"
         v-model="SelectedSkill"
         placeholder="Subject Type"
         @update:model-value="updateData"
       />
+      <div class="skill-percentage" v-for="(skill, index) in SelectedSkill" :key="index">
+        <label :for="`skill-percentage-${index}`">
+          {{ skill.title }}
+        </label>
+        <input
+          :id="`skill-percentage-${index}`"
+          type="number"
+          v-model="skill.percentage"
+          placeholder="Percentage"
+        />
+      </div>
     </div>
   </div>
 </template>
+<style scoped lang="scss">
+  .skill-percentage {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    margin-block: 10px;
+    & label {
+      width: 80%;
+      border: 1px solid #e6e6e6;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    & input {
+      width: 20%;
+      padding: 10px;
+      border: 1px solid #e6e6e6;
+      border-radius: 4px;
+      background-color: white;
+      color: black;
+      border-radius: 10px;
+
+      &:focus {
+        outline: none;
+        border: 1px solid #e6e6e6;
+      }
+    }
+  }
+</style>

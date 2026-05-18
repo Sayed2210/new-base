@@ -7,7 +7,7 @@
   &.document-tab {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    // grid-template-columns: repeat(2, 1fr);
     gap: $MdSize;
     margin-bottom: $XsSize;
     width: 100%;
@@ -35,6 +35,9 @@
     gap: $MdSize;
     margin-bottom: $XsSize;
     width: 100%;
+    .field-input {
+      border-radius: 50px !important;
+    }
     .input {
       .input-label {
         color: var(--title-header-color);

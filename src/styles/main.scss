@@ -210,8 +210,25 @@ body {
   }
 }
 
-.is-correct-section {
+.is-correct-section,
+.question-clarification-header,
+.question-solution-steps-header,
+.question-solution-hints-header {
   .p-checkbox-box {
     border-radius: 5px !important;
+    z-index: 999;
+  }
+}
+
+.question-clarification,
+.answers-data-form {
+  .p-accordioncontent-content {
+    padding: 0 !important;
+  }
+}
+
+.questions-details-form-card {
+  .p-accordioncontent-content {
+    padding: 0 !important;
   }
 }

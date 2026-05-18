@@ -265,8 +265,9 @@
   "Add terms and conditions for using the platform": "Add terms and conditions for using the platform",
   "continue_to_login": "Continue to login",
   "employee_ref_number": "Employee Ref Number",
-  "update_employee":"update_employee",
+  "update_employee": "update_employee",
   "add_your_answer": "Add Your Answer",
-  "add_another_answer": "Add Another Answer"
-
+  "add_another_answer": "Add Another Answer",
+  "Is there any Question clarification?": "Is there any Question clarification?",
+  "upload_attachment": "Upload Attachment"
 }

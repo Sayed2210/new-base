@@ -10896,7 +10896,6 @@ body::-webkit-scrollbar-thumb:hover {
 .contant_tabs.document-tab {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: var(--md-size);
   margin-bottom: var(--xs-size);
   width: 100%;
@@ -10923,6 +10922,9 @@ body::-webkit-scrollbar-thumb:hover {
   gap: var(--md-size);
   margin-bottom: var(--xs-size);
   width: 100%;
+}
+.contant_tabs .form-group .field-input {
+  border-radius: 50px !important;
 }
 .contant_tabs .form-group .input .input-label {
   color: var(--title-header-color);
@@ -12201,6 +12203,19 @@ body div {
   fill: var(--white) !important;
 }
 
-.is-correct-section .p-checkbox-box {
+.is-correct-section .p-checkbox-box,
+.question-clarification-header .p-checkbox-box,
+.question-solution-steps-header .p-checkbox-box,
+.question-solution-hints-header .p-checkbox-box {
   border-radius: 5px !important;
+  z-index: 999;
+}
+
+.question-clarification .p-accordioncontent-content,
+.answers-data-form .p-accordioncontent-content {
+  padding: 0 !important;
+}
+
+.questions-details-form-card .p-accordioncontent-content {
+  padding: 0 !important;
 }/*# sourceMappingURL=main.css.map */
