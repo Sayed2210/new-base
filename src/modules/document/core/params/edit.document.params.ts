@@ -82,7 +82,7 @@ export default class EditDocumentParams implements Params {
       stage_id: this.stage_id,
       subject_id: this.subjects,
       translations: this.translations.toMap(),
-      tags: this.tags,
+      document_tags: this.tags,
     };
 
     // ← بعت الصورة/الملف بس لو base64
