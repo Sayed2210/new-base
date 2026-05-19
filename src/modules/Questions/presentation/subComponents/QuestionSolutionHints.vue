@@ -4,12 +4,17 @@
   import AccordionHeader from 'primevue/accordionheader';
   import AccordionContent from 'primevue/accordioncontent';
   import Checkbox from 'primevue/checkbox';
-  import { ref } from 'vue';
+  import { ref, watch } from 'vue';
   import HandleFilesUpload, { type UploadedFile } from '@/shared/FormInputs/HandleFilesUpload.vue';
   import UploadFileIcon from '@/shared/icons/UploadFileIcon.vue';
   import SolutionStepsParams from '../../core/params/subParams/soluation.steps.params';
+import type SolutionHintModel from '../../core/models/subModels/solution.hint.model';
 
   const emit = defineEmits(['updateData']);
+  const {SolutionHintsData ,isSolutionHintsData } = defineProps<{
+    SolutionHintsData:SolutionHintModel,
+    isSolutionHintsData:boolean
+  }>()
   const updateData = () => {
     emit('updateData', {
       isSolutionSteps: isSolutionSteps.value,
@@ -20,13 +25,19 @@
     });
   };
 
-  const isSolutionSteps = ref(false);
+  const isSolutionSteps = ref(isSolutionHintsData);
   const description = ref('');
   const file = ref();
   const handleFile = (files: UploadedFile[]) => {
     file.value = files[0]?.base64;
     updateData();
   };
+
+  watch([()=>SolutionHintsData ,  ()=>isSolutionHintsData] , ([newSolutionHinrdata , newIsSolution])=>{
+  isSolutionSteps.value = newIsSolution
+  description.value = newSolutionHinrdata.hint
+  file.value = newSolutionHinrdata.image
+})
 </script>
 
 <template>
@@ -35,6 +46,7 @@
       root: `question-solution-hints ${isSolutionSteps ? 'active' : ''}`,
     }"
     @update:value="isSolutionSteps = !isSolutionSteps"
+    :value="isSolutionSteps ? 1 :0"
   >
     <AccordionPanel :value="1">
       <AccordionHeader>
@@ -64,6 +76,7 @@
                 :have-content="true"
                 :class="`image-input`"
                 @change="(files) => handleFile(files)"
+                :file="file"
               >
                 <template #content>
                   <div class="upload-attachment-container">

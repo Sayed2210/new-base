@@ -1,4 +1,4 @@
-import type TitleInterface from '@/base/Data/Models/titleInterface';
+import TitleInterface from '@/base/Data/Models/titleInterface';
 
 export default class QuestionClarificationModel {
   public readonly documents?: TitleInterface<number>;
@@ -32,13 +32,14 @@ export default class QuestionClarificationModel {
     });
   }
 
+
   static example: QuestionClarificationModel = new QuestionClarificationModel({
-    documents: {
-      id: 1,
-      title: 'Source',
-    },
+    documents:new TitleInterface<number>({
+      id:10,
+      title:'title'
+    }),
     source: 'Source',
     clarification: 'Clarification',
-    file: 'File',
+    file: 'https://cyber.comolho.com/static/img/avatar.png',
   });
 }

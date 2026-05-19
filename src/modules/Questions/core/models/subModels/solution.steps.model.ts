@@ -24,7 +24,7 @@ export default class SolutionStepsModel {
 
   static example: SolutionStepsModel = new SolutionStepsModel({
     id: 1,
-    step: 'Cairo',
-    image: 'https://example.com/cairo.jpg',
+    step: 'steps',
+    image:`https://cyber.comolho.com/static/img/avatar.png`,
   });
 }

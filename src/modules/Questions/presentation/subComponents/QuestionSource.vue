@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import type TitleInterface from '@/base/Data/Models/titleInterface';
+import TitleInterface from '@/base/Data/Models/titleInterface';
 import { DocumentController, IndexDocumentParams } from '@/modules/document';
 import UpdatedCustomInputSelect from '@/shared/FormInputs/UpdatedCustomInputSelect.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import QuestionClarificationParams from '../../core/params/subParams/question.clarification.params';
+import QuestionDocumentModel from '@/modules/Questions/core/models/subModels/question.document.model';
 
-const { document, source } = defineProps<{
+const { document, source, documentSource } = defineProps<{
   document?: TitleInterface<number> | null | undefined;
   source?: string | null;
+  documentSource?: QuestionDocumentModel | null;
 }>();
 
 const emit = defineEmits(['updateData']);
@@ -17,7 +19,7 @@ const SelectedSubject = ref<TitleInterface<number> | null>(document ?? null);
 const questionSource = ref<string>(source ?? '');
 
 const updateData = () => {
- 
+
 
   emit(
     'updateData',
@@ -27,14 +29,20 @@ const updateData = () => {
     }),
   );
 };
+
+watch(() => documentSource, (newValue) => {
+  SelectedSubject.value = newValue?.id ? new TitleInterface<number>({ id: newValue.id, title: newValue.title }) : null
+  questionSource.value = newValue?.source || ''
+})
 </script>
 
 <template>
   <div class="contant_tabs document-tab">
     <div class="form-group">
       <div class="input">
+        {{ SelectedSubject }}
         <UpdatedCustomInputSelect id="doc-subject" :label="`Document Source`" :params="indexDocumentParams"
-          :controller="documentController" v-model="SelectedSubject" placeholder="Document Source"
+          :controller="documentController" v-model="SelectedSubject " placeholder="Document Source"
           @update:model-value="updateData" />
       </div>
       <div class="field-group">

@@ -4,12 +4,20 @@ import AccordionPanel from 'primevue/accordionpanel';
 import AccordionHeader from 'primevue/accordionheader';
 import AccordionContent from 'primevue/accordioncontent';
 import Checkbox from 'primevue/checkbox';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import QuestionSource from './QuestionSource.vue';
 import QuestionClarificationParams from '../../core/params/subParams/question.clarification.params';
 import HandleFilesUpload, { type UploadedFile } from '@/shared/FormInputs/HandleFilesUpload.vue';
 import UploadFileIcon from '@/shared/icons/UploadFileIcon.vue';
-const isClarification = ref(false);
+import type QuestionClarificationModel from '../../core/models/subModels/question.clarification.model';
+import QuestionDocumentModel from '../../core/models/subModels/question.document.model';
+
+
+const {ClarificationData , isclarification} = defineProps<{
+  ClarificationData:QuestionClarificationModel
+  isclarification:boolean
+}>()
+const isClarification = ref(isclarification);
 
 const emit = defineEmits(['updateData']);
 const updateData = () => {
@@ -37,10 +45,24 @@ const handleFile = (files: UploadedFile[]) => {
   file.value = files[0]?.base64;
   updateData();
 };
+
+const DocumentSource = ref<QuestionDocumentModel | null>(null);
+
+  watch([()=>ClarificationData , ()=>isclarification] , ([newValue , neIsClarification])=>{
+    DocumentSource.value = new QuestionDocumentModel({
+      id: newValue?.documents?.id,
+      title: newValue?.documents?.title,
+      source: newValue?.source,
+    });
+    description.value = newValue.clarification!;
+    file.value = newValue.file
+    isClarification.value = neIsClarification
+
+})
 </script>
 
 <template>
-  <Accordion :pt="{
+  <Accordion :value="isClarification ? 1  :0" :pt="{
     root: `question-clarification ${isClarification ? 'active' : ''}`,
   }" @update:value="isClarification = !isClarification; updateData()">
     <AccordionPanel :value="1">
@@ -53,7 +75,7 @@ const handleFile = (files: UploadedFile[]) => {
         </template>
       </AccordionHeader>
       <AccordionContent>
-        <QuestionSource @updateData="GetQuestionSource" />
+        <QuestionSource :documentSource="DocumentSource" @updateData="GetQuestionSource" />
 
         <div class="input-wrapper">
           <label for="descreption">{{ $t('Description') }}</label>
@@ -61,7 +83,7 @@ const handleFile = (files: UploadedFile[]) => {
             <div class="description-header">
               <span>B / U</span>
               <HandleFilesUpload :label="``" accept="image/*" :multiple="true" :index="20" :have-content="true"
-                :class="`image-input`" @change="(files) => handleFile(files)">
+                :class="`image-input`" @change="(files) => handleFile(files)" :file="file">
                 <template #content>
                   <div class="upload-attachment-container">
                     <UploadFileIcon />
@@ -79,8 +101,8 @@ const handleFile = (files: UploadedFile[]) => {
 </template>
 
 <style scoped lang="scss">
-@import '../../../../styles/variables';
-@import '../../../../styles/mixins/flex';
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins/flex' as *;
 
 .question-clarification {
   border: 1px solid $PrimaryColor;

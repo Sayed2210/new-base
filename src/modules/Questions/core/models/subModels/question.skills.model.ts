@@ -23,8 +23,8 @@ export default class QuestionSkillsModel {
   }
 
   static example: QuestionSkillsModel = new QuestionSkillsModel({
-    id: 1,
-    skill: 'Cairo',
-    precentage: 0,
+    id: 2,
+    skill: 'Document 2',
+    precentage: 10,
   });
 }

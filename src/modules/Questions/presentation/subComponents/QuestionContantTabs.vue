@@ -58,7 +58,7 @@ const updateData = () => {
 watch(() => ContentData, (newData) => {
   SelectedDifficultyLevel.value = new TitleInterface<number>({ id: newData.difficulty!, title: DifficultLevels.value.find((item) => item.id === newData.difficulty)?.title as string })
   SelectedTopic.value = newData.topics!.map((item) => new TitleInterface<number>({ id: item.id!, title: item.title! }))
-  SelectedSkill.value = newData.skills!.map((item) => new TitleInterface<number>({ id: item.id!, title: item.skill! }))
+  SelectedSkill.value = newData.skills!.map((item) => new TitleInterface<number>({ id: item.id!, title: item.skill!, subtitle: item.precentage! }))
 })
 </script>
 

@@ -4,12 +4,17 @@ import AccordionPanel from 'primevue/accordionpanel';
 import AccordionHeader from 'primevue/accordionheader';
 import AccordionContent from 'primevue/accordioncontent';
 import Checkbox from 'primevue/checkbox';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import HandleFilesUpload, { type UploadedFile } from '@/shared/FormInputs/HandleFilesUpload.vue';
 import UploadFileIcon from '@/shared/icons/UploadFileIcon.vue';
 import SolutionStepsParams from '../../core/params/subParams/soluation.steps.params';
+import type SolutionStepsModel from '../../core/models/subModels/solution.steps.model';
 
 const emit = defineEmits(['updateData']);
+const {SolutionStepsData ,isSolutionStepsData } =defineProps<{
+  SolutionStepsData:SolutionStepsModel,
+  isSolutionStepsData:boolean
+}>()
 const updateData = () => {
   emit('updateData', {
     isSolutionSteps: isSolutionSteps.value,
@@ -20,7 +25,7 @@ const updateData = () => {
   });
 };
 
-const isSolutionSteps = ref(false);
+const isSolutionSteps = ref(isSolutionStepsData);
 
 const description = ref('');
 const file = ref();
@@ -28,10 +33,16 @@ const handleFile = (files: UploadedFile[]) => {
   file.value = files[0]?.base64;
   updateData();
 };
+
+watch([()=>SolutionStepsData ,  ()=>isSolutionStepsData] , ([newSolutionStepsdata , newIsSolution])=>{
+  isSolutionSteps.value = newIsSolution
+  description.value = newSolutionStepsdata.step
+  file.value = newSolutionStepsdata.image
+})
 </script>
 
 <template>
-  <Accordion :pt="{
+  <Accordion :value="isSolutionSteps ? 1 : 0" :pt="{
     root: `question-solution-steps ${isSolutionSteps ? 'active' : ''}`,
   }" @update:value="isSolutionSteps = !isSolutionSteps">
     <AccordionPanel :value="1">
@@ -49,7 +60,7 @@ const handleFile = (files: UploadedFile[]) => {
           <div class="description-container">
             <div class="description-header">
               <span>B / U</span>
-              <HandleFilesUpload :label="``" accept="image/*" :multiple="true" :index="30" :have-content="true"
+              <HandleFilesUpload :label="``" accept="image/*" :multiple="true" :index="30"  :file=file :have-content="true"
                 :class="`image-input`" @change="(files) => handleFile(files)">
                 <template #content>
                   <div class="upload-attachment-container">

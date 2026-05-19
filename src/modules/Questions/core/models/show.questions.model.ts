@@ -25,20 +25,17 @@ export default class ShowQuestionsModel {
   public readonly createdAt?: string;
 
   public readonly answers?: AnswerModel[];
-
   public readonly questionClarification?: QuestionClarificationModel;
-
   public readonly solutionSteps?: SolutionStepsModel;
-
   public readonly solutionHint?: SolutionHintModel;
-
   public readonly subjectTree?: SubjectTreeModel;
-
   public readonly sequenceTree?: sequenceTreeModel;
-
   public readonly questionDocuments?: QuestionDocumentModel;
-
   public readonly skills?: QuestionSkillsModel[];
+
+  public readonly isClarification?: boolean;
+  public readonly isQusetionSteps?: boolean;
+  public readonly isQusetionHints?: boolean;
 
   constructor(data: {
     id?: number;
@@ -58,6 +55,9 @@ export default class ShowQuestionsModel {
     sequenceTree?: sequenceTreeModel;
     questionDocuments?: QuestionDocumentModel;
     skills?: QuestionSkillsModel[];
+    isClarification?: boolean;
+    isQusetionSteps?: boolean;
+    isQusetionHints?: boolean;
   }) {
     this.id = data.id;
     this.generatedBy = data.generatedBy;
@@ -76,6 +76,9 @@ export default class ShowQuestionsModel {
     this.sequenceTree = data.sequenceTree;
     this.questionDocuments = data.questionDocuments;
     this.skills = data.skills;
+    this.isClarification = data.isClarification;
+    this.isQusetionSteps = data.isQusetionSteps;
+    this.isQusetionHints = data.isQusetionHints;
 
     Object.freeze(this);
   }
@@ -103,6 +106,9 @@ export default class ShowQuestionsModel {
       sequenceTree: sequenceTreeModel.fromJson(json.sequence_tree),
       questionDocuments: QuestionDocumentModel.fromJson(json.question_documents),
       skills: json.skills.map((skill: any) => QuestionSkillsModel.fromJson(skill)),
+      isClarification: json.is_clarification,
+      isQusetionSteps: json.is_question_steps,
+      isQusetionHints: json.is_question_hint,
     });
   }
 
@@ -115,7 +121,10 @@ export default class ShowQuestionsModel {
     createdAt: '2022-01-01',
     questionTitle: 'Question Title',
     questionImage: `https://cyber.comolho.com/static/img/avatar.png`,
-    topics: [{ id: 2, title: 'Document 2' }],
+    topics: [
+      { id: 2, title: 'Document 2' },
+      { id: 3, title: 'Document 3' },
+    ],
     answers: [AnswerModel.example],
     questionClarification: QuestionClarificationModel.example,
     solutionSteps: SolutionStepsModel.example,
@@ -123,6 +132,20 @@ export default class ShowQuestionsModel {
     subjectTree: SubjectTreeModel.example,
     sequenceTree: sequenceTreeModel.example,
     questionDocuments: QuestionDocumentModel.example,
-    skills: [QuestionSkillsModel.example],
+    skills: [
+      new QuestionSkillsModel({
+        id: 2,
+        skill: 'Document 2',
+        precentage: 10,
+      }),
+      new QuestionSkillsModel({
+        id: 3,
+        skill: 'Document 3',
+        precentage: 90,
+      }),
+    ],
+    isClarification:true,
+    isQusetionSteps:true,
+    isQusetionHints:true,
   });
 }
