@@ -1,149 +1,166 @@
 <script setup lang="ts">
-  import Accordion from 'primevue/accordion';
-  import AccordionPanel from 'primevue/accordionpanel';
-  import AccordionHeader from 'primevue/accordionheader';
-  import AccordionContent from 'primevue/accordioncontent';
-  import AccordionToggleIcon from '@/shared/icons/questions/AccordionToggleIcon.vue';
-  import { ref } from 'vue';
-  import { useRoute } from 'vue-router';
-  import AddquestionsParams from '@/modules/Questions/core/params/add.question.params';
-  import EditquestionsParams from '@/modules/Questions/core/params/edit.question.params';
-  import HandleFilesUpload from '@/shared/FormInputs/HandleFilesUpload.vue';
-  import UplaodImageInput from '@/shared/icons/UploadImage/UplaodImageInput.vue';
-  import SelectionTabs from '../../subComponents/SelectionTabs.vue';
-  import type TitleInterface from '@/base/Data/Models/titleInterface';
-  import { QuestionTypeEnum } from '@/modules/Questions/core/constant/question.type.enum';
-  import QuestionContantTabs from '../../subComponents/QuestionContantTabs.vue';
-  import QuestionSource from '../../subComponents/QuestionSource.vue';
-  import QuestionSourceParams from '@/modules/Questions/core/params/subParams/question.source.params';
-  import type { QuestionDifficultyEnum } from '@/modules/Questions/core/constant/question.difficulty.enum';
-  import QuestionSkillParams from '@/modules/Questions/core/params/subParams/question.skills.params';
-  import type QuestionClarificationParams from '@/modules/Questions/core/params/subParams/question.clarification.params';
+import Accordion from 'primevue/accordion';
+import AccordionPanel from 'primevue/accordionpanel';
+import AccordionHeader from 'primevue/accordionheader';
+import AccordionContent from 'primevue/accordioncontent';
+import AccordionToggleIcon from '@/shared/icons/questions/AccordionToggleIcon.vue';
+import { onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import AddquestionsParams from '@/modules/Questions/core/params/add.question.params';
+import EditquestionsParams from '@/modules/Questions/core/params/edit.question.params';
+import HandleFilesUpload from '@/shared/FormInputs/HandleFilesUpload.vue';
+import UplaodImageInput from '@/shared/icons/UploadImage/UplaodImageInput.vue';
+import SelectionTabs from '../../subComponents/SelectionTabs.vue';
+import type TitleInterface from '@/base/Data/Models/titleInterface';
+import { QuestionTypeEnum } from '@/modules/Questions/core/constant/question.type.enum';
+import QuestionContantTabs from '../../subComponents/QuestionContantTabs.vue';
+import QuestionSource from '../../subComponents/QuestionSource.vue';
+import QuestionSourceParams from '@/modules/Questions/core/params/subParams/question.source.params';
+import type { QuestionDifficultyEnum } from '@/modules/Questions/core/constant/question.difficulty.enum';
+import QuestionSkillParams from '@/modules/Questions/core/params/subParams/question.skills.params';
+import type QuestionClarificationParams from '@/modules/Questions/core/params/subParams/question.clarification.params';
+import type ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
 
-  const emit = defineEmits(['updateData']);
-  const route = useRoute();
-  const selectedDifficultyLevel = ref<number | null>(null);
-  const SelectedSkill = ref<number[] | null>(null);
-  const SelectedTopic = ref<number[] | null>(null);
-  const SelectedQuestionSequence = ref<number | null>(null);
-  const SelectedSubject = ref<number | null>(null);
-  const title = ref<string>('');
+const emit = defineEmits(['updateData']);
+const route = useRoute();
+const selectedDifficultyLevel = ref<number | null>(null);
+const SelectedSkill = ref<QuestionSkillParams[] | null>(null);
+const SelectedTopic = ref<number[] | null>(null);
+const SelectedQuestionSequence = ref<number | null>(null);
+const SelectedSubject = ref<number | null>(null);
+const title = ref<string>('');
 
-  const { loading } = defineProps<{
-    loading?: boolean;
-  }>();
+const { loading, questionData } = defineProps<{
+  loading?: boolean;
+  questionData?: ShowQuestionsModel
+}>();
 
-  const updateData = () => {
-    let params: any;
-    if (route.params.id) {
-      params = new EditquestionsParams({
-        id: Number(route.params.id),
-        title: title.value,
-        image: UploadedImage.value || [],
-        questionType: selectedTab.value as QuestionTypeEnum,
-        subjectId: SelectedSubject.value ? SelectedSubject.value : null,
-        skills: [
-          new QuestionSkillParams({
-            percentage: 0,
-            skillId: 1,
-          }),
-        ],
-        difficultyLevel: selectedDifficultyLevel.value
-          ? (selectedDifficultyLevel.value as QuestionDifficultyEnum)
-          : null,
-        topics: SelectedTopic.value ? SelectedTopic.value : [],
-        questionSequenceId: SelectedQuestionSequence.value ? SelectedQuestionSequence.value : null,
-        questionSource: new QuestionSourceParams({
-          documentId: SelectedDocumet.value || 0,
-          source: questionSource.value || '',
-        }),
+const updateData = () => {
+  let params: any;
+  if (route.params.id) {
+    params = new EditquestionsParams({
+      id: Number(route.params.id),
+      title: title.value,
+      image: UploadedImage.value || [],
+      questionType: selectedTab.value as QuestionTypeEnum,
+      subjectId: SelectedSubject.value ? SelectedSubject.value : null,
+      skills: SelectedSkill.value || [],
+      difficultyLevel: selectedDifficultyLevel.value
+        ? (selectedDifficultyLevel.value as QuestionDifficultyEnum)
+        : null,
+      topics: SelectedTopic.value ? SelectedTopic.value : [],
+      questionSequenceId: SelectedQuestionSequence.value ? SelectedQuestionSequence.value : null,
+      questionSource: new QuestionSourceParams({
+        documentId: SelectedDocumet.value || 0,
+        source: questionSource.value || '',
+      }),
+    });
+  } else {
+    params = new AddquestionsParams({
+      title: title.value,
+      image: UploadedImage.value || [],
+      questionType: selectedTab.value as QuestionTypeEnum,
+      subjectId: SelectedSubject.value ? SelectedSubject.value : null,
+      skills: SelectedSkill.value || [],
+      difficultyLevel: selectedDifficultyLevel.value
+        ? (selectedDifficultyLevel.value as QuestionDifficultyEnum)
+        : null,
+      topics: SelectedTopic.value ? SelectedTopic.value : [],
+      questionSequenceId: SelectedQuestionSequence.value ? SelectedQuestionSequence.value : null,
+      questionSource: new QuestionSourceParams({
+        documentId: SelectedDocumet.value || 0,
+        source: questionSource.value || '',
+      }),
+    });
+  }
+  emit('updateData', params);
+};
+const UploadedImage = ref<string[]>([]);
+
+const handleImageChange = (file: any) => {
+  UploadedImage.value = file[0]?.base64 ? [file[0].base64] : [];
+  updateData();
+};
+
+const tabs = ref<TitleInterface<number>[]>([
+  {
+    id: QuestionTypeEnum.mcq,
+    title: 'MCQ',
+  },
+  {
+    id: QuestionTypeEnum.true_false,
+    title: 'trueAndFalse',
+  },
+  {
+    id: QuestionTypeEnum.ranking,
+    title: 'ranking',
+  },
+  {
+    id: QuestionTypeEnum.complate,
+    title: 'complete',
+  },
+  {
+    id: QuestionTypeEnum.matching,
+    title: 'matching',
+  },
+]);
+
+const selectedTab = ref<number | null>(QuestionTypeEnum.mcq);
+const selectTab = (tab: number) => {
+  selectedTab.value = tab;
+  updateData();
+};
+
+const getQuestionCOntent = (data: AddquestionsParams) => {
+  selectedDifficultyLevel.value = data.difficultyLevel!;
+  SelectedSkill.value = data.skills!.map((item) => {
+    return new QuestionSkillParams({
+      skillId: item.skillId,
+      percentage: item?.percentage,
+    });
+  });
+  SelectedTopic.value = data.topics!;
+  SelectedQuestionSequence.value = data.questionSequenceId!;
+  SelectedSubject.value = data.subjectId!;
+  updateData();
+};
+
+const questionSource = ref<string>('');
+const SelectedDocumet = ref<number | null>(null);
+const GetQuestionSource = (data: QuestionClarificationParams) => {
+  SelectedDocumet.value = data.documentId!;
+  questionSource.value = data.source!;
+  updateData();
+};
+onMounted(() => {
+  updateData();
+})
+
+watch(() => questionData, (newValue) => {
+  if (newValue) {
+    title.value = newValue?.questionTitle || '';
+    UploadedImage.value = newValue?.questionImage ? [newValue?.questionImage] : [];
+    selectedTab.value = newValue?.questionType || null;
+    SelectedSubject.value = newValue?.subjectTree?.id || null;
+    SelectedSkill.value = newValue?.skills!.map((item) => {
+      return new QuestionSkillParams({
+        skillId: item.id!,
+        percentage: item.precentage!,
       });
-    } else {
-      params = new AddquestionsParams({
-        title: title.value,
-        image: UploadedImage.value || [],
-        questionType: selectedTab.value as QuestionTypeEnum,
-        subjectId: SelectedSubject.value ? SelectedSubject.value : null,
-        skills: [
-          new QuestionSkillParams({
-            percentage: 0,
-            skillId: 1,
-          }),
-        ],
-        difficultyLevel: selectedDifficultyLevel.value
-          ? (selectedDifficultyLevel.value as QuestionDifficultyEnum)
-          : null,
-        topics: SelectedTopic.value ? SelectedTopic.value : [],
-        questionSequenceId: SelectedQuestionSequence.value ? SelectedQuestionSequence.value : null,
-        questionSource: new QuestionSourceParams({
-          documentId: SelectedDocumet.value || 0,
-          source: questionSource.value || '',
-        }),
-      });
-    }
-    emit('updateData', params);
-  };
-  const UploadedImage = ref<string[]>([]);
-
-  const handleImageChange = (file: any) => {
-    UploadedImage.value = file[0]?.base64;
-    updateData();
-  };
-
-  const tabs = ref<TitleInterface<number>[]>([
-    {
-      id: QuestionTypeEnum.mcq,
-      title: 'MCQ',
-    },
-    {
-      id: QuestionTypeEnum.true_false,
-      title: 'trueAndFalse',
-    },
-    {
-      id: QuestionTypeEnum.ranking,
-      title: 'ranking',
-    },
-    {
-      id: QuestionTypeEnum.complate,
-      title: 'complete',
-    },
-    {
-      id: QuestionTypeEnum.matching,
-      title: 'matching',
-    },
-  ]);
-
-  const selectedTab = ref<number | null>(null);
-  const selectTab = (tab: number) => {
-    selectedTab.value = tab;
-    updateData();
-  };
-
-  const getQuestionCOntent = (data: AddquestionsParams) => {
-    selectedDifficultyLevel.value = data.difficultyLevel!;
-    SelectedSkill.value = data.skills!.map((item) => {
-      return {
-        skillId: item.skillId,
-        percentage: item?.percentage,
-      };
-    }) as unknown as number[];
-    SelectedTopic.value = data.topics!;
-    SelectedQuestionSequence.value = data.questionSequenceId!;
-    SelectedSubject.value = data.subjectId!;
-    updateData();
-  };
-
-  const questionSource = ref<string>('');
-  const SelectedDocumet = ref<number | null>(null);
-  const GetQuestionSource = (data: QuestionClarificationParams) => {
-    SelectedDocumet.value = data.documentId!;
-    questionSource.value = data.source!;
-    updateData();
-  };
+    }) || [];
+    selectedDifficultyLevel.value = newValue?.difficulty || null;
+    SelectedTopic.value = newValue?.topics?.map((item) => item.id) || [];
+    SelectedQuestionSequence.value = newValue?.sequenceTree?.id || null;
+    SelectedDocumet.value = newValue?.questionDocuments?.id || null;
+    questionSource.value = newValue?.questionDocuments?.source || '';
+  }
+})
 </script>
 
 <template>
-  <Accordion value="0" :lazy="true">
+  <Accordion :pt="{
+    'root': 'basic-data-form'
+  }" value="0" :lazy="true">
     <AccordionPanel value="0">
       <AccordionHeader>
         <template #toggleicon>
@@ -159,46 +176,28 @@
           <div class="field-group col-span-2" :class="{ disabled: loading }">
             <label class="field-label" for="name">{{ $t(`question title`) }}</label>
             <div class="input-wrap">
-              <input
-                id="title"
-                v-model="title"
-                type="text"
-                placeholder="Enter question title"
-                class="field-input"
-                @input="updateData"
-              />
+              <input id="title" v-model="title" type="text" placeholder="Enter question title" class="field-input"
+                @input="updateData" />
             </div>
           </div>
 
           <div class="field-group col-span-2" :class="{ disabled: loading }">
-            <HandleFilesUpload
-              :label="`upload image`"
-              accept="image/*"
-              :multiple="false"
-              :index="1"
-              :file="UploadedImage"
-              :have-content="true"
-              :class="`image-input`"
-              @change="handleImageChange"
-            >
+            <HandleFilesUpload :label="`upload image`" accept="image/*" :multiple="false" :index="1"
+              :file="UploadedImage" :have-content="true" :class="`image-input`" @change="handleImageChange">
               <template #content>
                 <div class="add-imaegs-data">
                   <UplaodImageInput />
-                  <p class="first-text"><span>Click to upload</span>or drag and drop</p>
-                  <p class="second-text">JPG, JPEG, PNG less than 1MB</p>
+                  <p class="first-text"><span>{{ 'Click to upload' }}</span>{{ $t('or drag and drop') }}</p>
+                  <p class="second-text">{{ $t('JPG, JPEG, PNG less than 1MB') }}</p>
                 </div>
               </template>
             </HandleFilesUpload>
           </div>
 
-          <SelectionTabs
-            class="field-group col-span-2"
-            :tabs="tabs"
-            :selected-tab="selectedTab"
-            @update:model-value="selectTab"
-          />
-          <QuestionContantTabs class="field-group col-span-2" @updateData="getQuestionCOntent" />
-          <QuestionSource @update:modelValue="GetQuestionSource" class="field-group col-span-2" />
+          <SelectionTabs class="field-group col-span-2" :tabs="tabs" :selected-tab="selectedTab"
+            @update:model-value="selectTab" />
+          <QuestionContantTabs  class="field-group col-span-2" @updateData="getQuestionCOntent" />
+          <QuestionSource @updateData="GetQuestionSource" class="field-group col-span-2" />
         </div>
       </AccordionContent>
     </AccordionPanel>
@@ -206,18 +205,20 @@
 </template>
 
 <style scoped>
-  .toggll-container {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 5px;
-  }
-  .dashed-border {
-    width: 85%;
-    height: 1px;
-    border-bottom: 1px dashed #d0d0d0;
-  }
-  .p-accordionpanel:last-child > .p-accordionheader {
-    padding-left: 0 !important;
-  }
+.toggll-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+}
+
+.dashed-border {
+  width: 85%;
+  height: 1px;
+  border-bottom: 1px dashed #d0d0d0;
+}
+
+.p-accordionpanel:last-child>.p-accordionheader {
+  padding-left: 0 !important;
+}
 </style>

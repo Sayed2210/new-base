@@ -3,21 +3,21 @@ import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import AppButton from '@/shared/HelpersComponents/AppButton.vue';
 import IconAccept from '@/shared/icons/IconAccept.vue';
-import EmployeeController from '../controllers/questions.controller';
-import type EditEmployeeParams from '../../core/params/edit.question.params';
-import ShowEmployeeParams from '../../core/params/show.question.params';
-import EmployeeForm from './questionsForm.vue';
+import type EditQuestionParams from '../../core/params/edit.question.params';
+import ShowQuestionParams from '../../core/params/show.question.params';
+import questionsController from '../controllers/questions.controller';
+import QuestionsForm from './questionsForm.vue';
 
-const controller = EmployeeController.getInstance();
+const controller = questionsController.getInstance();
 const route = useRoute();
 const formKey = route.fullPath;
 
-const params = ref<EditEmployeeParams | null>(null);
+const params = ref<EditQuestionParams | null>(null);
 
 /**
  * Update employee
  */
-const saveEmployee = async () => {
+const saveQuestion = async () => {
   if (!params.value) {
     console.error('No employee parameters to save');
     return;
@@ -26,21 +26,21 @@ const saveEmployee = async () => {
   await controller.update(params.value, undefined, formKey);
 };
 
-const updateData = (updatedParams: EditEmployeeParams) => {
+const updateData = (updatedParams: EditQuestionParams) => {
   params.value = updatedParams;
 };
 
 onMounted(async () => {
-  await controller.fetchOne(new ShowEmployeeParams(Number(route.params.id)));
+  await controller.fetchOne(new ShowQuestionParams(Number(route.params.id)));
 });
 </script>
 
 <template>
   <div class="employee-edit-page">
-    <EmployeeForm :employee="controller.itemData.value!" :form-key="formKey" @update-data="updateData" />
+    <QuestionsForm :question="controller.itemData.value!" :form-key="formKey" @update-data="updateData" />
 
     <div class="actions">
-      <AppButton title="Update Employee" size="sm" icon="right" type="submit" @click="saveEmployee">
+      <AppButton title="Update Employee" size="sm" icon="right" type="submit" @click="saveQuestion">
         Update Employee
         <template #icon>
           <IconAccept />
@@ -56,12 +56,6 @@ onMounted(async () => {
 </template>
 
 <style scoped lang="scss">
-// .employee-edit-page {
-//   padding: 24px;
-//   max-width: 1000px;
-//   margin: 0 auto;
-// }
-
 .actions {
   margin-top: 24px;
   display: flex;

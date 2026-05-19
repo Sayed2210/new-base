@@ -39,7 +39,7 @@
         border-radius: 50px;
 
         &.haveImage {
-          :deep(.upload-area) {
+          .upload-area {
             display: none !important;
           }
         }
@@ -48,14 +48,14 @@
       .image-input {
         width: 100%;
 
-        :deep(.upload-area) {
+        .upload-area {
           background-color: $StandardWhite !important;
           padding: 5px !important;
           border-radius: 50%;
           border: 1px solid $PrimaryColor !important;
         }
 
-        :deep(.preview-item) {
+        .preview-item {
           width: 40px !important;
           height: 40px !important;
           border-radius: 50%;

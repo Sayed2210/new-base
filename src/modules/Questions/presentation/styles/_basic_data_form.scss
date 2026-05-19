@@ -1,0 +1,53 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins/flex' as *;
+@use '../../../../styles/mixins/grid' as *;
+
+.basic-data-form {
+  .form-fields {
+    .field-group {
+      .field-label {
+        width: fit-content;
+        text-align: start;
+        font-family: 'Medium';
+        color: $Gray-5;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: capitalize !important;
+      }
+      .input-wrap {
+        input {
+          font-size: 14px;
+          font-weight: 600;
+          &::placeholder {
+            font-family: 'Medium';
+            color: #94a3b8;
+            font-size: 16px;
+            font-weight: 300;
+          }
+        }
+      }
+    }
+    .image-input {
+      .upload-label {
+        width: fit-content;
+        text-align: start;
+        font-family: 'Medium';
+        color: #5d5d5d;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        text-transform: capitalize !important;
+      }
+    }
+  }
+  .new-form-group {
+    .input-label {
+      width: fit-content;
+      text-align: start;
+      font-family: 'Medium';
+      color: #5d5d5d;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      text-transform: capitalize !important;
+    }
+  }
+}

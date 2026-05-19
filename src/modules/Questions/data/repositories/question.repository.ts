@@ -5,8 +5,12 @@ import { QuestionDifficultyEnum } from '../../core/constant/question.difficulty.
 import { QuestionTypeEnum } from '../../core/constant/question.type.enum';
 import { QuestionStatusEnum } from '../../core/constant/question.status.enum';
 import { QuestionGeneratedByEnum } from '../../core/constant/generatedby.enum';
+import ShowQuestionsModel from '../../core/models/show.questions.model';
 
-export default class questionsRepository extends BaseRepository<questionsModel, questionsModel[]> {
+export default class questionsRepository extends BaseRepository<
+  ShowQuestionsModel,
+  questionsModel[]
+> {
   private static instance: questionsRepository;
 
   protected get apiService() {
@@ -21,8 +25,8 @@ export default class questionsRepository extends BaseRepository<questionsModel, 
     };
   }
 
-  protected get mockItem(): questionsModel {
-    return questionsModel.example;
+  protected get mockItem(): ShowQuestionsModel {
+    return ShowQuestionsModel.example;
   }
 
   protected get mockList(): questionsModel[] {
@@ -65,8 +69,8 @@ export default class questionsRepository extends BaseRepository<questionsModel, 
     return questionsRepository.instance;
   }
 
-  protected parseItem(data: any): questionsModel {
-    return questionsModel.fromJson(data);
+  protected parseItem(data: any): ShowQuestionsModel {
+    return ShowQuestionsModel.fromJson(data);
   }
 
   protected parseList(data: any): questionsModel[] {
@@ -74,7 +78,7 @@ export default class questionsRepository extends BaseRepository<questionsModel, 
     return data.reduce((acc: questionsModel[], item) => {
       try {
         if (item != null) {
-          acc.push(this.parseItem(item));
+          acc.push(questionsModel.fromJson(item));
         }
       } catch {}
       return acc;

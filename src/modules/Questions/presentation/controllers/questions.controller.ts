@@ -7,8 +7,9 @@ import router from '@/router';
 import { useFormsStore } from '@/stores/formsStore';
 import type questionsModel from '../../core/models/questions.model';
 import questionsRepository from '../../data/repositories/question.repository';
+import type ShowQuestionsModel from '../../core/models/show.questions.model';
 
-export default class questionsController extends BaseController<questionsModel, questionsModel[]> {
+export default class questionsController extends BaseController<ShowQuestionsModel, questionsModel[]> {
   private static instance: questionsController;
 
   protected get repository() {

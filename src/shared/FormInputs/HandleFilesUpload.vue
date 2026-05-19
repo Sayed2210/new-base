@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, watch, computed } from 'vue';
+  import { ref, onMounted, computed, watch } from 'vue';
 
   export interface UploadedFile {
     id: string;
@@ -117,29 +117,11 @@
     yml: '⚙️',
   };
 
-  const isAlreadySynced = (): boolean => {
-    const propFileList = Array.isArray(props.file) ? props.file : props.file ? [props.file] : [];
-    if (propFileList.length !== files.value.length) return false;
+  const initFilesFromProps = (file: string | string[] | undefined, base64File: string | string[] | undefined) => {
+    if (!file && !base64File) return;
 
-    return propFileList.every((url, index) => {
-      const fileItem = files.value[index];
-      if (!fileItem) return false;
-      return fileItem.url === url || fileItem.base64 === url;
-    });
-  };
-
-  const syncFilesFromProps = () => {
-    if (!props.file && !props.base64File) {
-      files.value = [];
-      return;
-    }
-
-    const fileList = Array.isArray(props.file) ? props.file : props.file ? [props.file] : [];
-    const base64List = Array.isArray(props.base64File)
-      ? props.base64File
-      : props.base64File
-        ? [props.base64File]
-        : [];
+    const fileList = Array.isArray(file) ? file : file ? [file] : [];
+    const base64List = Array.isArray(base64File) ? base64File : base64File ? [base64File] : [];
 
     files.value = fileList.map((url, i) => {
       let name = 'file';
@@ -166,15 +148,9 @@
     });
   };
 
-  watch(
-    [() => props.file, () => props.base64File],
-    () => {
-      if (!isAlreadySynced()) {
-        syncFilesFromProps();
-      }
-    },
-    { deep: true, immediate: true }
-  );
+  onMounted(() => initFilesFromProps(props.file, props.base64File));
+
+  watch(() => props.file, (newFile) => initFilesFromProps(newFile, props.base64File));
 
   const isMaxReached = computed(() => files.value.length >= props.maxFiles);
 
@@ -295,11 +271,10 @@
         title="Click to download"
         @click="downloadFile(fileItem)"
       >
-        <template v-if="isImage(fileItem)">
-          <!-- <img :src="fileItem.url" :alt="fileItem.name" class="preview-thumb" /> -->
-           <img :src="fileItem.url" :alt="fileItem.name" class="preview-thumb" crossorigin="anonymous" @error="onImgError($event, fileItem)" />
-
-        </template>
+      <template v-if="isImage(fileItem)">
+        <img :src="fileItem.url" :alt="fileItem.name" class="preview-thumb" />
+      </template>
+      
 
         <template v-else>
           <div class="preview-icon">

@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import HandleFilesUpload from '@/shared/FormInputs/HandleFilesUpload.vue';
-// import DeletIcon from '@/shared/icons/DropListIcons/DeletIcon.vue';
 import UploadFileIcon from '@/shared/icons/UploadFileIcon.vue';
 import { onMounted, ref } from 'vue';
 import Checkbox from 'primevue/checkbox';
-// import AddNewAnswerIcon from '@/shared/icons/AddNewAnswerIcon.vue';
-// import { QuestionTypeEnum } from '../../core/constant/question.type.enum';
 
 const emit = defineEmits(['update:data']);
 
@@ -22,16 +19,6 @@ const Answers = ref([
     },
 ]);
 
-
-// const addNewAnswer = () => {
-//     Answers.value.push({ answer: '', isCorrect: false, file: '' });
-//     UpdateData();
-// };
-
-// const DeleteItem = (index: number) => {
-//     Answers.value.splice(index, 1);
-//     UpdateData();
-// };
 
 const UpdateData = () => {
     emit('update:data', Answers.value);
@@ -83,26 +70,12 @@ const setCorrect = (index: number) => {
                         <Checkbox :binary="true" :model-value="item.isCorrect" :input-id="`is-correct-${index}`"
                             name="is-correct" :value="item.isCorrect" @change="setCorrect(index)" />
                     </div>
-                    <!-- <div class="delete-icon-container"
-                        v-if="Answers.length > 1 && questionType !== QuestionTypeEnum.true_false">
-                        <button type="button" class="delete-btn" @click="DeleteItem(index)">
-                            <DeletIcon />
-                        </button>
-                    </div> -->
                 </div>
             </div>
 
-            <!-- <div class="add-row" @click="addNewAnswer"
-                v-if="Answers.length - 1 == index && questionType !== QuestionTypeEnum.true_false">
-                <div class="add-icon">
-                    <AddNewAnswerIcon />
-                    <span class="add-text">{{ $t('add_another_answer') }}</span>
-                </div>
-            </div> -->
+
         </div>
     </div>
 </template>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

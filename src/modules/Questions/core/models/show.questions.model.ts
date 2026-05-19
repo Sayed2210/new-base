@@ -1,4 +1,4 @@
-import type TitleInterface from '@/base/Data/Models/titleInterface';
+import TitleInterface from '@/base/Data/Models/titleInterface';
 import { QuestionGeneratedByEnum } from '../constant/generatedby.enum';
 import { QuestionDifficultyEnum } from '../constant/question.difficulty.enum';
 import { QuestionStatusEnum } from '../constant/question.status.enum';
@@ -16,7 +16,7 @@ export default class ShowQuestionsModel {
   public readonly id?: number;
   public readonly questionType?: QuestionTypeEnum;
   public readonly difficulty?: QuestionDifficultyEnum;
-  public readonly topic?: TitleInterface<number>;
+  public readonly topics?: TitleInterface<number>[];
   public readonly questionTitle?: string;
   public readonly questionImage?: string;
 
@@ -46,6 +46,9 @@ export default class ShowQuestionsModel {
     questionType?: QuestionTypeEnum;
     difficulty?: QuestionDifficultyEnum;
     status?: QuestionStatusEnum;
+    topics?: TitleInterface<number>[];
+    questionTitle?: string;
+    questionImage?: string;
     createdAt?: string;
     answers?: AnswerModel[];
     questionClarification?: QuestionClarificationModel;
@@ -62,6 +65,9 @@ export default class ShowQuestionsModel {
     this.difficulty = data.difficulty;
     this.status = data.status;
     this.createdAt = data.createdAt;
+    this.questionTitle = data.questionTitle;
+    this.questionImage = data.questionImage;
+    this.topics = data.topics;
     this.answers = data.answers;
     this.questionClarification = data.questionClarification;
     this.solutionSteps = data.solutionSteps;
@@ -86,6 +92,9 @@ export default class ShowQuestionsModel {
       difficulty: json.difficulty,
       status: json.status,
       createdAt: json.created_at,
+      questionTitle: json.question_title,
+      questionImage: json.question_image,
+      topics: json.topics,
       answers: json.answers.map((answer: any) => AnswerModel.fromJson(answer)),
       questionClarification: QuestionClarificationModel.fromJson(json.question_clarification),
       solutionSteps: SolutionStepsModel.fromJson(json.solution_steps),
@@ -100,10 +109,13 @@ export default class ShowQuestionsModel {
   static example: ShowQuestionsModel = new ShowQuestionsModel({
     id: 1,
     generatedBy: QuestionGeneratedByEnum.manual,
-    questionType: QuestionTypeEnum.mcq,
+    questionType: QuestionTypeEnum.true_false,
     difficulty: QuestionDifficultyEnum.easy,
     status: QuestionStatusEnum.not_Reviewd,
     createdAt: '2022-01-01',
+    questionTitle: 'Question Title',
+    questionImage: `https://cyber.comolho.com/static/img/avatar.png`,
+    topics: [{ id: 1, title: 'topic' }],
     answers: [AnswerModel.example],
     questionClarification: QuestionClarificationModel.example,
     solutionSteps: SolutionStepsModel.example,
