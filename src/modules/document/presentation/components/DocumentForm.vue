@@ -62,7 +62,7 @@
           (s) =>
             new TitleInterface<number>({
               id: s.id!,
-              title: `${b.title} -> ${s.title}`,
+              title: `${b.title} → ${s.title}`,
               subtitle: b.id,
             }),
         ),
@@ -72,31 +72,39 @@
 
   const selectedBranchTitle = ref<TitleInterface<number>>();
   watch(
-    () => document,
-    (newDoc) => {
-      if (newDoc) {
-        title.value = newDoc.translations.title;
-        selectedDocumentType.value = newDoc.documentType;
+  () => document,
+  (newDoc) => {
+    if (newDoc) {
+      title.value = newDoc.translations.title;
+      selectedDocumentType.value = newDoc.documentType;
+      
+      // ← فقط اضبط لو القيمة اتغيرت فعلاً
+      if (UploadedImage.value !== newDoc.images) {
         UploadedImage.value = newDoc.images;
-        UploadedFiles.value = newDoc.files;
-        RefrenceNumber.value = newDoc.RefNumber;
-        selectedBranch.value = {
-          id: newDoc.stage.id,
-          title: newDoc.stage.title,
-          subjects: [],
-        } as BranchesModel;
-        selectedSubject.value = new TitleInterface({
-          id: newDoc.subject.id,
-          title: newDoc.subject.title,
-        });
-        selectedDocumentType.value = new TitleInterface({
-          id: newDoc.documentType.id,
-          title: newDoc.documentType.title,
-        });
       }
-    },
-    { immediate: true },
-  );
+      if (UploadedFiles.value !== newDoc.files) {
+        UploadedFiles.value = newDoc.files;
+      }
+      
+      RefrenceNumber.value = newDoc.RefNumber;
+      selectedBranchTitle.value = new TitleInterface({
+        id: newDoc.subject.id,
+        title: `${newDoc.stage.title} → ${newDoc.subject.title}`,
+        subtitle: newDoc.stage.id,
+      });
+      selectedSubject.value = new TitleInterface({
+        id: newDoc.subject.id,
+        title: newDoc.subject.title,
+      });
+      selectedDocumentType.value = new TitleInterface({
+        id: newDoc.documentType.id,
+        title: newDoc.documentType.title,
+      });
+      tags.value = newDoc.tags;
+    }
+  },
+  { immediate: true },
+);
 
   const updateData = () => {
     console.log(UploadedImage.value, 'UploadedImage emit');
@@ -122,15 +130,34 @@
     updateData();
   };
 
-  const handleImageChange = (files: UploadedFile[]) => {
-    UploadedImage.value = files?.[0]?.base64;
-    updateData();
-  };
+  // const handleImageChange = (files: UploadedFile[]) => {
+  //   UploadedImage.value = files?.[0]?.base64;
+  //   updateData();
+  // };
 
-  const handleFilsChange = (files: UploadedFile[]) => {
-    UploadedFiles.value = files?.[0]?.base64;
-    updateData();
-  };
+  // const handleFilsChange = (files: UploadedFile[]) => {
+  //   UploadedFiles.value = files?.[0]?.base64;
+  //   updateData();
+  // };
+
+  const handleImageChange = (files: UploadedFile[]) => {
+  if (files.length === 0) {
+    UploadedImage.value = '';
+  } else {
+    // لو base64 موجود (رفع جديد) بعته، لو لأ بعت الـ URL (صورة من السيرفر)
+    UploadedImage.value = files[0]?.base64 || files[0]?.url || '';
+  }
+  updateData();
+};
+
+const handleFilsChange = (files: UploadedFile[]) => {
+  if (files.length === 0) {
+    UploadedFiles.value = '';
+  } else {
+    UploadedFiles.value = files[0]?.base64 || files[0]?.url || '';
+  }
+  updateData();
+};
 
   const tag = ref<string>('');
   const tags = ref<string[]>([]);
@@ -175,7 +202,7 @@
         />
       </div>
 
-      <div class="field-group col-span-1 ref-number-group" >
+      <div class="field-group col-span-1 ref-number-group" :class="{ 'disabled-input': document?.RefNumber }" >
         <label class="field-label" for="doc-ref">{{ $t('Reference_Number') }}</label>
 
         <div class="input-wrap">
@@ -312,3 +339,10 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+.disabled-input {
+  pointer-events: none;
+  opacity: 0.5;
+}
+</style>

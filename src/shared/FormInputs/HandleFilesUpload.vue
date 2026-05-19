@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, onMounted, computed } from 'vue';
+  import { ref, watch, computed } from 'vue';
 
   export interface UploadedFile {
     id: string;
@@ -117,8 +117,22 @@
     yml: '⚙️',
   };
 
-  onMounted(() => {
-    if (!props.file && !props.base64File) return;
+  const isAlreadySynced = (): boolean => {
+    const propFileList = Array.isArray(props.file) ? props.file : props.file ? [props.file] : [];
+    if (propFileList.length !== files.value.length) return false;
+
+    return propFileList.every((url, index) => {
+      const fileItem = files.value[index];
+      if (!fileItem) return false;
+      return fileItem.url === url || fileItem.base64 === url;
+    });
+  };
+
+  const syncFilesFromProps = () => {
+    if (!props.file && !props.base64File) {
+      files.value = [];
+      return;
+    }
 
     const fileList = Array.isArray(props.file) ? props.file : props.file ? [props.file] : [];
     const base64List = Array.isArray(props.base64File)
@@ -128,8 +142,17 @@
         : [];
 
     files.value = fileList.map((url, i) => {
-      const name = url.split('/').pop() ?? 'file';
-      const ext = name.split('.').pop()?.toLowerCase() ?? '';
+      let name = 'file';
+      let ext = '';
+      if (url.startsWith('data:')) {
+        const match = url.match(/^data:([^;]+);/);
+        const mime = match ? match[1] : '';
+        ext = mime.split('/').pop() ?? '';
+        name = `file.${ext}`;
+      } else {
+        name = url.split('/').pop() ?? 'file';
+        ext = name.split('.').pop()?.toLowerCase() ?? '';
+      }
       const type = EXT_MIME_MAP[ext] ?? 'application/octet-stream';
 
       return {
@@ -138,10 +161,20 @@
         type,
         size: '',
         url,
-        base64: base64List[i] ?? '',
+        base64: base64List[i] ?? (url.startsWith('data:') ? url : ''),
       };
     });
-  });
+  };
+
+  watch(
+    [() => props.file, () => props.base64File],
+    () => {
+      if (!isAlreadySynced()) {
+        syncFilesFromProps();
+      }
+    },
+    { deep: true, immediate: true }
+  );
 
   const isMaxReached = computed(() => files.value.length >= props.maxFiles);
 
@@ -263,7 +296,9 @@
         @click="downloadFile(fileItem)"
       >
         <template v-if="isImage(fileItem)">
-          <img :src="fileItem.url" :alt="fileItem.name" class="preview-thumb" />
+          <!-- <img :src="fileItem.url" :alt="fileItem.name" class="preview-thumb" /> -->
+           <img :src="fileItem.url" :alt="fileItem.name" class="preview-thumb" crossorigin="anonymous" @error="onImgError($event, fileItem)" />
+
         </template>
 
         <template v-else>

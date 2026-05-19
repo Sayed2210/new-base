@@ -17,28 +17,31 @@
   const loading = ref(false);
 
   const saveDocument = async () => {
-    if (!params.value) return;
-    loading.value = true;
-    try {
-      await controller.update(params.value, undefined, formKey);
-    } finally {
-      loading.value = false;
-    }
-  };
+  if (!params.value) return;
+  loading.value = true;
+  try {
+    // ← حول الـ URLs لـ base64 قبل الإرسال
+    const preparedParams = await EditDocumentParams.prepare(params.value);
+    await controller.update(preparedParams, undefined, formKey);
+  } finally {
+    loading.value = false;
+  }
+};
 
   const updateData = (updatedParams: AddDocumentParams) => {
-    params.value = new EditDocumentParams({
-      document_id: Number(route.params.id),
-      refNumber: updatedParams.refNumber,
-      subjects: updatedParams.subjects,
-      stage_id: updatedParams.stage_id,
-      tags: updatedParams.tags,
-      images: [updatedParams.images!],
-      files: [updatedParams.files!],
-      translations: updatedParams.translations,
-      documentTypeId: updatedParams.documentTypeId,
-    });
-  };
+  params.value = new EditDocumentParams({
+    document_id: Number(route.params.id),
+    // refNumber: updatedParams.refNumber,
+    subjects: updatedParams.subjects,
+    stage_id: updatedParams.stage_id,
+    tags: updatedParams.tags,
+    // لو فاضي مبعتوش خالص
+    images: updatedParams.images ? [updatedParams.images] : [],
+    files: updatedParams.files ? [updatedParams.files] : [],
+    translations: updatedParams.translations,
+    documentTypeId: updatedParams.documentTypeId,
+  });
+};
 
   onMounted(async () => {
     await controller.fetchOne(

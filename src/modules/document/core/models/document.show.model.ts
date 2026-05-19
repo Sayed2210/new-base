@@ -71,9 +71,17 @@ export default class DocumentShowModel {
 
       RefNumber: json.RefNumber ?? json.reference_number ?? '',
 
+      // documentType: new TitleInterface({
+      //   id: json.document_type?.id,
+      //   title: json.document_type?.title?.find((item: any) => item.locale === 'en')?.title ?? '',
+      // }),
+      // documentType: new TitleInterface({
+      //   id: json.document_type?.id,
+      //   title: json.document_type?.title ?? '',
+      // }),
       documentType: new TitleInterface({
         id: json.document_type?.id,
-        title: json.document_type?.title?.find((item: any) => item.locale === 'en')?.title ?? '',
+        title: json.document_type?.title?.[0]?.title ?? '',
       }),
 
       stage: new TitleInterface({
@@ -86,9 +94,14 @@ export default class DocumentShowModel {
         title: json.subject?.titles?.[0]?.title ?? '',
       }),
 
-      tags: json.tags ?? [],
-      images: json.images ?? [],
-      files: json.files ?? [],
+      tags: Array.isArray(json.tags)
+        ? json.tags.map((t: any) => t.tag)
+        : [],
+      // tags: json.tags ?? [],
+      // images: json.images ?? [],
+      // files: json.files ?? [],
+      images: json.image  ?? '',
+      files: json.document_file  ?? '',
     });
   }
 

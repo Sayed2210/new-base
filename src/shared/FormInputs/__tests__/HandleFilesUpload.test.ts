@@ -103,4 +103,25 @@ describe('HandleFilesUpload', () => {
     expect(wrapper.emitted('change')).toBeTruthy();
     expect(wrapper.emitted('change')![0][0]).toEqual([]);
   });
+
+  it('updates files dynamically when file prop changes', async () => {
+    const wrapper = mount(HandleFilesUpload, {
+      props: {
+        file: '',
+      },
+      global: {
+        mocks: { $t: (key: string) => key },
+      },
+    });
+
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('.preview-grid').exists()).toBe(false);
+
+    await wrapper.setProps({ file: 'http://example.com/dynamic.jpg' });
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.find('.preview-grid').exists()).toBe(true);
+    expect(wrapper.findAll('.preview-item')).toHaveLength(1);
+    expect(wrapper.find('.preview-filename').text()).toBe('dynamic.jpg');
+  });
 });
