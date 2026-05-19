@@ -30,8 +30,8 @@ const date = ref();
 
 
 const headers: TableHeader[] = [
-  { key: 'title', label: 'Title', width: '50%', sortable: true },
-  { key: 'doecumentType', label: 'Document Type', width: '50%' },
+  { key: 'title', label: 'Title', width: '100%', sortable: true },
+  // { key: 'doecumentType', label: 'Document Type', width: '50%' },
 ];
 
 const perPage = ref(10);
