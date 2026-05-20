@@ -3,6 +3,10 @@
 @use 'multi_selection';
 @use 'contant_tabs';
 @use 'form_header';
+
+//Question Show
+@use 'QuestionShow/question_show_imports';
+
 @use 'question_time_line';
 @use 'basic_data_form';
 @use 'AnswerTypes/answer_types_imports';

@@ -26,7 +26,8 @@
     formKey?: string;
     loading?: boolean;
   }>();
-
+  const tag = ref<string>('');
+  const tags = ref<string[]>([]);
   const FormStore = useFormsStore();
 
   onBeforeRouteLeave((to, from) => {
@@ -72,39 +73,39 @@
 
   const selectedBranchTitle = ref<TitleInterface<number>>();
   watch(
-  () => document,
-  (newDoc) => {
-    if (newDoc) {
-      title.value = newDoc.translations.title;
-      selectedDocumentType.value = newDoc.documentType;
-      
-      // ← فقط اضبط لو القيمة اتغيرت فعلاً
-      if (UploadedImage.value !== newDoc.images) {
-        UploadedImage.value = newDoc.images;
+    () => document,
+    (newDoc) => {
+      if (newDoc) {
+        title.value = newDoc.translations.title;
+        selectedDocumentType.value = newDoc.documentType;
+
+        // ← فقط اضبط لو القيمة اتغيرت فعلاً
+        if (UploadedImage.value !== newDoc.images) {
+          UploadedImage.value = newDoc.images;
+        }
+        if (UploadedFiles.value !== newDoc.files) {
+          UploadedFiles.value = newDoc.files;
+        }
+
+        RefrenceNumber.value = newDoc.RefNumber;
+        selectedBranchTitle.value = new TitleInterface({
+          id: newDoc.subject.id,
+          title: `${newDoc.stage.title} → ${newDoc.subject.title}`,
+          subtitle: newDoc.stage.id,
+        });
+        selectedSubject.value = new TitleInterface({
+          id: newDoc.subject.id,
+          title: newDoc.subject.title,
+        });
+        selectedDocumentType.value = new TitleInterface({
+          id: newDoc.documentType.id,
+          title: newDoc.documentType.title,
+        });
+        tags.value = newDoc.tags;
       }
-      if (UploadedFiles.value !== newDoc.files) {
-        UploadedFiles.value = newDoc.files;
-      }
-      
-      RefrenceNumber.value = newDoc.RefNumber;
-      selectedBranchTitle.value = new TitleInterface({
-        id: newDoc.subject.id,
-        title: `${newDoc.stage.title} → ${newDoc.subject.title}`,
-        subtitle: newDoc.stage.id,
-      });
-      selectedSubject.value = new TitleInterface({
-        id: newDoc.subject.id,
-        title: newDoc.subject.title,
-      });
-      selectedDocumentType.value = new TitleInterface({
-        id: newDoc.documentType.id,
-        title: newDoc.documentType.title,
-      });
-      tags.value = newDoc.tags;
-    }
-  },
-  { immediate: true },
-);
+    },
+    { immediate: true },
+  );
 
   const updateData = () => {
     console.log(UploadedImage.value, 'UploadedImage emit');
@@ -141,26 +142,23 @@
   // };
 
   const handleImageChange = (files: UploadedFile[]) => {
-  if (files.length === 0) {
-    UploadedImage.value = '';
-  } else {
-    // لو base64 موجود (رفع جديد) بعته، لو لأ بعت الـ URL (صورة من السيرفر)
-    UploadedImage.value = files[0]?.base64 || files[0]?.url || '';
-  }
-  updateData();
-};
+    if (files.length === 0) {
+      UploadedImage.value = '';
+    } else {
+      // لو base64 موجود (رفع جديد) بعته، لو لأ بعت الـ URL (صورة من السيرفر)
+      UploadedImage.value = files[0]?.base64 || files[0]?.url || '';
+    }
+    updateData();
+  };
 
-const handleFilsChange = (files: UploadedFile[]) => {
-  if (files.length === 0) {
-    UploadedFiles.value = '';
-  } else {
-    UploadedFiles.value = files[0]?.base64 || files[0]?.url || '';
-  }
-  updateData();
-};
-
-  const tag = ref<string>('');
-  const tags = ref<string[]>([]);
+  const handleFilsChange = (files: UploadedFile[]) => {
+    if (files.length === 0) {
+      UploadedFiles.value = '';
+    } else {
+      UploadedFiles.value = files[0]?.base64 || files[0]?.url || '';
+    }
+    updateData();
+  };
 
   const setTags = () => {
     if (tag.value.length > 0) {
@@ -188,7 +186,7 @@ const handleFilsChange = (files: UploadedFile[]) => {
     </div>
 
     <div class="form-fields" :class="{ disabled: loading }">
-      <div class="field-group" >
+      <div class="field-group">
         <MultiLangInput
           :field-key="`title`"
           :label="$t(`Document_name`)"
@@ -202,7 +200,10 @@ const handleFilsChange = (files: UploadedFile[]) => {
         />
       </div>
 
-      <div class="field-group col-span-1 ref-number-group" :class="{ 'disabled-input': document?.RefNumber }" >
+      <div
+        class="field-group col-span-1 ref-number-group"
+        :class="{ 'disabled-input': document?.RefNumber }"
+      >
         <label class="field-label" for="doc-ref">{{ $t('Reference_Number') }}</label>
 
         <div class="input-wrap">
@@ -217,7 +218,7 @@ const handleFilsChange = (files: UploadedFile[]) => {
         </div>
       </div>
 
-      <div class="field-group select-group col-span-2" >
+      <div class="field-group select-group col-span-2">
         <UpdatedCustomInputSelect
           id="documentType"
           :class="`field-input`"
@@ -234,7 +235,7 @@ const handleFilsChange = (files: UploadedFile[]) => {
         />
       </div>
 
-      <div class="field-group col-span-2" >
+      <div class="field-group col-span-2">
         <UpdatedCustomInputSelect
           id="doc-branch"
           :label="`subject name`"
@@ -246,7 +247,7 @@ const handleFilsChange = (files: UploadedFile[]) => {
         />
       </div>
 
-      <div class="field-group col-span-2" >
+      <div class="field-group col-span-2">
         <MultiLangInput
           :field-key="`description`"
           :label="$t(`Description`)"
@@ -260,7 +261,7 @@ const handleFilsChange = (files: UploadedFile[]) => {
         />
       </div>
 
-      <div class="field-group tags-group col-span-2" >
+      <div class="field-group tags-group col-span-2">
         <label class="field-label" for="tag">{{ $t('Tag') }}</label>
 
         <div class="input-wrap input-tag-wrap">
@@ -285,7 +286,7 @@ const handleFilsChange = (files: UploadedFile[]) => {
         </div>
       </div>
 
-      <div class="field-group col-span-2" >
+      <div class="field-group col-span-2">
         <HandleFilesUpload
           :label="`upload image`"
           accept="image/*"
@@ -310,7 +311,7 @@ const handleFilsChange = (files: UploadedFile[]) => {
         </HandleFilesUpload>
       </div>
 
-      <div class="field-group col-span-2" >
+      <div class="field-group col-span-2">
         <HandleFilesUpload
           :label="`upload document`"
           accept=".pdf"
@@ -341,8 +342,8 @@ const handleFilsChange = (files: UploadedFile[]) => {
 </template>
 
 <style scoped>
-.disabled-input {
-  pointer-events: none;
-  opacity: 0.5;
-}
+  .disabled-input {
+    pointer-events: none;
+    opacity: 0.5;
+  }
 </style>

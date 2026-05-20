@@ -1,7 +1,8 @@
+<script setup lang="ts">
+  import QuestionShow from '@/modules/Questions/presentation/components/questionShow.vue';
+</script>
 <template>
   <div>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut quas iste qui eum explicabo
-    repudiandae quam adipisci, amet voluptates architecto debitis! Mollitia, harum velit optio
-    expedita esse quis nisi explicabo.
+    <QuestionShow />
   </div>
 </template>

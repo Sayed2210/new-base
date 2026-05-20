@@ -99,6 +99,7 @@
   --Gray-3: #64748b;
   --gray-5: #5d5d5d;
   --Gray-6: #4b4b4b;
+  --gray-7: #303030;
   --breadcrumb-separator: #a5a5a5;
   --GrayText-1: #475569;
   --GrayText: #475569;
@@ -127,6 +128,17 @@
   --gray-text-blue: #4b5563;
   --baseInputPadding: 12px;
   --gray-text: #8a8a8a;
+
+  /* Status Colors */
+  --bg-waiting: #eaf4ff;
+  --border-waiting: #bfd9ff;
+  --bg-drafting: #e6e6e6;
+  --border-drafting: #d2d2d2;
+  --bg-rejected: #ffeceb;
+  --border-rejected: #f5c2c0;
+  --bg-approved: #e9f9ee;
+  --border-approved: #b7e9c9;
+
   /* ── Typography ────────────────────────────────────────────── */
   --font-family: 'Medium', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
@@ -248,6 +260,8 @@
   --indigo-100: #e0e7ff;
   --green-100: #dcfce7;
 
+  --StandardBlue: #2f7bff;
+
   /* ── Brand Colors ────────────────────────────────────────── */
   --whatsapp-green: #25d366;
   --telegram-blue: #229ed9;
@@ -267,7 +281,8 @@
   --danger-border-light: #fecaca;
   --in-active-color: #d99100;
   --badge-bg: #4faf7c0f;
-  --sidebar-auth-bg:#24385C;
+  --sidebar-auth-bg: #24385c;
+  --caution-bg: #fff7e6;
 }
 
 /* =============================================================================
