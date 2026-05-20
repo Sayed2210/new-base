@@ -15,7 +15,7 @@ const Answers = ref([
 
 
 const addNewAnswer = () => {
-    Answers.value.push({ answer: '', matching: 0 });
+    Answers.value.push({ answer: '', matching: '' });
 
     UpdateData();
 };

@@ -116,6 +116,6 @@ watch(
     </header>
 
     <BasicQuestionDataForm :questionData="question" @updateData="GetAllBasicData" />
-    <QuestionAnswersDataForm :questionData="question" :questionType="BasicData?.questionType!" @updateData="GetAllAnswers" />
+    <QuestionAnswersDataForm :questionData="question!" :questionType="BasicData?.questionType!" @updateData="GetAllAnswers" />
   </div>
 </template>
