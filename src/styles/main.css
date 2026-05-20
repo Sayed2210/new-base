@@ -8099,7 +8099,6 @@ body::-webkit-scrollbar-thumb:hover {
   /* ── Form Fields ───────────────────────────────────────────── */
 }
 .document-form-card .form-fields {
-  padding: 20px 24px 24px;
   display: grid;
   grid-template-columns: repeat(2, 1rf);
   gap: 20px;
@@ -8275,7 +8274,6 @@ body::-webkit-scrollbar-thumb:hover {
     flex-wrap: wrap;
   }
   .document-form-card .form-fields {
-    padding: 16px;
     gap: 16px;
   }
   .document-form-card .form-divider {
@@ -12571,6 +12569,8 @@ body::-webkit-scrollbar-thumb:hover {
   font-weight: 400;
   font-size: var(--sm-size);
   color: var(--bread-crumb-color-span);
+  max-width: 100%;
+  max-height: 200px;
 }
 .multi-lang-input .field-input::-moz-placeholder {
   color: var(--bread-crumb-color-span);

@@ -89,6 +89,7 @@
         "
         class="field-input"
         :dir="activeLang === 'ar' ? 'rtl' : 'ltr'"
+        
       ></textarea>
       <input
         v-else
