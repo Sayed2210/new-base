@@ -24,7 +24,7 @@ export default class SolutionHintModel {
 
   static example: SolutionHintModel = new SolutionHintModel({
     id: 1,
-    hint: 'steps',
+    hint: 'Hint',
     image:`https://cyber.comolho.com/static/img/avatar.png`,
   });
 }

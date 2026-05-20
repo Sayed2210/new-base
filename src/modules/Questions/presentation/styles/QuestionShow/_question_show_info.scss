@@ -12,12 +12,9 @@
 
   .question-info-categories {
     @include flex-row(wrap, flex-start, center);
-
     gap: $MdSize;
-
     .question-info-item {
       @include flex-row(center, center);
-
       gap: $SmSize;
       background-color: var(--gray-soft);
       padding: $XsSize2 $XsSize;
@@ -71,7 +68,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      max-width: calc(XlSize4 * 2);
+      max-width: calc($XlSize4 * 2);
 
       img {
         max-width: 100%;
