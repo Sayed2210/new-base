@@ -41,7 +41,7 @@
   const description = ref<Record<string, string>>({});
   const RefrenceNumber = ref<string>('');
   const selectedDocumentType = ref<TitleInterface<number> | null>(null);
-  const selectedBranch = ref<BranchesModel | null>(null);
+  // const selectedBranch = ref<BranchesModel | null>(null);
   const selectedSubject = ref<TitleInterface<number> | null>(null);
   const allStages = ref<StageModel[]>([]);
   const indexDocumentTypeParams = new IndexDocumentTypeParams('', 1, 10, 0);
@@ -239,7 +239,7 @@ const handleFilsChange = (files: UploadedFile[]) => {
           id="doc-branch"
           :label="`subject name`"
           :static-options="branchOptions"
-          :model-value="selectedBranchTitle "
+          v-model="selectedBranchTitle "
           :placeholder="$t('Enter subject name')"
           :reload="false"
           @update:model-value="handleBranchChange($event)"

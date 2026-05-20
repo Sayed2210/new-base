@@ -137,8 +137,8 @@ watch(
           :isclarification="isClarification"
           @update-data="GetClarification"
         />
-        <QuestionSolutionSteps :SolutionStepsData="SolutionStepsData" :isSolutionStepsData="isSolutionStepsData" @update-data="GetSolutionSteps" />
-        <QuestionSolutionHints :SolutionHintsData="SolutionHintsData" :isSolutionHintsData="isSolutionHintsData" @update-data="GetSolutionHints" />
+        <QuestionSolutionSteps :SolutionStepsData="SolutionStepsData!" :isSolutionStepsData="isSolutionStepsData" @update-data="GetSolutionSteps" />
+        <QuestionSolutionHints :SolutionHintsData="SolutionHintsData!" :isSolutionHintsData="isSolutionHintsData" @update-data="GetSolutionHints" />
       </AccordionContent>
     </AccordionPanel>
   </Accordion>

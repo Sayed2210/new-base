@@ -129,7 +129,7 @@
       if (url.startsWith('data:')) {
         const match = url.match(/^data:([^;]+);/);
         const mime = match ? match[1] : '';
-        ext = mime.split('/').pop() ?? '';
+        ext = mime?.split('/').pop() ?? '';
         name = `file.${ext}`;
       } else {
         name = url.split('/').pop() ?? 'file';

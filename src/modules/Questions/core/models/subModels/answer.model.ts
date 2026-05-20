@@ -1,12 +1,34 @@
+import { AnswerEvaluationTypeEnum } from '../../constant/answer.evaluation.type.enum';
+
 export default class AnswerModel {
   public readonly id?: number;
   public readonly answer: string;
   public readonly image: string;
+  public readonly is_right_answer: boolean;
+  public readonly match: string;
+  public readonly rank: number;
+  public readonly similar: string;
+  public readonly EvaluationType: AnswerEvaluationTypeEnum;
 
-  constructor(data: { id?: number; answer?: string; image?: string }) {
+  constructor(data: {
+    id?: number;
+    answer?: string;
+    image?: string;
+    is_right_answer?: boolean;
+    match?: string;
+    rank?: number;
+    similar?: string;
+    EvaluationType?: AnswerEvaluationTypeEnum;
+  }) {
     this.id = data.id;
     this.answer = data.answer || '';
     this.image = data.image || '';
+    this.is_right_answer = data.is_right_answer || false;
+    this.match = data.match || '';
+    this.rank = data.rank || 0;
+    this.similar = data.similar || '';
+    this.EvaluationType = data.EvaluationType || AnswerEvaluationTypeEnum.similar;
+
     Object.freeze(this);
   }
 
@@ -19,12 +41,21 @@ export default class AnswerModel {
       id: json.id,
       answer: json.answer,
       image: json.image,
+      is_right_answer: json.is_right_answer,
+      match: json.match,
+      rank: json.rank,
+      similar: json.similar,
+      EvaluationType: json.evaluation_type,
     });
   }
 
   static example: AnswerModel = new AnswerModel({
-    id: 1,
-    answer: 'Cairo',
-    image: 'https://example.com/cairo.jpg',
+    answer: 'answer',
+    image: 'image',
+    is_right_answer: true,
+    match: 'match',
+    rank: 10,
+    similar: 'similar',
+    EvaluationType: AnswerEvaluationTypeEnum.similar,
   });
 }

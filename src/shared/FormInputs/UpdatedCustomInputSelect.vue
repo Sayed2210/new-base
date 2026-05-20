@@ -26,7 +26,7 @@ interface Props {
 
   staticOptions?: TitleInterface<string | number>[] | null;
 
-  modelValue: TitleInterface<string | number> | TitleInterface<string | number>[] | null;
+  modelValue: TitleInterface<string | number> | TitleInterface<string | number>[] | null | undefined;
 
   placeholder: string;
 
