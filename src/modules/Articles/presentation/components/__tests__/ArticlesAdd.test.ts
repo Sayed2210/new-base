@@ -54,7 +54,7 @@ const globalConfig = {
   },
 };
 
-describe('ArticlesAdd.vue', () => {
+describe('ArticlesAdd.vue', () => { 
   beforeEach(() => {
     setActivePinia(createPinia());
     vi.clearAllMocks();
