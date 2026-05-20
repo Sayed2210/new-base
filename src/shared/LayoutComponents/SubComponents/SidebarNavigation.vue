@@ -14,12 +14,12 @@
   import { useUserStore } from '@/stores/user';
   import AuthArrowIcon from '@/shared/icons/SidebarIcons/AuthArrowIcon.vue';
   import IconLogout from '@/shared/icons/IconLogout.vue';
-
   import Accordion from 'primevue/accordion';
   import AccordionPanel from 'primevue/accordionpanel';
   import AccordionHeader from 'primevue/accordionheader';
   import AccordionContent from 'primevue/accordioncontent';
-import Question from '@/shared/icons/question.vue';
+  import Question from '@/shared/icons/question.vue';
+  import ArticleIcon from '@/shared/icons/ArticleIcon.vue';
 
   const route = useRoute();
   const emit = defineEmits(['clickItem']);
@@ -94,6 +94,11 @@ import Question from '@/shared/icons/question.vue';
           link: '/questions',
           name: 'Questions',
           icon: Question,
+        },
+        {
+          link: '/articles',
+          name: 'Articles',
+          icon: ArticleIcon,
         },
       ],
     },
