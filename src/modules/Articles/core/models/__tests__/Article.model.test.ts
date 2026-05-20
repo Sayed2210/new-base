@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import ArticleModel from '../Article.model';
 import ArticleSubjectModel from '../Subject.model';
-import { QuestionGeneratedByEnum } from '../../constant/generatedby.enum';
+import { ArticleGeneratedByEnum } from '../../constant/Article.generatedby.enum';
 
 describe('ArticleModel', () => {
   const mockJson = {
@@ -12,7 +12,7 @@ describe('ArticleModel', () => {
       cycle: 'Primary',
       grade: 'First',
     },
-    generated_by: QuestionGeneratedByEnum.manual,
+    generated_by: ArticleGeneratedByEnum.manual,
     no_of_qs: 10,
   };
 
@@ -21,14 +21,14 @@ describe('ArticleModel', () => {
       id: 1,
       articleTitle: 'Title of the Article',
       subject: ArticleSubjectModel.example,
-      generatedBy: QuestionGeneratedByEnum.manual,
+      generatedBy: ArticleGeneratedByEnum.manual,
       noOfQs: 10,
     };
     const model = new ArticleModel(data);
 
     expect(model.articleTitle).toBe('Title of the Article');
     expect(model.subject).toEqual(ArticleSubjectModel.example);
-    expect(model.generatedBy).toBe(QuestionGeneratedByEnum.manual);
+    expect(model.generatedBy).toBe(ArticleGeneratedByEnum.manual);
     expect(model.noOfQs).toBe(10);
   });
 
@@ -42,7 +42,7 @@ describe('ArticleModel', () => {
       cycle: 'Primary',
       grade: 'First',
     });
-    expect(model.generatedBy).toBe(QuestionGeneratedByEnum.manual);
+    expect(model.generatedBy).toBe(ArticleGeneratedByEnum.manual);
     expect(model.noOfQs).toBe(10);
   });
 

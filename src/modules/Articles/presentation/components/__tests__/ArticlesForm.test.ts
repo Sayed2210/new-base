@@ -40,8 +40,8 @@ describe('ArticlesForm', () => {
         stubs: {
           'router-link': true,
           'router-view': true,
-          BasicArticalDataForm: true,
-          ArticalAnswersDataForm: true,
+          BasicArticleDataForm: true,
+          ArticleAnswersDataForm: true,
         },
         mocks: {
           $t: (msg: string) => msg,

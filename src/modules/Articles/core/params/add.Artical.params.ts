@@ -1,7 +1,7 @@
 import type Params from '@/base/Core/Params/params';
 import { ClassValidation } from '@/base/Presentation/Utils/classValidation';
-import type { QuestionTypeEnum } from '../constant/question.type.enum';
-import type { QuestionDifficultyEnum } from '../constant/question.difficulty.enum';
+import type { ArticleTypeEnum } from '../constant/Article.type.enum';
+import type { ArticleDifficultyEnum } from '../constant/Article.difficulty.enum';
 import type ArticalSolutionStepsParams from './subParams/Artical.soluation.steps.params';
 import type ArticalAnswersParams from './subParams/Artical.answers.params';
 import type ArticalSourceParams from './subParams/Artical.source.params';
@@ -14,11 +14,11 @@ import type ArticalSkillParams from './subParams/Artical.skills.params';
 export default class AddArticlesParams implements Params {
   public title?: string;
   public image?: string[];
-  public articleType?: QuestionTypeEnum;
+  public articleType?: ArticleTypeEnum;
   public subjectId?: number | null;
   public topics?: number[];
   public articleSequenceId?: number | null;
-  public difficultyLevel?: QuestionDifficultyEnum | null;
+  public difficultyLevel?: ArticleDifficultyEnum | null;
   public skills?: ArticalSkillParams[];
   public articleSource?: ArticalSourceParams;
   public answers?: ArticalAnswersParams[];
@@ -44,11 +44,11 @@ export default class AddArticlesParams implements Params {
   constructor(data: {
     title?: string;
     image?: string[];
-    articleType?: QuestionTypeEnum;
+    articleType?: ArticleTypeEnum;
     subjectId?: number | null;
     topics?: number[];
     articleSequenceId?: number | null;
-    difficultyLevel?: QuestionDifficultyEnum | null;
+    difficultyLevel?: ArticleDifficultyEnum | null;
     skills?: ArticalSkillParams[];
     articleSource?: ArticalSourceParams;
     answers?: ArticalAnswersParams[];

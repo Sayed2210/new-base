@@ -7,8 +7,9 @@ import router from '@/router';
 import { useFormsStore } from '@/stores/formsStore';
 import type ArticleModel from '../../core/models/Article.model';
 import ArticleRepository from '../../data/repositories/Artical.repository';
+import type ShowArticleModel from '../../core/models/show.Article.model';
 
-export default class ArticleController extends BaseController<ArticleModel, ArticleModel[]> {
+export default class ArticleController extends BaseController<ShowArticleModel, ArticleModel[]> {
   private static instance: ArticleController;
 
   protected get repository() {

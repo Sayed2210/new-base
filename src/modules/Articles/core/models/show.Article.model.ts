@@ -1,25 +1,25 @@
 import type TitleInterface from '@/base/Data/Models/titleInterface';
-import { QuestionGeneratedByEnum } from '../constant/generatedby.enum';
-import { QuestionDifficultyEnum } from '../constant/question.difficulty.enum';
-import { QuestionStatusEnum } from '../constant/question.status.enum';
-import { QuestionTypeEnum } from '../constant/question.type.enum';
 import AnswerModel from './subModels/Article.answer.model';
 import QuestionClarificationModel from './subModels/Article.clarification.model';
 import SolutionHintModel from './subModels/Article.solution.hint.model';
 import SolutionStepsModel from './subModels/Article.solution.steps.model';
 import SubjectTreeModel from './subModels/Article.subject.tree.model';
 import sequenceTreeModel from './subModels/Article.sequence.model';
-import QuestionDocumentModel from './subModels/Article.document.model';
 import ArticleSkillsModel from './subModels/Article.skills.model';
+import { ArticleTypeEnum } from '../constant/Article.type.enum';
+import { ArticleDifficultyEnum } from '../constant/Article.difficulty.enum';
+import { ArticleStatusEnum } from '../constant/Article.status.enum';
+import { ArticleGeneratedByEnum } from '../constant/Article.generatedby.enum';
+import ArticleDocumentModel from './subModels/Article.document.model';
 
 export default class ShowArticleModel {
   public readonly id?: number;
-  public readonly articleType?: QuestionTypeEnum;
-  public readonly difficulty?: QuestionDifficultyEnum;
-  public readonly topic?: TitleInterface<number>;
+  public readonly articleType?: ArticleTypeEnum;
+  public readonly difficulty?: ArticleDifficultyEnum;
+  public readonly topics?: TitleInterface<number>[];
   public readonly articleImage?: string;
-  public readonly status?: QuestionStatusEnum;
-  public readonly generatedBy?: QuestionGeneratedByEnum;
+  public readonly status?: ArticleStatusEnum;
+  public readonly generatedBy?: ArticleGeneratedByEnum;
   public readonly createdAt?: string;
   public readonly answers?: AnswerModel[];
   public readonly articleClarification?: QuestionClarificationModel;
@@ -27,7 +27,7 @@ export default class ShowArticleModel {
   public readonly articleSolutionHint?: SolutionHintModel;
   public readonly subjectTree?: SubjectTreeModel;
   public readonly sequenceTree?: sequenceTreeModel;
-  public readonly articleDocuments?: QuestionDocumentModel;
+  public readonly articleDocuments?: ArticleDocumentModel;
   public readonly articleSkills?: ArticleSkillsModel[];
   public readonly articleTitle?: string;
   public readonly subject?: string;
@@ -35,18 +35,19 @@ export default class ShowArticleModel {
 
   constructor(data: {
     id?: number;
-    generatedBy?: QuestionGeneratedByEnum;
-    articleType?: QuestionTypeEnum;
-    difficulty?: QuestionDifficultyEnum;
-    status?: QuestionStatusEnum;
+    generatedBy?: ArticleGeneratedByEnum;
+    articleType?: ArticleTypeEnum;
+    difficulty?: ArticleDifficultyEnum;
+    status?: ArticleStatusEnum;
     createdAt?: string;
+    topics?: TitleInterface<number>[];
     answers?: AnswerModel[];
     articleClarification?: QuestionClarificationModel;
     articleSolutionSteps?: SolutionStepsModel;
     articleSolutionHint?: SolutionHintModel;
     subjectTree?: SubjectTreeModel;
     sequenceTree?: sequenceTreeModel;
-    articleDocuments?: QuestionDocumentModel;
+    articleDocuments?: ArticleDocumentModel;
     articleSkills?: ArticleSkillsModel[];
     articleTitle?: string;
     subject?: string;
@@ -58,6 +59,7 @@ export default class ShowArticleModel {
     this.difficulty = data.difficulty;
     this.status = data.status;
     this.createdAt = data.createdAt;
+    this.topics = data.topics;
     this.answers = data.answers;
     this.articleClarification = data.articleClarification;
     this.articleSolutionSteps = data.articleSolutionSteps;
@@ -76,7 +78,7 @@ export default class ShowArticleModel {
 
   static fromJson(json: any): ShowArticleModel {
     if (!json) {
-      throw new Error('Cannot create questionsModel from null or undefined');
+      throw new Error('Cannot create articlesModel from null or undefined');
     }
 
     return new ShowArticleModel({
@@ -86,13 +88,14 @@ export default class ShowArticleModel {
       difficulty: json.difficulty,
       status: json.status,
       createdAt: json.created_at,
+      topics: json.topics,
       answers: json.answers.map((answer: any) => AnswerModel.fromJson(answer)),
       articleClarification: QuestionClarificationModel.fromJson(json.article_clarification),
       articleSolutionSteps: SolutionStepsModel.fromJson(json.article_solution_steps),
       articleSolutionHint: SolutionHintModel.fromJson(json.article_solution_hint),
       subjectTree: SubjectTreeModel.fromJson(json.subject_tree),
       sequenceTree: sequenceTreeModel.fromJson(json.sequence_tree),
-      articleDocuments: QuestionDocumentModel.fromJson(json.article_documents),
+      articleDocuments: ArticleDocumentModel.fromJson(json.article_documents),
       articleSkills: json.article_skills.map((skill: any) => ArticleSkillsModel.fromJson(skill)),
       articleTitle: json.article_title,
       subject: json.subject,
@@ -101,11 +104,11 @@ export default class ShowArticleModel {
   }
 
   static example: ShowArticleModel = new ShowArticleModel({
-    id: 1,
-    generatedBy: QuestionGeneratedByEnum.manual,
-    articleType: QuestionTypeEnum.mcq,
-    difficulty: QuestionDifficultyEnum.easy,
-    status: QuestionStatusEnum.not_Reviewd,
+    id: 1, 
+    generatedBy: ArticleGeneratedByEnum.manual,
+    articleType: ArticleTypeEnum.mcq,
+    difficulty: ArticleDifficultyEnum.easy,
+    status: ArticleStatusEnum.not_Reviewd,
     createdAt: '2022-01-01',
     answers: [AnswerModel.example],
     articleClarification: QuestionClarificationModel.example,
@@ -113,7 +116,7 @@ export default class ShowArticleModel {
     articleSolutionHint: SolutionHintModel.example,
     subjectTree: SubjectTreeModel.example,
     sequenceTree: sequenceTreeModel.example,
-    articleDocuments: QuestionDocumentModel.example,
+    articleDocuments: ArticleDocumentModel.example,
     articleSkills: [ArticleSkillsModel.example],
     articleTitle: 'What is the capital of Egypt? ',
     subject: 'Math',

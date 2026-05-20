@@ -2,9 +2,10 @@ import BaseRepository, { type RepositoryConfig } from '@/base/Domain/Repositorie
 import ArticleModel from '../../core/models/Article.model';
 import ArticleSubjectModel from '../../core/models/Subject.model';
 import ArticleApiService from '../api/Artical.api-service';
-import { QuestionGeneratedByEnum } from '../../core/constant/generatedby.enum';
+import { ArticleGeneratedByEnum } from '../../core/constant/Article.generatedby.enum';
+import ShowArticleModel from '../../core/models/show.Article.model';
 
-export default class ArticleRepository extends BaseRepository<ArticleModel, ArticleModel[]> {
+export default class ArticleRepository extends BaseRepository<ShowArticleModel, ArticleModel[]> {
   private static instance: ArticleRepository;
 
   protected get apiService() {
@@ -19,8 +20,8 @@ export default class ArticleRepository extends BaseRepository<ArticleModel, Arti
     };
   }
 
-  protected get mockItem(): ArticleModel {
-    return ArticleModel.example;
+  protected get mockItem(): ShowArticleModel {
+    return ShowArticleModel.example;
   }
 
   protected get mockList(): ArticleModel[] {
@@ -30,21 +31,21 @@ export default class ArticleRepository extends BaseRepository<ArticleModel, Arti
         id: 2,
         articleTitle: 'What are the benefits of renewable energy?',
         subject: ArticleSubjectModel.example2,
-        generatedBy: QuestionGeneratedByEnum.manual,
+        generatedBy: ArticleGeneratedByEnum.manual,
         noOfQs: 5,
       }),
       new ArticleModel({
         id: 3,
         articleTitle: 'How does solar power work?',
         subject: ArticleSubjectModel.example3,
-        generatedBy: QuestionGeneratedByEnum.ai,
+        generatedBy: ArticleGeneratedByEnum.ai,
         noOfQs: 8,
       }),
       new ArticleModel({
         id: 4,
         articleTitle: 'What are the challenges of wind energy?',
         subject: ArticleSubjectModel.example,
-        generatedBy: QuestionGeneratedByEnum.manual,
+        generatedBy: ArticleGeneratedByEnum.manual,
         noOfQs: 12,
       }),
     ];
@@ -57,8 +58,8 @@ export default class ArticleRepository extends BaseRepository<ArticleModel, Arti
     return ArticleRepository.instance;
   }
 
-  protected parseItem(data: any): ArticleModel {
-    return ArticleModel.fromJson(data);
+  protected parseItem(data: any): ShowArticleModel {
+    return ShowArticleModel.fromJson(data);
   }
 
   protected parseList(data: any): ArticleModel[] {

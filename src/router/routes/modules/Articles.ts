@@ -16,7 +16,7 @@ export const ArticlesRoutes: RouteRecordRaw[] = [
     name: 'Add article',
     component: () => import('@/views/Articles/AddArticles.vue'),
     meta: {
-      breadcrumb: 'Add article',
+      breadcrumb: 'add artical questions',
       icon: EmployeeIcon,
       parent: 'Articles',
     },

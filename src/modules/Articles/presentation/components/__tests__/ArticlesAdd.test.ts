@@ -27,6 +27,12 @@ vi.mock('vue-router', () => ({
   createWebHistory: vi.fn(),
 }));
 
+vi.mock('primevue/config', () => ({
+  usePrimeVue: () => ({
+    config: { ripple: true },
+  }),
+}));
+
 vi.mock('../controllers/Article.controller', () => ({
   default: {
     getInstance: () => ({
@@ -39,7 +45,7 @@ vi.mock('../controllers/Article.controller', () => ({
 const globalConfig = {
   plugins: [createPinia()],
   stubs: {
-    ArticleForm: true,
+    ArticleNewForm: true,
     AppButton: true,
     IconAccept: true,
   },

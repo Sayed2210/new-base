@@ -1,23 +1,23 @@
 import IndexParams from '@/base/Core/Params/indexParams';
-import type { QuestionStatusEnum } from '../constant/question.status.enum';
-import type { QuestionGeneratedByEnum } from '../constant/generatedby.enum';
-import type { QuestionTypeEnum } from '../constant/question.type.enum';
-import type { QuestionDifficultyEnum } from '../constant/question.difficulty.enum';
+import type { ArticleStatusEnum } from '../constant/Article.status.enum';
+import type { ArticleGeneratedByEnum } from '../constant/Article.generatedby.enum';
+import type { ArticleTypeEnum } from '../constant/Article.type.enum';
+import type { ArticleDifficultyEnum } from '../constant/Article.difficulty.enum';
 
 export default class IndexArticleParams extends IndexParams {
-  public status?: QuestionStatusEnum;
-  public generated_by?: QuestionGeneratedByEnum;
-  public article_type?: QuestionTypeEnum;
-  public difficulty?: QuestionDifficultyEnum;
+  public status?: ArticleStatusEnum;
+  public generated_by?: ArticleGeneratedByEnum;
+  public article_type?: ArticleTypeEnum;
+  public difficulty?: ArticleDifficultyEnum;
   constructor(data: {
     word: string;
     pageNumber: number;
     perPage: number;
     withPage: number;
-    status?: QuestionStatusEnum;
-    generated_by?: QuestionGeneratedByEnum;
-    article_type?: QuestionTypeEnum;
-    difficulty?: QuestionDifficultyEnum;
+    status?: ArticleStatusEnum;
+    generated_by?: ArticleGeneratedByEnum;
+    article_type?: ArticleTypeEnum;
+    difficulty?: ArticleDifficultyEnum;
   }) {
     super(data.word, data.pageNumber, data.perPage, data.withPage);
     this.status = data.status;

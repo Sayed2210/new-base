@@ -4,8 +4,8 @@ import { onBeforeRouteLeave, useRoute } from 'vue-router';
 import { useFormsStore } from '@/stores/formsStore';
 import type ShowArticleModel from '../../core/models/show.Article.model';
 import type AddArticlesParams from '../../core/params/add.Artical.params';
-import BasicArticalDataForm from './FormComponent/BasicArticalDataForm.vue';
-import ArticalAnswersDataForm from './FormComponent/ArticalAnswersDataForm.vue';
+import BasicArticleDataForm from './FormComponent/BasicArticleDataForm.vue';
+import ArticleAnswersDataForm from './FormComponent/ArticleAnswersDataForm.vue';
 
 const emit = defineEmits(['updateData']);
 
@@ -120,7 +120,7 @@ const GetAllBasicData = (data: AddArticlesParams) => {
     </header>
 
 
-    <BasicArticalDataForm @updateData="GetAllBasicData" />
-    <ArticalAnswersDataForm />
+    <BasicArticleDataForm @updateData="GetAllBasicData" />
+    <ArticleAnswersDataForm :article-data="employee!" :article-type="1" />
   </div>
 </template>

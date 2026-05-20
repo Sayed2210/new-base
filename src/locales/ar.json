@@ -101,5 +101,15 @@
   "is_master": "هل هو نوع رئيسي؟",
   "write_the_answer": "اكتب الإجابة...",
   "correct_answer": "الإجابة الصحيحة",
-  "add_new_answer": "إضافة إجابة جديدة"
+  "add_new_answer": "إضافة إجابة جديدة",
+  "article title": "عنوان المقال",
+  "Enter article title": "أدخل عنوان المقال",
+  "basic article data": "البيانات الأساسية للمقال",
+  "Is there any Article clarification?": "هل هناك أي توضيح للمقال؟",
+  "article": "مقال",
+  "Articles": "المقالات",
+  "Add New Article": "إضافة مقال جديد",
+  "Edit Article": "تعديل المقال",
+  "Article Source": "مصدر المقال",
+  "Enter article source": "أدخل مصدر المقال"
 }
