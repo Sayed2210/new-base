@@ -11,6 +11,7 @@ import sequenceTreeModel from './subModels/sequence.model';
 import QuestionDocumentModel from './subModels/question.document.model';
 import QuestionSkillsModel from './subModels/question.skills.model';
 import type TitleInterface from '@/base/Data/Models/titleInterface';
+import { AnswerEvaluationTypeEnum } from '../constant/answer.evaluation.type.enum';
 
 export default class ShowQuestionsModel {
   public readonly id?: number;
@@ -115,7 +116,7 @@ export default class ShowQuestionsModel {
   static example: ShowQuestionsModel = new ShowQuestionsModel({
     id: 1,
     generatedBy: QuestionGeneratedByEnum.manual,
-    questionType: QuestionTypeEnum.true_false,
+    questionType: QuestionTypeEnum.mcq,
     difficulty: QuestionDifficultyEnum.easy,
     status: QuestionStatusEnum.not_Reviewd,
     createdAt: '2022-01-01',
@@ -125,7 +126,17 @@ export default class ShowQuestionsModel {
       { id: 2, title: 'Document 2' },
       { id: 3, title: 'Document 3' },
     ],
-    answers: [AnswerModel.example],
+    answers: [
+      {
+        ...AnswerModel.example,
+        answer: 'answer 1',
+        match: 'matching answert',
+        rank: 10,
+        similar: 'Similar',
+        EvaluationType: AnswerEvaluationTypeEnum.similar,
+      },
+      { ...AnswerModel.example, answer: 'answer 2', is_right_answer: false },
+    ],
     questionClarification: QuestionClarificationModel.example,
     solutionSteps: SolutionStepsModel.example,
     solutionHint: SolutionHintModel.example,
@@ -144,8 +155,8 @@ export default class ShowQuestionsModel {
         precentage: 90,
       }),
     ],
-    isClarification:true,
-    isQusetionSteps:true,
-    isQusetionHints:true,
+    isClarification: true,
+    isQusetionSteps: true,
+    isQusetionHints: true,
   });
 }

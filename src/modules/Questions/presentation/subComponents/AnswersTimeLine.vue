@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { AnswerTypeHelper } from '@/modules/Questions/presentation/subComponents/AnswersTypes/GetAnswerTypeHelper';
-import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/question.type.enum';
+  import { AnswerTypeHelper } from '@/modules/Questions/presentation/subComponents/AnswersTypes/GetAnswerTypeHelper';
+  import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/question.type.enum';
+  import type AnswerModel from '../../core/models/subModels/answer.model';
 
-const { questionType } = defineProps<{
-  questionType: QuestionTypeEnum
-}>();
+  const { questionType, questionData } = defineProps<{
+    questionType: QuestionTypeEnum;
+    questionData?: AnswerModel[];
+  }>();
 
-const emit = defineEmits(['update:data']);
+  const emit = defineEmits(['update:data']);
 </script>
 
 <template>
-  <component :is="AnswerTypeHelper(questionType)" @update:data="emit('update:data', $event)" />
+  <component
+    :is="AnswerTypeHelper(questionType)"
+    @update:data="emit('update:data', $event)"
+    :questionData="questionData!"
+  />
+  <!--  -->
 </template>

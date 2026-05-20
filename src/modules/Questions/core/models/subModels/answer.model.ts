@@ -1,14 +1,14 @@
 import { AnswerEvaluationTypeEnum } from '../../constant/answer.evaluation.type.enum';
 
 export default class AnswerModel {
-  public readonly id?: number;
-  public readonly answer: string;
-  public readonly image: string;
-  public readonly is_right_answer: boolean;
-  public readonly match: string;
-  public readonly rank: number;
-  public readonly similar: string;
-  public readonly EvaluationType: AnswerEvaluationTypeEnum;
+  public id?: number;
+  public answer?: string;
+  public image?: string;
+  public is_right_answer?: boolean;
+  public match?: string;
+  public rank?: number;
+  public similar?: string;
+  public EvaluationType?: AnswerEvaluationTypeEnum;
 
   constructor(data: {
     id?: number;
@@ -51,7 +51,7 @@ export default class AnswerModel {
 
   static example: AnswerModel = new AnswerModel({
     answer: 'answer',
-    image: 'image',
+    image: `https://cyber.comolho.com/static/img/avatar.png`,
     is_right_answer: true,
     match: 'match',
     rank: 10,
