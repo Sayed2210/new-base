@@ -1,257 +1,260 @@
 <script lang="ts" setup>
-import MultiSelect from 'primevue/multiselect';
+  import MultiSelect from 'primevue/multiselect';
 
-import Select from 'primevue/select';
+  import Select from 'primevue/select';
 
-import { computed, ref, watch, toRefs } from 'vue';
+  import { computed, ref, watch, toRefs } from 'vue';
 
-import type Params from '@/base/Core/Params/params';
+  import type Params from '@/base/Core/Params/params';
 
-import ValidationService from '@/base/Presentation/Utils/validationService';
+  import ValidationService from '@/base/Presentation/Utils/validationService';
 
-import IconBackStage from '@/shared/icons/IconBackStage.vue';
+  import IconBackStage from '@/shared/icons/IconBackStage.vue';
 
-import PlusIcon from '@/shared/icons/PlusIcon.vue';
+  import PlusIcon from '@/shared/icons/PlusIcon.vue';
 
-import TitleInterface from '@/base/Data/Models/titleInterface';
+  import TitleInterface from '@/base/Data/Models/titleInterface';
 
-import type BaseController from '@/base/Presentation/Controller/baseController';
+  import type BaseController from '@/base/Presentation/Controller/baseController';
 
-export type ComponentType = 'select' | 'multiselect';
+  export type ComponentType = 'select' | 'multiselect';
 
-interface Props {
-  label?: string;
+  interface Props {
+    label?: string;
 
-  options?: TitleInterface<string | number>[];
+    options?: TitleInterface<string | number>[];
 
-  staticOptions?: TitleInterface<string | number>[] | null;
+    staticOptions?: TitleInterface<string | number>[] | null;
 
-  modelValue: TitleInterface<string | number> | TitleInterface<string | number>[] | null | undefined;
+    modelValue:
+      | TitleInterface<string | number>
+      | TitleInterface<string | number>[]
+      | null
+      | undefined;
 
-  placeholder: string;
+    placeholder: string;
 
-  controller?: BaseController<any>;
+    controller?: BaseController<any>;
 
-  params?: Params;
+    params?: Params;
 
-  type?: ComponentType | number;
+    type?: ComponentType | number;
 
-  required?: boolean;
+    required?: boolean;
 
-  id?: string;
+    id?: string;
 
-  autoFill?: boolean;
+    autoFill?: boolean;
 
-  reload?: boolean;
+    reload?: boolean;
 
-  optional?: boolean;
+    optional?: boolean;
 
-  hascontent?: boolean;
+    hascontent?: boolean;
 
-  hasHeader?: boolean;
+    hasHeader?: boolean;
 
-  onclick?: () => void;
-}
+    onclick?: () => void;
+  }
 
-const emit = defineEmits(['update:modelValue', 'update:slot']);
+  const emit = defineEmits(['update:modelValue', 'update:slot']);
 
-const props = withDefaults(defineProps<Props>(), {
-  type: 1,
+  const props = withDefaults(defineProps<Props>(), {
+    type: 1,
 
-  required: false,
+    required: false,
 
-  autoFill: false,
+    autoFill: false,
 
-  id: 'custom-select-input',
+    id: 'custom-select-input',
 
-  reload: true,
+    reload: true,
 
-  staticOptions: null,
+    staticOptions: null,
 
-  optional: false,
-});
+    optional: false,
+  });
 
-const {
-  modelValue,
+  const {
+    modelValue,
 
-  type,
+    type,
 
-  controller,
+    controller,
 
-  params,
+    params,
 
-  staticOptions,
+    staticOptions,
 
-  autoFill,
+    autoFill,
 
-  id,
+    id,
 
-  required,
+    required,
 
-  reload: enableReload,
-} = toRefs(props);
+    reload: enableReload,
+  } = toRefs(props);
 
-// Reactive state
+  // Reactive state
 
-const loading = ref(false);
+  const loading = ref(false);
 
-const message = ref('No Data Found');
+  const message = ref('No Data Found');
 
-const localValue = ref(props.modelValue);
+  const localValue = ref(props.modelValue);
 
-const dynamicOptions = ref<TitleInterface<string | number>[]>([]);
+  const dynamicOptions = ref<TitleInterface<string | number>[]>([]);
 
-// Computed properties
+  // Computed properties
 
-const isMultiselect = computed(() => Number(type.value) === 2);
+  const isMultiselect = computed(() => Number(type.value) === 2);
 
-const componentType = computed(() => (isMultiselect.value ? MultiSelect : Select));
+  const componentType = computed(() => (isMultiselect.value ? MultiSelect : Select));
 
-const mergedOptions = computed(() => staticOptions?.value ?? dynamicOptions.value);
+  const mergedOptions = computed(() => staticOptions?.value ?? dynamicOptions.value);
 
-const multiselectProps = computed(() =>
-  isMultiselect.value ? { display: 'chip', maxSelectedLabels: 6 } : {},
-);
+  const multiselectProps = computed(() =>
+    isMultiselect.value ? { display: 'chip', maxSelectedLabels: 6 } : {},
+  );
 
-// Value handling
+  // Value handling
 
-const normalizedValue = computed({
-  get: () => localValue.value,
+  const normalizedValue = computed({
+    get: () => localValue.value,
 
-  set: (newValue) => {
-    localValue.value = isMultiselect.value ? ensureArray(newValue) : ensureSingle(newValue);
+    set: (newValue) => {
+      localValue.value = isMultiselect.value ? ensureArray(newValue) : ensureSingle(newValue);
 
+      // console.log(localValue.value, 'localValue.value');
+
+      emitUpdate();
+    },
+  });
+
+  // Watchers
+
+  watch(modelValue, syncLocalValue);
+
+  watch([params, controller], handleOptionUpdates, { immediate: true });
+
+  watch(mergedOptions, () => {
+    if (modelValue.value) syncLocalValue(modelValue.value);
+  });
+
+  // Initialization
+
+  syncLocalValue(props.modelValue);
+
+  // Methods
+
+  function ensureArray(value: unknown): TitleInterface<string | number>[] {
+    return Array.isArray(value) ? (value as TitleInterface<string | number>[]) : [];
+  }
+
+  function ensureSingle(value: unknown): TitleInterface<number | string> | null {
+    // console.log(value , "single");
+
+    return value instanceof TitleInterface ? (value as TitleInterface<number | string>) : null;
+  }
+
+  function syncLocalValue(newValue: typeof props.modelValue): void {
+    if (newValue === localValue.value) return;
+
+    // Handle multiselect (array)
+
+    if (Array.isArray(newValue)) {
+      // if (mergedOptions.value.length > 0) {
+      localValue.value = newValue.map((item) => {
+        const match = mergedOptions.value.find((opt) => opt.id === item.id);
+        return match ?? item;
+      });
+      // } else {
+      //   localValue.value = newValue;
+      // }
+      return;
+    }
+
+    // Handle single select
+    if (newValue && mergedOptions.value.length > 0) {
+      const id = (newValue as TitleInterface<string | number>).id;
+      const match = mergedOptions.value.find((opt) => opt.id === id);
+      localValue.value = match ?? newValue;
+    } else {
+      localValue.value = newValue;
+    }
+  }
+
+  function emitUpdate(): void {
     // console.log(localValue.value, 'localValue.value');
 
-    emitUpdate();
-  },
-});
+    emit('update:modelValue', localValue.value);
 
-// Watchers
-
-watch(modelValue, syncLocalValue);
-
-watch([params, controller], handleOptionUpdates, { immediate: true });
-
-watch(mergedOptions, () => {
-  if (modelValue.value) syncLocalValue(modelValue.value);
-});
-
-// Initialization
-
-syncLocalValue(props.modelValue);
-
-// Methods
-
-function ensureArray(value: unknown): TitleInterface<string | number>[] {
-  return Array.isArray(value) ? (value as TitleInterface<string | number>[]) : [];
-}
-
-function ensureSingle(value: unknown): TitleInterface<number | string> | null {
-  // console.log(value , "single");
-
-  return value instanceof TitleInterface ? (value as TitleInterface<number | string>) : null;
-}
-
-function syncLocalValue(newValue: typeof props.modelValue): void {
-  if (newValue === localValue.value) return;
-
-  // Handle multiselect (array)
-
-  if (Array.isArray(newValue)) {
-    // if (mergedOptions.value.length > 0) {
-    localValue.value = newValue.map((item) => {
-      const match = mergedOptions.value.find((opt) => opt.id === item.id);
-      return match ?? item;
-    });
-    // } else {
-    //   localValue.value = newValue;
-    // }
-    return;
+    ValidationService.clearError(id.value);
   }
 
-  // Handle single select
-  if (newValue && mergedOptions.value.length > 0) {
-    const id = (newValue as TitleInterface<string | number>).id;
-    const match = mergedOptions.value.find((opt) => opt.id === id);
-    localValue.value = match ?? newValue;
-  } else {
-    localValue.value = newValue;
+  async function handleOptionUpdates(): Promise<void> {
+    if (params?.value && controller?.value) {
+      await fetchOptions();
+    } else {
+      dynamicOptions.value = staticOptions?.value ?? [];
+    }
   }
 
-}
+  async function fetchOptions(): Promise<void> {
+    if (!controller?.value || !params?.value) return;
 
-function emitUpdate(): void {
-  // console.log(localValue.value);
+    try {
+      loading.value = true;
 
-  emit('update:modelValue', localValue.value);
+      message.value = 'Loading Data';
 
-  ValidationService.clearError(id.value);
-}
+      // Before: const response = await controller.value.fetch(params.value);
 
-async function handleOptionUpdates(): Promise<void> {
-  if (params?.value && controller?.value) {
+      const response = await controller.value.fetchAsOptions(params.value);
+
+      dynamicOptions.value = response;
+
+      updateControllerState();
+
+      handleAutoFill(response);
+    } catch (error) {
+      handleFetchError(error);
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  function updateControllerState(): void {
+    if (!controller?.value) return;
+
+    if (controller.value.isListFailed()) {
+      message.value = 'An Error Occurred';
+    } else if (controller.value.isListSuccess()) {
+      message.value = 'No Data Found';
+    }
+  }
+
+  function handleAutoFill(options: TitleInterface<number | string>[]): void {
+    if (autoFill?.value && options.length === 1) {
+      normalizedValue.value = isMultiselect.value ? [options[0]!] : options[0]!;
+    }
+  }
+
+  function handleFetchError(error: unknown): void {
+    console.error('Fetch error:', error);
+
+    message.value = 'Failed to load data';
+
+    dynamicOptions.value = [];
+  }
+
+  async function reloadData(): Promise<void> {
+    if (loading.value) return;
+
     await fetchOptions();
-  } else {
-    dynamicOptions.value = staticOptions?.value ?? [];
+
+    normalizedValue.value = isMultiselect.value ? [] : null;
   }
-}
-
-async function fetchOptions(): Promise<void> {
-  if (!controller?.value || !params?.value) return;
-
-  try {
-    loading.value = true;
-
-    message.value = 'Loading Data';
-
-    // Before: const response = await controller.value.fetch(params.value);
-
-    const response = await controller.value.fetchAsOptions(params.value);
-
-    dynamicOptions.value = response;
-
-    updateControllerState();
-
-    handleAutoFill(response);
-  } catch (error) {
-    handleFetchError(error);
-  } finally {
-    loading.value = false;
-  }
-}
-
-function updateControllerState(): void {
-  if (!controller?.value) return;
-
-  if (controller.value.isListFailed()) {
-    message.value = 'An Error Occurred';
-  } else if (controller.value.isListSuccess()) {
-    message.value = 'No Data Found';
-  }
-}
-
-function handleAutoFill(options: TitleInterface<number | string>[]): void {
-  if (autoFill?.value && options.length === 1) {
-    normalizedValue.value = isMultiselect.value ? [options[0]!] : options[0]!;
-  }
-}
-
-function handleFetchError(error: unknown): void {
-  console.error('Fetch error:', error);
-
-  message.value = 'Failed to load data';
-
-  dynamicOptions.value = [];
-}
-
-async function reloadData(): Promise<void> {
-  if (loading.value) return;
-
-  await fetchOptions();
-
-  normalizedValue.value = isMultiselect.value ? [] : null;
-}
 </script>
 
 <template>
@@ -260,8 +263,11 @@ async function reloadData(): Promise<void> {
       <div class="flex items-center">
         <slot name="reloadHeader"></slot>
 
-        <span v-if="enableReload" class="reload-icon cursor-pointer flex items-center gap-sm me-2 w-full"
-          @click="reloadData">
+        <span
+          v-if="enableReload"
+          class="reload-icon cursor-pointer flex items-center gap-sm me-2 w-full"
+          @click="reloadData"
+        >
           <span v-if="optional" class="optional-text">({{ $t('optional') }})</span>
 
           <IconBackStage />
@@ -287,10 +293,18 @@ async function reloadData(): Promise<void> {
   </div>
 
   <slot v-if="!hascontent">
-
-    <component :is="componentType" v-model="normalizedValue" :options="mergedOptions" :placeholder="placeholder"
-      class="input-select w-full" option-label="title" v-bind="multiselectProps" filter :loading="loading"
-      :empty-message="message" />
+    <component
+      :is="componentType"
+      v-model="normalizedValue"
+      :options="mergedOptions"
+      :placeholder="placeholder"
+      class="input-select w-full"
+      option-label="title"
+      v-bind="multiselectProps"
+      filter
+      :loading="loading"
+      :empty-message="message"
+    />
 
     <input :id="id" type="text" class="hidden w-full" :value="normalizedValue" />
   </slot>
@@ -299,25 +313,25 @@ async function reloadData(): Promise<void> {
 </template>
 
 <style scoped lang="scss">
-.add-dialog {
-  width: 20px;
-  height: 20px;
-  margin-right: 6px;
-  cursor: pointer;
+  .add-dialog {
+    width: 20px;
+    height: 20px;
+    margin-right: 6px;
+    cursor: pointer;
 
-  svg {
-    width: 18px;
-    height: 18px;
+    svg {
+      width: 18px;
+      height: 18px;
+    }
   }
-}
 
-.input-select {
-  width: 100%;
-  background-color: transparent;
-  border-radius: 50px;
+  .input-select {
+    width: 100%;
+    background-color: transparent;
+    border-radius: 50px;
 
-  &:focus {
-    border: 1px solid #d9dbe9 !important;
+    &:focus {
+      border: 1px solid #d9dbe9 !important;
+    }
   }
-}
 </style>
