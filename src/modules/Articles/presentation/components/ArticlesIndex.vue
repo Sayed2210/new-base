@@ -230,7 +230,7 @@ const GetQuestionStatus = (val: ArticleStatusEnum) => {
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                   </svg>
                 </router-link>
-                <router-link :to="`/${route.params.country_code}/articles/edit/${item.id}`" title="show"
+                <router-link :to="`/${route.params.country_code}/articles/show/${item.id}`" title="show"
                   class="action-btn show">
                   <ShowIcon />
                 </router-link>

@@ -3,9 +3,9 @@ import ArticleModel from '../../core/models/Article.model';
 import ArticleSubjectModel from '../../core/models/Subject.model';
 import ArticleApiService from '../api/Artical.api-service';
 import { ArticleGeneratedByEnum } from '../../core/constant/Article.generatedby.enum';
-import ShowArticleModel from '../../core/models/show.Article.model';
+import ArticalDetailsModel from '../../core/models/artical.details.model';
 
-export default class ArticleRepository extends BaseRepository<ShowArticleModel, ArticleModel[]> {
+export default class ArticleRepository extends BaseRepository<ArticalDetailsModel, ArticleModel[]> {
   private static instance: ArticleRepository;
 
   protected get apiService() {
@@ -20,8 +20,8 @@ export default class ArticleRepository extends BaseRepository<ShowArticleModel, 
     };
   }
 
-  protected get mockItem(): ShowArticleModel {
-    return ShowArticleModel.example;
+  protected get mockItem(): ArticalDetailsModel {
+    return ArticalDetailsModel.example;
   }
 
   protected get mockList(): ArticleModel[] {
@@ -58,8 +58,8 @@ export default class ArticleRepository extends BaseRepository<ShowArticleModel, 
     return ArticleRepository.instance;
   }
 
-  protected parseItem(data: any): ShowArticleModel {
-    return ShowArticleModel.fromJson(data);
+  protected parseItem(data: any): ArticalDetailsModel {
+    return ArticalDetailsModel.fromJson(data);
   }
 
   protected parseList(data: any): ArticleModel[] {
@@ -67,7 +67,7 @@ export default class ArticleRepository extends BaseRepository<ShowArticleModel, 
     return data.reduce((acc: ArticleModel[], item) => {
       try {
         if (item != null) {
-          acc.push(this.parseItem(item));
+          acc.push(ArticleModel.fromJson(item));
         }
       } catch {}
       return acc;

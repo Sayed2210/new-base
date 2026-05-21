@@ -1,0 +1,28 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import ArticleController from '../../controllers/Article.controller';
+import { onMounted } from 'vue';
+import ShowArticlesParams from '../../../core/params/show.Articles.params';
+import OverViewArticle from './OverViewArticle.vue';
+import AnalysisReport from './AnalysisReport.vue';
+
+
+const controller = ArticleController.getInstance();
+const state = computed(() => controller.itemState.value);
+const route = useRoute();
+
+const fetchArticle = async () => {
+    await controller.fetchOne(new ShowArticlesParams(Number(route.params.id)));
+}
+onMounted(() => {
+    fetchArticle();
+});
+
+</script>
+<template>
+    <div class="Article_details">
+        <OverViewArticle :article="state.data!" />
+        <AnalysisReport :article="state.data!" />
+    </div>
+</template>

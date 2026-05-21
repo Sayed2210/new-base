@@ -32,4 +32,15 @@ export const ArticlesRoutes: RouteRecordRaw[] = [
       parent: 'Articles',
     },
   },
+  {
+    path: 'articles/show/:id',
+    name: 'Show article',
+    component: () => import('@/views/Articles/ShowArticles.vue'),
+    props: true,
+    meta: {
+      breadcrumb: 'artical details',
+      icon: EmployeeIcon,
+      parent: 'Articles',
+    },
+  },
 ];
