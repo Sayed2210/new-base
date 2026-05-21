@@ -7,6 +7,7 @@ import type QuestionSkillParams from './subParams/question.skills.params';
 import type QuestionSourceParams from './subParams/question.source.params';
 import type SolutionStepsParams from './subParams/soluation.steps.params';
 import type QuestionClarificationParams from './subParams/question.clarification.params';
+import type TopicsParams from './subParams/topics.params';
 
 /**
  * Parameters for adding a new employee
@@ -17,7 +18,7 @@ export default class EditquestionsParams implements Params {
   public image?: string[];
   public questionType?: QuestionTypeEnum;
   public subjectId?: number | null;
-  public topics?: number[];
+  public topics?: TopicsParams[];
   public questionSequenceId?: number | null;
   public difficultyLevel?: QuestionDifficultyEnum | null;
   public skills?: QuestionSkillParams[];
@@ -48,7 +49,7 @@ export default class EditquestionsParams implements Params {
     image?: string[];
     questionType?: QuestionTypeEnum;
     subjectId?: number | null;
-    topics?: number[];
+    topics?: TopicsParams[];
     questionSequenceId?: number | null;
     difficultyLevel?: QuestionDifficultyEnum | null;
     skills?: QuestionSkillParams[];

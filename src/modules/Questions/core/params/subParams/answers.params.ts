@@ -1,16 +1,17 @@
 import type Params from '@/base/Core/Params/params';
 import { ClassValidation } from '@/base/Presentation/Utils/classValidation';
 import type { AnswerEvaluationTypeEnum } from '../../constant/answer.evaluation.type.enum';
+import AttachmentsParams from './attachments.params';
 
 export default class AnswersParams implements Params {
   public title?: string;
-  public file?: string;
+  public file?: AttachmentsParams[];
   public isCorrect?: boolean;
   public correctOrder?: number;
   public matchAnswer?: string;
   public answerEvaluation?: AnswerEvaluationTypeEnum;
-  public similarPrecentage?: number;
-
+  public similarPrecentage?: string;
+  public rank?: number;
   public static readonly validation = new ClassValidation().setRules({
     title: { required: true },
     answerEvaluation: { required: true },
@@ -18,12 +19,13 @@ export default class AnswersParams implements Params {
 
   constructor(data: {
     title?: string;
-    file?: string;
+    file?: AttachmentsParams[];
     isCorrect?: boolean;
     correctOrder?: number;
     matchAnswer?: string;
     answerEvaluation?: AnswerEvaluationTypeEnum;
-    similarPrecentage?: number;
+    similarPrecentage?: string;
+    rank?:number
   }) {
     this.title = data.title;
     this.file = data.file;
@@ -32,17 +34,19 @@ export default class AnswersParams implements Params {
     this.matchAnswer = data.matchAnswer;
     this.answerEvaluation = data.answerEvaluation;
     this.similarPrecentage = data.similarPrecentage;
+    this.rank = data.rank;
   }
 
   toMap(): { [p: string]: any } {
     return {
-      title: this.title,
-      file: this.file,
+      answer: this.title,
+      attachments: this.file?.map((item) => item.toMap()),
       is_correct: this.isCorrect,
       correct_order: this.correctOrder,
       match_answer: this.matchAnswer,
       answer_evaluation: this.answerEvaluation,
       similar_precentage: this.similarPrecentage,
+      rank: this.rank,
     };
   }
 

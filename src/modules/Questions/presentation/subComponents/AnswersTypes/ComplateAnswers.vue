@@ -6,13 +6,14 @@
   import TitleInterface from '@/base/Data/Models/titleInterface';
   import { AnswerEvaluationTypeEnum } from '@/modules/Questions/core/constant/answer.evaluation.type.enum';
   import type AnswerModel from '@/modules/Questions/core/models/subModels/answer.model';
+  import AnswersParams from '@/modules/Questions/core/params/subParams/answers.params';
   const emit = defineEmits(['update:data']);
   const { questionData } = defineProps<{
     questionData: AnswerModel[];
   }>();
 
   const selectedTab = ref<number | null>(
-    questionData[0]?.EvaluationType || AnswerEvaluationTypeEnum.typical,
+    questionData?.[0]?.EvaluationType || AnswerEvaluationTypeEnum.typical,
   );
 
   const Answers = ref<AnswerModel[]>([
@@ -39,11 +40,29 @@
   };
 
   const UpdateData = () => {
-    emit('update:data', Answers.value);
+    emit(
+      'update:data',
+      Answers.value.map((el: AnswerModel) => {
+        return new AnswersParams({
+          title: el.answer,
+          similarPrecentage: el.similar,
+          answerEvaluation: el.EvaluationType,
+        });
+      }),
+    );
   };
 
   onMounted(() => {
-    emit('update:data', Answers.value);
+    emit(
+      'update:data',
+      Answers.value.map((el: AnswerModel) => {
+        return new AnswersParams({
+          title: el.answer,
+          similarPrecentage: el.similar,
+          answerEvaluation: el.EvaluationType,
+        });
+      }),
+    );
   });
 
   const tabs = ref<TitleInterface<number>[]>([
@@ -63,6 +82,7 @@
 
   const selectTab = (tab: number) => {
     selectedTab.value = tab;
+    UpdateData();
   };
 
   watch(

@@ -7,6 +7,7 @@ import type QuestionSkillParams from './subParams/question.skills.params';
 import type QuestionSourceParams from './subParams/question.source.params';
 import type SolutionStepsParams from './subParams/soluation.steps.params';
 import type QuestionClarificationParams from './subParams/question.clarification.params';
+import type TopicsParams from './subParams/topics.params';
 
 /**
  * Parameters for adding a new employee
@@ -16,7 +17,7 @@ export default class AddquestionsParams implements Params {
   public image?: string[];
   public questionType?: QuestionTypeEnum;
   public subjectId?: number | null;
-  public topics?: number[];
+  public topics?: TopicsParams[];
   public questionSequenceId?: number | null;
   public difficultyLevel?: QuestionDifficultyEnum | null;
   public skills?: QuestionSkillParams[];
@@ -46,7 +47,7 @@ export default class AddquestionsParams implements Params {
     image?: string[];
     questionType?: QuestionTypeEnum;
     subjectId?: number | null;
-    topics?: number[];
+    topics?: TopicsParams[];
     questionSequenceId?: number | null;
     difficultyLevel?: QuestionDifficultyEnum | null;
     skills?: QuestionSkillParams[];
@@ -79,20 +80,20 @@ export default class AddquestionsParams implements Params {
 
   toMap(): { [p: string]: any } {
     return {
-      title: this.title,
+      question: this.title,
       image: this.image,
       question_type: this.questionType,
       subject_id: this.subjectId,
-      topics: this.topics,
+      topics: this.topics?.map((item) => item.toMap()),
       question_sequence_id: this.questionSequenceId,
       difficulty_level: this.difficultyLevel,
-      skills: this.skills,
-      answers: this.answers,
-      question_source: this.questionSource,
+      skills: this.skills?.map((item) => item.toMap()),
+      answers: this.answers?.map((item) => item.toMap()),
+      question_source: this.questionSource?.toMap(),
       is_question_clarification: this.isQuestionClarification,
-      question_clarification: this.questionClarification,
+      question_clarification: this.questionClarification?.toMap(),
       is_solution_steps: this.isSolutionSteps,
-      solution_steps: this.solutionSteps,
+      solution_steps: this.solutionSteps?.toMap(),
       is_solution_hint: this.isSolutionHint,
       solution_hint: this.solutionHint,
     };

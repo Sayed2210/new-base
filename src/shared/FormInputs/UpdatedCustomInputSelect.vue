@@ -13,7 +13,7 @@
 
   import PlusIcon from '@/shared/icons/PlusIcon.vue';
 
-  import TitleInterface from '@/base/Data/Models/titleInterface';
+  import type TitleInterface from '@/base/Data/Models/titleInterface';
 
   import type BaseController from '@/base/Presentation/Controller/baseController';
 
@@ -152,9 +152,10 @@
   }
 
   function ensureSingle(value: unknown): TitleInterface<number | string> | null {
-    // console.log(value , "single");
-
-    return value instanceof TitleInterface ? (value as TitleInterface<number | string>) : null;
+    if (value !== null && typeof value === 'object' && 'id' in value) {
+      return value as TitleInterface<number | string>;
+    }
+    return null;
   }
 
   function syncLocalValue(newValue: typeof props.modelValue): void {

@@ -3,6 +3,7 @@
   import { onMounted, ref, watch } from 'vue';
   import AddNewAnswerIcon from '@/shared/icons/AddNewAnswerIcon.vue';
   import type AnswerModel from '@/modules/Questions/core/models/subModels/answer.model';
+  import AnswersParams from '@/modules/Questions/core/params/subParams/answers.params';
 
   const emit = defineEmits(['update:data']);
   const { questionData } = defineProps<{
@@ -28,11 +29,27 @@
   };
 
   const UpdateData = () => {
-    emit('update:data', Answers.value);
+    emit(
+      'update:data',
+      Answers.value.map((el: AnswerModel) => {
+        return new AnswersParams({
+          title: el.answer,
+          rank: el.rank,
+        });
+      }),
+    );
   };
 
   onMounted(() => {
-    emit('update:data', Answers.value);
+    emit(
+      'update:data',
+      Answers.value.map((el: AnswerModel) => {
+        return new AnswersParams({
+          title: el.answer,
+          rank: el.rank,
+        });
+      }),
+    );
   });
 
   watch(

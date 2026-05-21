@@ -6,6 +6,8 @@
   import Checkbox from 'primevue/checkbox';
   import AddNewAnswerIcon from '@/shared/icons/AddNewAnswerIcon.vue';
   import type AnswerModel from '@/modules/Questions/core/models/subModels/answer.model';
+  import AnswersParams from '@/modules/Questions/core/params/subParams/answers.params';
+  import AttachmentsParams from '@/modules/Questions/core/params/subParams/attachments.params';
 
   const emit = defineEmits(['update:data']);
   const { questionData } = defineProps<{
@@ -32,11 +34,43 @@
   };
 
   const UpdateData = () => {
-    emit('update:data', Answers.value);
+    emit(
+      'update:data',
+      Answers.value.map((el: AnswerModel) => {
+        return new AnswersParams({
+          title: el.answer,
+          file: el.image
+            ? [
+                new AttachmentsParams({
+                  alt: el.image,
+                  file: el.image,
+                }),
+              ]
+            : [],
+          isCorrect: el.is_right_answer,
+        });
+      }),
+    );
   };
 
   onMounted(() => {
-    emit('update:data', Answers.value);
+    emit(
+      'update:data',
+      Answers.value.map((el: AnswerModel) => {
+        return new AnswersParams({
+          title: el.answer,
+          file: el.image
+            ? [
+                new AttachmentsParams({
+                  alt: el.image,
+                  file: el.image,
+                }),
+              ]
+            : [],
+          isCorrect: el.is_right_answer,
+        });
+      }),
+    );
   });
 
   const setImage = (files: any[], index: number) => {

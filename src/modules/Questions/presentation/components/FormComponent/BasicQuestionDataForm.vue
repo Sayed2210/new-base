@@ -21,6 +21,7 @@
   import type QuestionClarificationParams from '@/modules/Questions/core/params/subParams/question.clarification.params';
   import ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
   import QuestionDocumentModel from '@/modules/Questions/core/models/subModels/question.document.model';
+  import TopicsParams from '@/modules/Questions/core/params/subParams/topics.params';
 
   const emit = defineEmits(['updateData']);
   const route = useRoute();
@@ -49,7 +50,9 @@
         difficultyLevel: selectedDifficultyLevel.value
           ? (selectedDifficultyLevel.value as QuestionDifficultyEnum)
           : null,
-        topics: SelectedTopic.value ? SelectedTopic.value : [],
+        topics: SelectedTopic.value
+          ? SelectedTopic.value.map((item: number) => new TopicsParams({ id: item }))
+          : [],
         questionSequenceId: SelectedQuestionSequence.value ? SelectedQuestionSequence.value : null,
         questionSource: new QuestionSourceParams({
           documentId: SelectedDocumet.value || 0,
@@ -66,7 +69,9 @@
         difficultyLevel: selectedDifficultyLevel.value
           ? (selectedDifficultyLevel.value as QuestionDifficultyEnum)
           : null,
-        topics: SelectedTopic.value ? SelectedTopic.value : [],
+        topics: SelectedTopic.value
+          ? SelectedTopic.value.map((item) => new TopicsParams({ id: item }))
+          : [],
         questionSequenceId: SelectedQuestionSequence.value ? SelectedQuestionSequence.value : null,
         questionSource: new QuestionSourceParams({
           documentId: SelectedDocumet.value || 0,
