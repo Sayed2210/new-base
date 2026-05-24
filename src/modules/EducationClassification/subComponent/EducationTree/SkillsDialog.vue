@@ -36,7 +36,7 @@
 
   const isEdit = ref(false);
   const editId = ref<number | null>(null);
-  const percentageValue = ref<string>('');
+  const percentageValue = ref<number | null>(null);
   const selectedSkill = ref<TitleInterface<number> | undefined>(undefined);
   const inputRef = ref<HTMLInputElement | null>(null);
 
@@ -57,7 +57,7 @@
   const isInputEmpty = computed(() => !percentageValue.value || !selectedSkill.value);
 
   function resetForm() {
-    percentageValue.value = '';
+    percentageValue.value = null;
     selectedSkill.value = undefined;
     isEdit.value = false;
     editId.value = null;
@@ -81,7 +81,7 @@
         new EditEducationSubjectSkillsParams({
           entryId: editId.value,
           skillId: selectedSkill.value.id,
-          percentage: percentageValue.value,
+          percentage: percentageValue.value?.toString() || '0',
           educationClassificationSubjectId: props.branchId!,
         }),
       );
@@ -92,7 +92,7 @@
           skills: [
             new SkillParams({
               skillId: selectedSkill.value.id,
-              percentage: percentageValue.value,
+              percentage: percentageValue.value?.toString() || '0',
             }),
           ],
         }),
@@ -114,7 +114,7 @@
       new ShowEducationSubjectSkillsParams({ entryId: id }),
     );
     if (res?.data) {
-      percentageValue.value = String(res.data.percentage);
+      percentageValue.value = res.data.percentage as number;
       if (res.data.skill) {
         selectedSkill.value = {
           id: res.data.skill.id,
@@ -175,6 +175,8 @@
 
       <div class="dialog-inputs">
         <div class="field-group select-group">
+           <span class="error-message-inputs">  {{ selectedSkill }}</span>
+        
           <UpdatedCustomInputSelect
             id="skills"
             :label="`skills`"
@@ -194,12 +196,17 @@
             :id="`percentage-input-${level}`"
             ref="inputRef"
             v-model="percentageValue"
-            type="text"
+            type="number"
+            min="0"
+            max="100"
             :placeholder="$t('enter_percentage')"
             class="field-input"
             @keydown.esc="dialogVisible = false"
             @keydown.enter="!isInputEmpty && handleSave()"
-          />
+          /> 
+          <span class="error-message-inputs" v-if="percentageValue < 0 || percentageValue > 100   || typeof percentageValue === 'string' ">  
+            {{ $t('percentage must be between 0 and 100') }}
+          </span>
         </div>
       </div>
 
@@ -219,6 +226,10 @@
 </template>
 
 <style scoped lang="scss">
+  .error-message-inputs{
+    color: red;
+    font-family: "medium";
+  }
   .dialog-content {
     display: flex;
     flex-direction: column;
@@ -266,7 +277,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    gap: 5px;
+    gap: 15px;
     .field-group {
       &:first-child {
         width: 60%;

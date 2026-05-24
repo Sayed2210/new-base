@@ -47,10 +47,10 @@
     }
   });
 
-  const isInputEmpty = computed(() => !durationValue.value || !pricingValue.value);
+  const isInputEmpty = computed(() => durationValue.value < 0 || pricingValue.value < 0); 
 
   function resetForm() {
-    durationValue.value = 0;
+    durationValue.value = 0 ;
     pricingValue.value = 0;
     isEdit.value = false;
     editId.value = null;
@@ -68,7 +68,7 @@
       await educationPricingController.update(
         new EditEducationSubjectPricingParams({
           pricingId: editId.value,
-          duration: durationValue.value,
+          duration: durationValue.value ,
           durationType: DurationTypeEnum.MONTH,
           price: pricingValue.value,
         }),
@@ -164,10 +164,14 @@
             v-model="durationValue"
             type="number"
             :placeholder="$t('enter_duration')"
+            min="0"
             class="field-input"
             @keydown.esc="dialogVisible = false"
             @keydown.enter="!isInputEmpty && handleSave()"
           />
+          <span class="error-message-inputs" v-if="durationValue < 0">
+            {{ $t('duration must be greater than 0') }}
+          </span>
         </div>
         <div class="field-group">
           <label class="field-label" :for="`pricing-input-${level}`">{{ $t('pricing') }}</label>
@@ -176,10 +180,14 @@
             v-model="pricingValue"
             type="number"
             :placeholder="$t('enter_pricing')"
+            min="0"
             class="field-input"
             @keydown.esc="dialogVisible = false"
             @keydown.enter="!isInputEmpty && handleSave()"
           />
+          <span class="error-message-inputs" v-if="pricingValue < 0">
+            {{ $t('pricing must be greater than 0') }}
+          </span>
         </div>
       </div>
 
@@ -199,6 +207,10 @@
 </template>
 
 <style scoped>
+.error-message-inputs{
+  color: red;
+  font-family: "medium";
+}
   .dialog-content {
     display: flex;
     flex-direction: column;

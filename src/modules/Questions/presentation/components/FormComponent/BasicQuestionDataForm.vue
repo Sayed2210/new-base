@@ -251,12 +251,12 @@
           <QuestionContantTabs
             :ContentData="ContentData!"
             class="field-group col-span-2"
-            @updateData="getQuestionCOntent"
+            @update-data="getQuestionCOntent"
           />
           <QuestionSource
-            :documentSource="DocumentSource"
-            @updateData="GetQuestionSource"
+            :document-source="DocumentSource"
             class="field-group col-span-2"
+            @update-data="GetQuestionSource"
           />
         </div>
       </AccordionContent>

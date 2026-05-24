@@ -63,7 +63,8 @@ watch(
 </script>
 
 <template>
-  <Accordion :value="isClarification ? 1 : 0" :pt="{
+  <Accordion
+:value="isClarification ? 1 : 0" :pt="{
     root: `question-clarification ${isClarification ? 'active' : ''}`,
   }" @update:value="isClarification = !isClarification; updateData()">
     <AccordionPanel :value="1">
@@ -76,15 +77,16 @@ watch(
         </template>
       </AccordionHeader>
       <AccordionContent>
-        <ArticleSource :documentSource="DocumentSource" @updateData="GetQuestionSource" />
+        <ArticleSource :document-source="DocumentSource" @update-data="GetQuestionSource" />
 
         <div class="input-wrapper">
           <label for="descreption">{{ $t('Description') }}</label>
           <div class="description-container">
             <div class="description-header">
               <span>B / U</span>
-              <HandleFilesUpload :label="``" accept="image/*" :multiple="true" :index="20" :have-content="true"
-                :class="`image-input`" @change="(files) => handleFile(files)" :file="file">
+              <HandleFilesUpload
+:label="``" accept="image/*" :multiple="true" :index="20" :have-content="true"
+                :class="`image-input`" :file="file" @change="(files) => handleFile(files)">
                 <template #content>
                   <div class="upload-attachment-container">
                     <UploadFileIcon />
@@ -93,7 +95,7 @@ watch(
                 </template>
               </HandleFilesUpload>
             </div>
-            <textarea name="descreption" id="descreption" v-model="description" @input="updateData"></textarea>
+            <textarea id="descreption" v-model="description" name="descreption" @input="updateData"></textarea>
           </div>
         </div>
       </AccordionContent>

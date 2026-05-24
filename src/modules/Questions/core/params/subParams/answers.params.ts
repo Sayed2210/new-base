@@ -1,7 +1,7 @@
 import type Params from '@/base/Core/Params/params';
 import { ClassValidation } from '@/base/Presentation/Utils/classValidation';
 import type { AnswerEvaluationTypeEnum } from '../../constant/answer.evaluation.type.enum';
-import AttachmentsParams from './attachments.params';
+import type AttachmentsParams from './attachments.params';
 
 export default class AnswersParams implements Params {
   public title?: string;

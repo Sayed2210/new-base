@@ -109,7 +109,8 @@ watch(
         </div>
       </div>
     </header>
-    <Accordion :value="isSolutionSteps ? 1 : 0" :pt="{
+    <Accordion
+:value="isSolutionSteps ? 1 : 0" :pt="{
       root: `article-solution-steps ${isSolutionSteps ? 'active' : ''}`,
     }" @update:value="isSolutionSteps = !isSolutionSteps">
       <AccordionPanel :value="1">
@@ -131,7 +132,8 @@ watch(
             <div class="description-container">
               <div class="description-header">
                 <span>B / U</span>
-                <HandleFilesUpload :label="``" accept="image/*" :multiple="true" :index="30" :file=file
+                <HandleFilesUpload
+:label="``" accept="image/*" :multiple="true" :index="30" :file=file
                   :have-content="true" :class="`image-input`" @change="(files) => handleFile(files)">
                   <template #content>
                     <div class="upload-attachment-container">
@@ -141,21 +143,24 @@ watch(
                   </template>
                 </HandleFilesUpload>
               </div>
-              <textarea id="descreption" v-model="description" name="descreption"
+              <textarea
+id="descreption" v-model="description" name="descreption"
                 :placeholder="$t('Enter Question clarification')" @input="updateData"></textarea>
             </div>
           </div>
           <div class="document-tab">
             <div class="form-group">
               <div class="input">
-                <UpdatedCustomInputSelect id="doc-subject" :label="`subject`" :params="indexDocumentParams"
-                  :controller="documentController" v-model="SelectedSubject" placeholder="select subject"
+                <UpdatedCustomInputSelect
+id="doc-subject" v-model="SelectedSubject" :label="`subject`"
+                  :params="indexDocumentParams" :controller="documentController" placeholder="select subject"
                   @update:model-value="updateData" />
               </div>
               <div class="field-group">
                 <label class="field-label" for="name">{{ $t('title of artical') }}</label>
                 <div class="input-wrap">
-                  <input id="article-source" v-model="articleSource" type="text"
+                  <input
+id="article-source" v-model="articleSource" type="text"
                     :placeholder="$t('enter title of artical ')" class="field-input" @input="updateData" />
                 </div>
               </div>
@@ -165,7 +170,8 @@ watch(
       </AccordionPanel>
     </Accordion>
 
-    <Accordion :value="isSolutionHint ? 1 : 0" :pt="{
+    <Accordion
+:value="isSolutionHint ? 1 : 0" :pt="{
       root: `article-solution-steps ${isSolutionHint ? 'active' : ''}`,
     }" @update:value="isSolutionHint = !isSolutionHint">
       <AccordionPanel :value="1">
@@ -185,14 +191,16 @@ watch(
           <div class=" document-tab">
             <div class="form-group form-group-grid">
               <div class="input">
-                <UpdatedCustomInputSelect id="doc-subject" :label="`Documents`" :params="indexDocumentParams"
-                  :controller="documentController" v-model="SelectedSubject" placeholder="select Documents"
+                <UpdatedCustomInputSelect
+id="doc-subject" v-model="SelectedSubject" :label="`Documents`"
+                  :params="indexDocumentParams" :controller="documentController" placeholder="select Documents"
                   @update:model-value="updateData" />
               </div>
               <div class="field-group">
                 <label class="field-label" for="name">{{ $t('source') }}</label>
                 <div class="input-wrap">
-                  <input id="article-source" v-model="articleSource" type="text" :placeholder="$t('enter source')"
+                  <input
+id="article-source" v-model="articleSource" type="text" :placeholder="$t('enter source')"
                     class="field-input" @input="updateData" />
                 </div>
               </div>
@@ -201,7 +209,8 @@ watch(
         </AccordionContent>
       </AccordionPanel>
     </Accordion>
-    <Accordion :value="isExplain ? 1 : 0" :pt="{
+    <Accordion
+:value="isExplain ? 1 : 0" :pt="{
       root: `article-solution-steps-explain ${isExplain ? 'active' : ''}`,
     }" @update:value="isExplain = !isExplain">
       <AccordionPanel :value="1">
@@ -219,7 +228,8 @@ watch(
             <div class="description-container">
               <div class="description-header">
                 <span>B / U</span>
-                <HandleFilesUpload :label="``" accept="image/*" :multiple="true" :index="30" :file=file
+                <HandleFilesUpload
+:label="``" accept="image/*" :multiple="true" :index="30" :file=file
                   :have-content="true" :class="`image-input`" @change="(files) => handleFile(files)">
                   <template #content>
                     <div class="upload-attachment-container">
@@ -229,7 +239,7 @@ watch(
                   </template>
                 </HandleFilesUpload>
               </div>
-              <textarea name="descreption" id="descreption" v-model="description" @input="updateData"></textarea>
+              <textarea id="descreption" v-model="description" name="descreption" @input="updateData"></textarea>
             </div>
           </div>
         </AccordionContent>

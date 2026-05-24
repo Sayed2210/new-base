@@ -35,9 +35,9 @@
 <template>
   <div class="ranking-answers-time-line-container">
     <div
-      class="timeline-item"
       v-for="(item, index) in Answers"
       :key="index"
+      class="timeline-item"
       :style="{ animationDelay: `${index * 0.15}s` }"
     >
       <div class="timeline-content">
@@ -59,13 +59,13 @@
           <div class="ranking-section">
             <input
               :id="`rank-${index}`"
+              v-model="item.rank"
               type="number"
               placeholder="ranking"
-              v-model="item.rank"
               @input="UpdateData"
             />
           </div>
-          <div class="delete-icon-container" v-if="Answers.length > 1">
+          <div v-if="Answers.length > 1" class="delete-icon-container">
             <button type="button" class="delete-btn" @click="DeleteItem(index)">
               <DeletIcon />
             </button>
@@ -73,7 +73,7 @@
         </div>
       </div>
 
-      <div class="add-row" @click="addNewAnswer" v-if="Answers.length - 1 == index">
+      <div v-if="Answers.length - 1 == index" class="add-row" @click="addNewAnswer">
         <div class="add-icon">
           <AddNewAnswerIcon />
           <span class="add-text">{{ $t('add_another_answer') }}</span>

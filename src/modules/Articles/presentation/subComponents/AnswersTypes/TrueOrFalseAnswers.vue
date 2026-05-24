@@ -44,18 +44,21 @@ const setCorrect = (index: number) => {
 
 <template>
     <div class="true-false-answers-time-line-container">
-        <div class="timeline-item" v-for="(item, index) in Answers" :key="index"
+        <div
+v-for="(item, index) in Answers" :key="index" class="timeline-item"
             :style="{ animationDelay: `${index * 0.15}s` }">
             <div class="timeline-content">
                 <div class="timeline-form-content">
                     <div class="field-group">
                         <label class="field-label" :for="`answer-${index}`">{{ $t(`answer`) }}</label>
                         <div class="input-wrap">
-                            <input :id="`answer-${index}`" v-model="item.answer" type="text"
+                            <input
+:id="`answer-${index}`" v-model="item.answer" type="text"
                                 :placeholder="$t('add_your_answer')" class="field-input" @input="UpdateData" />
                         </div>
                         <div class="files-input" :class="{ haveImage: item.file }">
-                            <HandleFilesUpload :label="``" accept="image/*" :multiple="true" :index="index + 5"
+                            <HandleFilesUpload
+:label="``" accept="image/*" :multiple="true" :index="index + 5"
                                 :file="item.file" :have-content="true" :class="`image-input`"
                                 @change="(files) => setImage(files, index)">
                                 <template #content>
@@ -67,7 +70,8 @@ const setCorrect = (index: number) => {
 
                     <div class="is-correct-section">
                         <label :for="`is-correct-${index}`">{{ $t('correct answer') }}</label>
-                        <Checkbox :binary="true" :model-value="item.isCorrect" :input-id="`is-correct-${index}`"
+                        <Checkbox
+:binary="true" :model-value="item.isCorrect" :input-id="`is-correct-${index}`"
                             name="is-correct" :value="item.isCorrect" @change="setCorrect(index)" />
                     </div>
                 </div>

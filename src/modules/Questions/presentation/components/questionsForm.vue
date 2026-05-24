@@ -110,11 +110,11 @@
       </div>
     </header>
 
-    <BasicQuestionDataForm :questionData="question" @updateData="GetAllBasicData" />
+    <BasicQuestionDataForm :question-data="question" @update-data="GetAllBasicData" />
     <QuestionAnswersDataForm
-      :questionData="question!"
-      :questionType="BasicData?.questionType!"
-      @updateData="GetAllAnswers"
+      :question-data="question!"
+      :question-type="BasicData?.questionType!"
+      @update-data="GetAllAnswers"
     />
   </div>
 </template>

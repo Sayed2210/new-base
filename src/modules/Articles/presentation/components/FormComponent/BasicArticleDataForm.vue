@@ -15,7 +15,7 @@ import type TitleInterface from '@/base/Data/Models/titleInterface';
 import ArticleContantTabs from '../../subComponents/ArticleContantTabs.vue';
 import ArticleSource from '../../subComponents/ArticleSource.vue';
 import ArticalSourceParams from '@/modules/Articles/core/params/subParams/Artical.source.params';
-import { ArticleDifficultyEnum } from '@/modules/Articles/core/constant/Article.difficulty.enum';
+import { type ArticleDifficultyEnum } from '@/modules/Articles/core/constant/Article.difficulty.enum';
 import ArticalSkillParams from '@/modules/Articles/core/params/subParams/Artical.skills.params';
 import type ArticleClarificationParams from '@/modules/Articles/core/params/subParams/Artical.clarification.params';
 import ArticleDocumentModel from '@/modules/Articles/core/models/subModels/Article.document.model';
@@ -181,7 +181,8 @@ watch(
 </script>
 
 <template>
-  <Accordion :pt="{
+  <Accordion
+:pt="{
     'root': 'basic-data-form'
   }" value="0" :lazy="true">
     <AccordionPanel value="0">
@@ -199,13 +200,15 @@ watch(
           <div class="field-group col-span-2" :class="{ disabled: loading }">
             <label class="field-label" for="name">{{ $t('article title') }}</label>
             <div class="input-wrap">
-              <input id="title" v-model="title" type="text" :placeholder="$t('Enter article title')" class="field-input"
+              <input
+id="title" v-model="title" type="text" :placeholder="$t('Enter article title')" class="field-input"
                 @input="updateData" />
             </div>
           </div>
 
           <div class="field-group col-span-2" :class="{ disabled: loading }">
-            <HandleFilesUpload :label="`upload image`" accept="image/*" :multiple="false" :index="1"
+            <HandleFilesUpload
+:label="`upload image`" accept="image/*" :multiple="false" :index="1"
               :file="UploadedImage" :have-content="true" :class="`image-input`" @change="handleImageChange">
               <template #content>
                 <div class="add-imaegs-data">
@@ -217,12 +220,15 @@ watch(
             </HandleFilesUpload>
           </div>
 
-          <SelectionTabs class="field-group col-span-2" :tabs="tabs" :selected-tab="selectedTab"
+          <SelectionTabs
+class="field-group col-span-2" :tabs="tabs" :selected-tab="selectedTab"
             @update:model-value="selectTab" />
-          <ArticleContantTabs :ContentData="ContentData!" class="field-group col-span-2"
-            @updateData="getQuestionCOntent" />
-          <ArticleSource :documentSource="DocumentSource" @updateData="GetQuestionSource"
-            class="field-group col-span-2" />
+          <ArticleContantTabs
+:ContentData="ContentData!" class="field-group col-span-2"
+            @update-data="getQuestionCOntent" />
+          <ArticleSource
+:document-source="DocumentSource" class="field-group col-span-2"
+            @update-data="GetQuestionSource" />
         </div>
       </AccordionContent>
     </AccordionPanel>

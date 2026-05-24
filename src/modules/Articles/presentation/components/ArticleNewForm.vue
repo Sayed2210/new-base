@@ -92,7 +92,7 @@ watch(
       </div>
     </header>
 
-    <BasicArticleDataForm :articleData="article" @updateData="GetAllBasicData" />
-    <ArticleAnswersDataForm :articleData="article!" :articleType="BasicData.articleType!" @updateData="GetAllAnswers" />
+    <BasicArticleDataForm :article-data="article" @update-data="GetAllBasicData" />
+    <ArticleAnswersDataForm :article-data="article!" :article-type="BasicData.articleType!" @update-data="GetAllAnswers" />
   </div>
 </template>

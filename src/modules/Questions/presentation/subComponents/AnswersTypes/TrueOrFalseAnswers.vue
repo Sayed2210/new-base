@@ -91,9 +91,9 @@
 <template>
   <div class="true-false-answers-time-line-container">
     <div
-      class="timeline-item"
       v-for="(item, index) in Answers"
       :key="index"
+      class="timeline-item"
       :style="{ animationDelay: `${index * 0.15}s` }"
     >
       <div class="timeline-content">

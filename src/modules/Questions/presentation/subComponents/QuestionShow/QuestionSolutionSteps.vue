@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import SolutionStepsModel from '@/modules/Questions/core/models/subModels/solution.steps.model';
+  import type SolutionStepsModel from '@/modules/Questions/core/models/subModels/solution.steps.model';
   import SolutionStepsIcon from '@/shared/icons/Question/SolutionSteps.vue';
 
   const { solutionSteps } = defineProps<{ solutionSteps: SolutionStepsModel }>();

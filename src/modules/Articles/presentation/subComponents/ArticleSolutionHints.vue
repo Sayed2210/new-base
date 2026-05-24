@@ -47,8 +47,8 @@ import type ArticleSolutionHintModel from '../../core/models/subModels/Article.s
     :pt="{
       root: `question-solution-hints ${isSolutionSteps ? 'active' : ''}`,
     }"
-    @update:value="isSolutionSteps = !isSolutionSteps"
     :value="isSolutionSteps ? 1 :0"
+    @update:value="isSolutionSteps = !isSolutionSteps"
   >
     <AccordionPanel :value="1">
       <AccordionHeader>
@@ -77,8 +77,8 @@ import type ArticleSolutionHintModel from '../../core/models/subModels/Article.s
                 :index="40"
                 :have-content="true"
                 :class="`image-input`"
-                @change="(files) => handleFile(files)"
                 :file="file"
+                @change="(files) => handleFile(files)"
               >
                 <template #content>
                   <div class="upload-attachment-container">
@@ -89,9 +89,9 @@ import type ArticleSolutionHintModel from '../../core/models/subModels/Article.s
               </HandleFilesUpload>
             </div>
             <textarea
-              name="descreption"
               id="descreption"
               v-model="description"
+              name="descreption"
               @input="updateData"
             ></textarea>
           </div>
