@@ -68,6 +68,12 @@ export default class EducationClassificationController extends BaseController<
     return result;
   }
 
+  async fetchList(params: Params, options?: ApiCallOptions) {
+    return super.fetchList(params, { ...options, useJson: true ,headers:{
+      'Accept-Language': (params as any).isLocale ? 'ar' : 'en',
+    } });
+  }
+
   async update(params: Params, options?: ApiCallOptions, formKey?: string) {
     const FormStore = useFormsStore();
 

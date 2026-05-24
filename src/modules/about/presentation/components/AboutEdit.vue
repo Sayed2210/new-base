@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { onMounted, ref } from 'vue';
-  import { useRoute } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   import type EditAboutParams from '../../core/params/edit.about.params';
   import AboutController from '../controllers/about.controller';
   import ShowAboutParams from '../../core/params/show.about.params';
@@ -13,6 +13,7 @@
   const params = ref<EditAboutParams | null>(null);
   const loading = ref(false);
 
+  const router = useRouter();
   /**
    * Update employee
    */
@@ -26,6 +27,7 @@
     try {
       // console.log(params.value, "params.value")
       await controller.update(params.value, undefined);
+        router.push({ name: 'About' });
     } finally {
       loading.value = false;
     }

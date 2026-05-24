@@ -37,9 +37,10 @@ export default class AboutController extends BaseController<AboutModel, AboutMod
     return AboutController.instance;
   }
   async create(
-    params: Params,
+    params: Params, 
     options?: ApiCallOptions,
-  ): Promise<DataState<AboutModel> | undefined> {
+  ): Promise<DataState<AboutModel> | undefined> { 
+
     return await super.create(params, { ...options, useJson: true });
   }
   async fetchList(params: Params, options?: ApiCallOptions) {
