@@ -314,6 +314,10 @@
 </template>
 
 <style scoped lang="scss">
+  .reload-icon {
+    z-index: 9999;
+    cursor: pointer;
+  }
   .add-dialog {
     width: 20px;
     height: 20px;

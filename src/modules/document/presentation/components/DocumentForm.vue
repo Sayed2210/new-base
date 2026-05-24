@@ -16,9 +16,9 @@
   import DeleteTagIcon from '@/shared/icons/DocaumentType/DeleteTagIcon.vue';
   import StageController from '@/modules/Stages/presentation/controllers/stage.controller';
   import type StageModel from '@/modules/Stages/core/models/stage.model';
-  import type BranchesModel from '@/modules/Stages/core/models/branches.model';
+  // import type BranchesModel from '@/modules/Stages/core/models/branches.model';
   import type DocumentShowModel from '../../core/models/document.show.model';
-
+  import flattenBranchTree from '@/modules/document/core/TreeSelectHelper';
   const emit = defineEmits(['updateData']);
 
   const { document, formKey, loading } = defineProps<{
@@ -57,18 +57,7 @@
   });
 
   const branchOptions = computed<TitleInterface<number>[]>(() => {
-    return allStages.value.flatMap((stage: StageModel) =>
-      stage.branches.flatMap((b: BranchesModel) =>
-        b.subjects.map(
-          (s) =>
-            new TitleInterface<number>({
-              id: s.id!,
-              title: `${b.title} → ${s.title}`,
-              subtitle: b.id,
-            }),
-        ),
-      ),
-    );
+    return allStages.value.flatMap((stage: StageModel) => flattenBranchTree(stage.branches));
   });
 
   const selectedBranchTitle = ref<TitleInterface<number>>();
@@ -108,7 +97,6 @@
   );
 
   const updateData = () => {
-    console.log(UploadedImage.value, 'UploadedImage emit');
     const params = new AddDocumentParams({
       translations: new DocumentTranslationParams({
         description: description.value,
@@ -128,6 +116,7 @@
 
   const handleBranchChange = (selected: TitleInterface<number> | undefined) => {
     selectedBranchTitle.value = selected;
+    console.log(selected, 'selected');
     updateData();
   };
 
@@ -238,11 +227,11 @@
       <div class="field-group col-span-2">
         <UpdatedCustomInputSelect
           id="doc-branch"
-          v-model="selectedBranchTitle "
           :label="`subject name`"
           :static-options="branchOptions"
+          v-model="selectedBranchTitle"
           :placeholder="$t('Enter subject name')"
-          :reload="false"
+          :reload="true"
           @update:model-value="handleBranchChange($event)"
         />
       </div>

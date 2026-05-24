@@ -3,7 +3,7 @@
   import UpdatedCustomInputSelect from '@/shared/FormInputs/UpdatedCustomInputSelect.vue';
   import DocumentTypeController from '@/modules/document/presentation/controllers/DocumentType/document.type.controller';
   import TitleInterface from '@/base/Data/Models/titleInterface';
-  import { ref, watch } from 'vue';
+  import { computed, onMounted, ref, watch } from 'vue';
   import { QuestionDifficultyEnum } from '../../core/constant/question.difficulty.enum';
   import AddquestionsParams from '../../core/params/add.question.params';
   import QuestionSkillParams from '../../core/params/subParams/question.skills.params';
@@ -11,6 +11,13 @@
   import type ShowQuestionsModel from '../../core/models/show.questions.model';
   import SkillsController from '@/modules/Skills/presentation/controllers/skills.controller';
   import IndexSkillsParams from '@/modules/Skills/core/params/index.skills.params';
+  import type StageModel from '@/modules/Stages/core/models/stage.model';
+  import StageController from '@/modules/Stages/presentation/controllers/stage.controller';
+  import flattenBranchTree from '@/modules/document/core/TreeSelectHelper';
+  import FullSubjectTreeController from '../../presentation/controllers/FullSubjectTree/full.subject.tree.controller';
+  import FullSubjectTreeParams from '../../core/params/FullSubjectTree/full.subject.tree.params';
+  import flattenSubjectBranchTree from '@/modules/Questions/core/SubjectTreeSelectHelper';
+
   const indexDocumentTypeParams = new IndexDocumentTypeParams();
   const documentTypeController = DocumentTypeController.getInstance();
   const emit = defineEmits(['updateData']);
@@ -23,6 +30,7 @@
   const SelectedTopic = ref<TitleInterface<number>[] | null>(null);
   const SelectedDifficultyLevel = ref<TitleInterface<number> | null>(null);
   const SelectedSkill = ref<TitleInterface<number>[] | null>(null);
+  const selectedBranchTitle = ref<TitleInterface<number>>();
 
   const DifficultLevels = ref<TitleInterface<number>[]>([
     {
@@ -52,8 +60,8 @@
             });
           }) || undefined,
         topics: SelectedTopic.value?.map((item) => new TopicsParams({ id: item.id })) || [],
-        questionSequenceId: SelectedQuestionSequence.value?.id,
-        subjectId: SelectedSubject.value?.id,
+        questionSequenceId: SelectedSubject.value?.id,
+        subjectId: selectedBranchTitle.value?.id,
       }),
     );
   };
@@ -82,6 +90,44 @@
 
   const skillsController = SkillsController.getInstance();
   const indexSkillsParams = new IndexSkillsParams();
+
+  const stageController = StageController.getInstance();
+  const allStages = ref<StageModel[]>([]);
+
+  const fullSubjectTreeController = FullSubjectTreeController.getInstance();
+
+  onMounted(async () => {
+    await stageController.fetchList(indexDocumentTypeParams);
+    allStages.value = (stageController.listData.value ?? []) as StageModel[];
+  });
+
+  const branchOptions = computed<TitleInterface<number>[]>(() => {
+    return allStages.value.flatMap((stage: StageModel) => flattenBranchTree(stage.branches));
+  });
+
+  const AllSubjectTree = ref<StageModel[]>([]);
+  const handleBranchChange = async (selected: TitleInterface<number> | undefined) => {
+    selectedBranchTitle.value = selected;
+    const fullSubjectTreeParams = new FullSubjectTreeParams({
+      id: selectedBranchTitle.value?.id as number,
+    });
+    if (selectedBranchTitle.value?.id) {
+      const result = await fullSubjectTreeController.fetchList(fullSubjectTreeParams);
+      AllSubjectTree.value = result.data!;
+    }
+    updateData();
+  };
+
+  const subjectOptions = computed<TitleInterface<number>[]>(() => {
+    return (AllSubjectTree.value! || []).flatMap((stage: StageModel) => {
+      return flattenSubjectBranchTree(stage.children);
+    });
+  });
+
+  const handelSubjectUpdate = async (selected: TitleInterface<number> | undefined) => {
+    SelectedSubject.value = selected!;
+    updateData();
+  };
 </script>
 
 <template>
@@ -89,13 +135,14 @@
     <div class="form-group">
       <div class="input">
         <UpdatedCustomInputSelect
-          id="subject"
-          v-model="SelectedSubject"
-          :label="`Subject`"
-          :params="indexDocumentTypeParams"
-          :controller="documentTypeController"
-          placeholder="Subject"
-          @update:model-value="updateData"
+
+          id="doc-branch"
+          :label="`subject name`"
+          :static-options="branchOptions"
+          v-model="selectedBranchTitle"
+          :placeholder="$t('Enter subject name')"
+          :reload="true"
+          @update:model-value="handleBranchChange($event)"
         />
       </div>
       <div class="input">
@@ -103,10 +150,9 @@
           id="question-sequence"
           v-model="SelectedQuestionSequence"
           :label="`question sequence`"
-          :params="indexDocumentTypeParams"
-          :controller="documentTypeController"
+          :static-options="subjectOptions"
           placeholder="Question sequence"
-          @update:model-value="updateData"
+          @update:model-value="handelSubjectUpdate"
         />
       </div>
       <div class="input">
