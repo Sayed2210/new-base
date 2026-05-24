@@ -19,12 +19,11 @@
 
 .info {
   @include flex(row, center, start);
-
   gap: $MdSize;
   min-width: 0;
 
   img {
-    width: var($XlSize4 + $XsSize2);
+    width: calc($XlSize4 + $XsSize2);
     object-fit: contain;
     flex-shrink: 0;
   }

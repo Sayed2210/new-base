@@ -11,7 +11,7 @@
 
   const emit = defineEmits(['updateData']);
 
-  const { skill, formKey, loading } = defineProps<{
+  const { skill, loading } = defineProps<{
     skill?: SkillModel;
     formKey?: string;
     loading?: boolean;

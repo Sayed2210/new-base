@@ -14,7 +14,7 @@
   import type EducationStageModel from '@/modules/EducationClassification/core/models/EducationStage/education.stages.model';
   import type EducationConfigurationModel from '@/modules/EducationClassification/core/models/EducationConfiguration/education.configuration.model';
   import { DataSuccess } from '@/base/Core/NetworkStructure/Resources/dataState/dataState';
-  import DialogIconFillter from '@/shared/icons/DialogIconFillter.vue';
+  // import DialogIconFillter from '@/shared/icons/DialogIconFillter.vue';
   import RenameClassificationDialog from '@/modules/EducationClassification/subComponent/RenameClassificationDialog.vue';
   import DropList from '@/shared/HelpersComponents/DropList.vue';
   import EditIcon from '@/shared/icons/DropListIcons/EditIcon.vue';

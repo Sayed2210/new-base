@@ -9,6 +9,8 @@
   import QuestionSkillParams from '../../core/params/subParams/question.skills.params';
   import TopicsParams from '../../core/params/subParams/topics.params';
   import type ShowQuestionsModel from '../../core/models/show.questions.model';
+  import SkillsController from '@/modules/Skills/presentation/controllers/skills.controller';
+  import IndexSkillsParams from '@/modules/Skills/core/params/index.skills.params';
   const indexDocumentTypeParams = new IndexDocumentTypeParams();
   const documentTypeController = DocumentTypeController.getInstance();
   const emit = defineEmits(['updateData']);
@@ -38,7 +40,6 @@
   ]);
 
   const updateData = () => {
-    console.log(SelectedDifficultyLevel.value, 'SelectedDifficultyLevel');
     emit(
       'updateData',
       new AddquestionsParams({
@@ -78,6 +79,9 @@
       );
     },
   );
+
+  const skillsController = SkillsController.getInstance();
+  const indexSkillsParams = new IndexSkillsParams();
 </script>
 
 <template>
@@ -133,8 +137,8 @@
         id="skills"
         :label="`skill`"
         :type="2"
-        :params="indexDocumentTypeParams"
-        :controller="documentTypeController"
+        :params="indexSkillsParams"
+        :controller="skillsController"
         v-model="SelectedSkill"
         placeholder="Subject Type"
         @update:model-value="updateData"

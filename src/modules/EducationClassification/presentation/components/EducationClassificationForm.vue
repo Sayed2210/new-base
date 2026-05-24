@@ -14,7 +14,7 @@
 
   const emit = defineEmits(['updateData', 'save-education-classification']);
 
-  const { country, formKey, loading } = defineProps<{
+  const { country, loading } = defineProps<{
     country?: EducationClassificationModel;
     formKey?: string;
     loading?: boolean;

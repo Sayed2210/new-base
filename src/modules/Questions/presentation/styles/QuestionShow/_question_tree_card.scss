@@ -5,12 +5,12 @@
 .question-tree-card {
   background: var(--gray-soft);
   border-radius: $XlSize2;
-  border: var(BaseBorderWidth) solid var(--border-color);
+  border: $BaseBorderWidth solid var(--border-color);
   overflow: hidden;
 
   .section {
     padding: $MdSize;
-    border-bottom: var(BaseBorderWidth) solid var(--border-color);
+    border-bottom: $BaseBorderWidth solid var(--border-color);
     &:last-child {
       border-bottom: none;
     }

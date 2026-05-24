@@ -90,7 +90,7 @@ export default class AddquestionsParams implements Params {
       question: this.title,
       image: this.image,
       question_type: this.questionType,
-      subject_id: this.subjectId,
+      e_c_subject_id: this.subjectId,
       topics: this.topics?.map((item) => item.toMap()),
       question_sequence_id: this.questionSequenceId,
       difficulty_level: this.difficultyLevel,

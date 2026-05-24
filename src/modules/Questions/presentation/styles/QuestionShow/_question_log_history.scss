@@ -4,7 +4,7 @@
 
 .question-log-history {
   border-radius: $XlSize2;
-  border: var(BaseBorderWidth) solid var(--border-color);
+  border: $BaseBorderWidth solid var(--border-color);
   background: var(--gray-soft);
   .card-header {
     margin-bottom: $XsSize4;
