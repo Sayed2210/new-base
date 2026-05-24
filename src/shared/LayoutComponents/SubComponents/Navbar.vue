@@ -5,7 +5,7 @@
   import { useThemeStore } from '@/stores/theme';
   import SearchIcon from '@/shared/icons/SearchIcon.vue';
   import HeaderSettingIcon from '@/shared/icons/HeaderIcons/HeaderSettingIcon.vue';
-  import HeaderDarkModeIcon from '@/shared/icons/HeaderIcons/HeaderDarkModeIcon.vue';
+  // import HeaderDarkModeIcon from '@/shared/icons/HeaderIcons/HeaderDarkModeIcon.vue';
   import HeaderMessgaesIcon from '@/shared/icons/HeaderIcons/HeaderMessgaesIcon.vue';
   import HeaderNotificationIcon from '@/shared/icons/HeaderIcons/HeaderNotificationIcon.vue';
   import EmployeeImage from '@/assets/images/headerIMages/employee.jpg';
@@ -18,7 +18,7 @@
   // const props = defineProps({
 
   const userStore = useUserStore();
-  const themeStore = useThemeStore();
+  // const themeStore = useThemeStore();
   const router = useRouter();
   const logout = () => {
     userStore.logout();
