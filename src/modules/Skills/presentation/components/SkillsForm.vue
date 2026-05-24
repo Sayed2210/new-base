@@ -1,14 +1,14 @@
 <script setup lang="ts">
   import { onMounted, ref, watch } from 'vue';
-  import { onBeforeRouteLeave, useRoute } from 'vue-router';
-  import { useFormsStore } from '@/stores/formsStore';
+  import { useRoute } from 'vue-router';
+  // import { useFormsStore } from '@/stores/formsStore';
 
   import type SkillModel from '../../core/models/skills.model';
   import TranslationParams from '@/modules/about/core/params/translation.params';
   import EditSkillsParams from '../../core/params/edit.skills.params';
   import AddSkillsParams from '../../core/params/add.skills.params';
   import MultiLangInput from '@/shared/MultiLangInput.vue';
- 
+
   const emit = defineEmits(['updateData']);
 
   const { skill, formKey, loading } = defineProps<{
@@ -17,13 +17,13 @@
     loading?: boolean;
   }>();
 
-  const FormStore = useFormsStore(); 
-  onBeforeRouteLeave((to, from) => {
-    const savedData = FormStore.getFormData(formKey!);
-    if (savedData && to.path !== from.path) {
-      FormStore.showReturnWarning(formKey!);
-    }
-  });
+  // const FormStore = useFormsStore();
+  // onBeforeRouteLeave((to, from) => {
+  //   const savedData = FormStore.getFormData(formKey!);
+  //   if (savedData && to.path !== from.path) {
+  //     FormStore.showReturnWarning(formKey!);
+  //   }
+  // });
 
   // Form state
   const translations = ref<Record<string, string>>({});
@@ -34,12 +34,15 @@
       if (newskill) {
         const raw: Record<string, string> | Array<Record<string, string>> = newskill.title;
         if (Array.isArray(raw)) {
-          translations.value = raw.reduce((acc: Record<string, string>, item: Record<string, string>) => {
-            if (item?.locale) {
-              acc[item.locale] = item.title ?? '';
-            }
-            return acc;
-          }, {});
+          translations.value = raw.reduce(
+            (acc: Record<string, string>, item: Record<string, string>) => {
+              if (item?.locale) {
+                acc[item.locale] = item.title ?? '';
+              }
+              return acc;
+            },
+            {},
+          );
         } else {
           translations.value = raw;
         }
@@ -57,7 +60,7 @@
       }),
     };
 
-    FormStore.setFormData(formKey!, data);
+    // FormStore.setFormData(formKey!, data);
 
     let params: any;
     if (route.params.id) {
@@ -77,14 +80,14 @@
   };
 
   onMounted(() => {
-    const saved = FormStore.getFormData(formKey!);
-    if (saved) {
-      translations.value = saved.translations;
+    // const saved = FormStore.getFormData(formKey!);
+    // if (saved) {
+    //   translations.value = saved.translations;
 
-      updateData();
-    } else if (!skill) {
-      resetForm();
-    }
+    //   updateData();
+    // } else if (!skill) {
+    resetForm();
+    // }
   });
 
   const updateTranslations = (newTranslations: Record<string, string>) => {

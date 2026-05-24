@@ -23,7 +23,7 @@ export default class SkillModel {
     }
 
     return new SkillModel({
-      id: json.id,
+      id: json.skill_id,
       title: json.title,
     });
   }

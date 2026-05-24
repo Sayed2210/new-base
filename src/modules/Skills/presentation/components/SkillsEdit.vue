@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { onMounted, ref } from 'vue';
-  import { useRoute } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   import IconAccept from '@/shared/icons/IconAccept.vue';
   import type EditSkillsParams from '../../core/params/edit.skills.params';
   import ShowSkillsParams from '../../core/params/show.skills.params';
@@ -9,8 +9,9 @@
 
   const controller = SkillsController.getInstance();
   const route = useRoute();
+  const router = useRouter();
   const formKey = route.fullPath;
- 
+
   const params = ref<EditSkillsParams | null>(null);
   const loading = ref(false);
 
@@ -25,7 +26,8 @@
 
     loading.value = true;
     try {
-      await controller.update(params.value, undefined);
+      const data = await controller.update(params.value, undefined);
+      if (data) router.push({ name: 'Skills' });
     } finally {
       loading.value = false;
     }
@@ -42,14 +44,17 @@
 
 <template>
   <div class="skills-edit-page">
-    <SkillsForm :skill="controller.itemData.value!" :form-key="formKey" :loading="loading" @update-data="updateData" />
+    <SkillsForm
+      :skill="controller.itemData.value!"
+      :form-key="formKey"
+      :loading="loading"
+      @update-data="updateData"
+    />
 
     <div class="actions" :class="{ disabled: loading }">
-      <button  class="btn btn-primary w-full" @click="saveSkill">
-        <span v-if="loading" class="loader-skills"></span> 
-        <span v-else>
-          {{ $t('save') }} <IconAccept />
-        </span>
+      <button class="btn btn-primary w-full" @click="saveSkill">
+        <span v-if="loading" class="loader-skills"></span>
+        <span v-else> {{ $t('save') }} <IconAccept /> </span>
       </button>
     </div>
 
@@ -60,17 +65,24 @@
 </template>
 
 <style scoped lang="scss">
-
-        .loader-skills {
-          width: 35px;
-          height: 35px;  
-          border-radius: 50%;
-          border: 8px solid;
-          border-color: #000 #0000;
-          animation: l1 1s infinite;
-        }
-        @keyframes l1 {to{transform: rotate(.5turn)}}
-        @keyframes l7 {to{transform: rotate(.5turn)}}
+  .loader-skills {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 8px solid;
+    border-color: #000 #0000;
+    animation: l1 1s infinite;
+  }
+  @keyframes l1 {
+    to {
+      transform: rotate(0.5turn);
+    }
+  }
+  @keyframes l7 {
+    to {
+      transform: rotate(0.5turn);
+    }
+  }
 
   .actions {
     margin-top: 24px;

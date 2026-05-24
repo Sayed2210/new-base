@@ -65,8 +65,11 @@
     return null;
   }
 
-  async function fetchRoot() {
-    const params = new FetchEducationStageParams({ classification_id: classificationId });
+  async function fetchRoot(word?: string) {
+    const params = new FetchEducationStageParams({
+      classification_id: classificationId,
+      search: word,
+    });
     const result = await controller.fetchList(params);
     if (result instanceof DataSuccess) {
       rootNodes.value = (result.data ?? []).map((s: EducationStageModel) => makeNode(s, 0));
@@ -122,7 +125,6 @@
     level: number;
     branchId?: number;
   }) {
-    console.log(branchId, 'branchId');
     if (!branchId) return;
     const params = new AddEducationStageParams({
       translations: new TranslationParams({ title: name }),
@@ -215,6 +217,14 @@
     await nextTick();
     refreshParentId.value = null;
   }
+
+  const SearchTree = async (event: Event) => {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    // console.log(value);
+    await fetchRoot(value);
+  } 
 </script>
 
 <template>
@@ -236,12 +246,13 @@
             type="text"
             placeholder="Search About Education Classification,Branch,Sub..."
             class="search-input"
+            @input="SearchTree"
           />
         </div>
-        <button class="filter-btn">
+        <!-- <button class="filter-btn">
           <DialogIconFillter />
           {{ $t('Filter') }}
-        </button>
+        </button> -->
       </div>
 
       <!-- Empty State -->
