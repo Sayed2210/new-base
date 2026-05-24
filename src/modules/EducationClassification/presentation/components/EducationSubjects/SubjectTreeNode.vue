@@ -235,7 +235,7 @@
         </svg>
       </button>
 
-      <button class="icon-btn" @click.stop>
+      <button class="icon-btn" @click.stop> 
         <DropList
           :action-list="actionList(node.subject.subject_id)"
           :delete-dialog-title="$t('are_you_sure_you_want_to_remove_this_education_classification')"
@@ -274,7 +274,7 @@
       </div>
     </transition>
     <PricingDialog
-      v-model:visible="showPricingDialog"
+      v-model:visible="showPricingDialog" 
       :level="node.depth + 1"
       :branch-name="node.subject.subject_title"
       :branch-id="node.subject.subject_id"

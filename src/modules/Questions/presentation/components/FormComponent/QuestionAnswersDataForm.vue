@@ -172,8 +172,8 @@ import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/questio
       </AccordionHeader>
       <AccordionContent>
         <AnswersTimeLine
-          :questionData="safeAnswers.answers"
-          :questionType="questionType"
+          :question-data="safeAnswers.answers"
+          :question-type="questionType"
           @update:data="GetAnswers"
         />
         <QuestionClarification
@@ -183,12 +183,12 @@ import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/questio
         />
         <QuestionSolutionSteps
           :SolutionStepsData="SolutionStepsData!"
-          :isSolutionStepsData="isSolutionStepsData"
+          :is-solution-steps-data="isSolutionStepsData"
           @update-data="GetSolutionSteps"
         />
         <QuestionSolutionHints
           :SolutionHintsData="SolutionHintsData!"
-          :isSolutionHintsData="isSolutionHintsData"
+          :is-solution-hints-data="isSolutionHintsData"
           @update-data="GetSolutionHints"
         />
       </AccordionContent>

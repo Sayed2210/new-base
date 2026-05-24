@@ -28,17 +28,20 @@ const route = useRoute();
             </div>
             <div class="buttons">
 
-                <router-link :to="`/${route.params.country_code}/articles/edit/${route.params.id}`" title="edit"
+                <router-link
+:to="`/${route.params.country_code}/articles/edit/${route.params.id}`" title="edit"
                     class="btn btn-edit">
                     <ArticlePencil />
                     {{ $t('Edit') }}
                 </router-link>
-                <router-link :to="`/${route.params.country_code}/articles/edit/${route.params.id}`" title="edit"
+                <router-link
+:to="`/${route.params.country_code}/articles/edit/${route.params.id}`" title="edit"
                     class="btn btn-action">
                     <AchiveIcon />
                     {{ $t('Archive ') }}
                 </router-link>
-                <router-link :to="`/${route.params.country_code}/articles/edit/${route.params.id}`" title="edit"
+                <router-link
+:to="`/${route.params.country_code}/articles/edit/${route.params.id}`" title="edit"
                     class=" btn-delet">
                     <DeletIArticle />
                 </router-link>

@@ -30,8 +30,8 @@ const date = ref();
 
 
 const headers: TableHeader[] = [
-  { key: 'title', label: 'Title', width: '100%', sortable: true },
-  // { key: 'doecumentType', label: 'Document Type', width: '50%' },
+  { key: 'title', label: 'Title', width: '50%', sortable: true },
+  { key: 'doecumentType', label: 'Document Type', width: '50%' },
 ];
 
 const perPage = ref(10);
@@ -182,7 +182,7 @@ id="documentType" :label="`added by`" :params="indexDocumentTypeParams"
         <div class="table-frame">
           <AppTable :headers="headers" :items="data as DocumentModel[]" selectable show-index hoverable striped>
             <template #cell-doecumentType="{ item }">
-              {{ item.doecumentType }}
+              {{ item.doecumentType?.title ?? 'N/A' }}
               <!-- {{ DOCUMENT_TYPE_LABELS[item.id] ?? item.documentTypeId }} -->
             </template>
             <template #actions="{ item }">

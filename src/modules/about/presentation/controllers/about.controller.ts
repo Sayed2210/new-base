@@ -20,7 +20,7 @@ export default class AboutController extends BaseController<AboutModel, AboutMod
       showSuccessDialog: false,
       showErrorDialog: false,
       showErrorTosat: true,
-      showSuccessTosat: false,
+      showSuccessTosat: true,
       autoRetry: false,
       maxAutoRetries: 1,
     };

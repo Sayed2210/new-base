@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import AnswerModel from '@/modules/Questions/core/models/subModels/answer.model';
+  import type AnswerModel from '@/modules/Questions/core/models/subModels/answer.model';
 
   const { answers } = defineProps<{ answers: AnswerModel[] }>();
 </script>
@@ -7,10 +7,10 @@
   <div class="question-answers-wrapper">
     <div class="question-answers-list">
       <div
-        class="question-answer-item"
-        :class="{ correct: answer?.is_right_answer }"
         v-for="answer in answers"
         :key="answer?.id"
+        class="question-answer-item"
+        :class="{ correct: answer?.is_right_answer }"
       >
         <div class="answer-content">
           <label> Answers No : {{ answer?.id }}</label>

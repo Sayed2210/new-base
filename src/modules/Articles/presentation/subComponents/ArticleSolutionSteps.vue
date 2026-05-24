@@ -93,9 +93,9 @@
               </HandleFilesUpload>
             </div>
             <textarea
-              name="descreption"
               id="descreption"
               v-model="description"
+              name="descreption"
               @input="updateData"
             ></textarea>
           </div>

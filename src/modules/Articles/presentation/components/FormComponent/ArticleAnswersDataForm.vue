@@ -119,14 +119,14 @@ watch(
         </template>
       </AccordionHeader>
       <AccordionContent>
-        <AnswersTimeLine :questionType="articleType" @update:data="GetAnswers" />
+        <AnswersTimeLine :question-type="articleType" @update:data="GetAnswers" />
         <ArticleClarification
           :ClarificationData="ClarificationData!"
           :isclarification="isClarification"
           @update-data="GetClarification"
         />
-        <ArticleSolutionSteps :SolutionStepsData="SolutionStepsData" :isSolutionStepsData="isSolutionStepsData" @update-data="GetSolutionSteps" />
-        <ArticleSolutionHints :SolutionHintsData="SolutionHintsData" :isSolutionHintsData="isSolutionHintsData" @update-data="GetSolutionHints" />
+        <ArticleSolutionSteps :SolutionStepsData="SolutionStepsData" :is-solution-steps-data="isSolutionStepsData" @update-data="GetSolutionSteps" />
+        <ArticleSolutionHints :SolutionHintsData="SolutionHintsData" :is-solution-hints-data="isSolutionHintsData" @update-data="GetSolutionHints" />
       </AccordionContent>
     </AccordionPanel>
   </Accordion>

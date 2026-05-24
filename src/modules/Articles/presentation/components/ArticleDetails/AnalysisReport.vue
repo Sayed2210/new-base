@@ -29,13 +29,15 @@ const updateData = () => {};
 
             </div>
             <div class="input_box">
-                <UpdatedCustomInputSelect id="doc-subject" :label="``" :params="indexDocumentParams"
-                    :controller="documentController" v-model="SelectedSubject" placeholder="Last 30 days"
+                <UpdatedCustomInputSelect
+id="doc-subject" v-model="SelectedSubject" :label="``"
+                    :params="indexDocumentParams" :controller="documentController" placeholder="Last 30 days"
                     @update:model-value="updateData" />
             </div>
         </div>
         <div class="cards_Exams">
-            <div class="items-card" v-for="item in article?.analysisReport" :key="item?.id" :class="{
+            <div
+v-for="item in article?.analysisReport" :key="item?.id" class="items-card" :class="{
                 'progress-card': item?.percentage,
             }">
                 <div class="card">
@@ -48,7 +50,7 @@ const updateData = () => {};
                     </div>
                 </div>
                  <div class="progress">
-                        <ProgressBar v-if="item?.percentage" :value="item?.percentage || 0"  :showValue="false"></ProgressBar>
+                        <ProgressBar v-if="item?.percentage" :value="item?.percentage || 0"  :show-value="false"></ProgressBar>
                         <p v-if="item?.percentage">{{ item?.percentage }}%</p>
                     </div>
             </div>

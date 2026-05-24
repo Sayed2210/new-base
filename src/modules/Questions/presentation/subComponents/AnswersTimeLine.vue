@@ -14,8 +14,8 @@
 <template>
   <component
     :is="AnswerTypeHelper(questionType)"
+    :question-data="questionData!"
     @update:data="emit('update:data', $event)"
-    :questionData="questionData!"
   />
   <!--  -->
 </template>

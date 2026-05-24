@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { AnswerTypeHelper } from './AnswersTypes/GetAnswerTypeHelper';
-import { ArticleTypeEnum } from '../../core/constant/Article.type.enum';
+import { type ArticleTypeEnum } from '../../core/constant/Article.type.enum';
 
 const { questionType } = defineProps<{
   questionType: ArticleTypeEnum

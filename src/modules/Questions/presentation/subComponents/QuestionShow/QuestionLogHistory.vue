@@ -40,7 +40,7 @@
         <!-- CONTENT -->
         <AccordionContent>
           <div class="logs">
-            <div class="log-item" v-for="log in logs" :key="`${log.date}-${log.time}`">
+            <div v-for="log in logs" :key="`${log.date}-${log.time}`" class="log-item">
               <div class="log-date" :class="getStatusClass(log.status)">
                 {{ log.date }}
               </div>

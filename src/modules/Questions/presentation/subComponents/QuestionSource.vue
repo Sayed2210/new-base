@@ -4,7 +4,7 @@
   import UpdatedCustomInputSelect from '@/shared/FormInputs/UpdatedCustomInputSelect.vue';
   import { ref, watch } from 'vue';
   import QuestionClarificationParams from '../../core/params/subParams/question.clarification.params';
-  import QuestionDocumentModel from '@/modules/Questions/core/models/subModels/question.document.model';
+  import type QuestionDocumentModel from '@/modules/Questions/core/models/subModels/question.document.model';
 
   const { document, source, documentSource } = defineProps<{
     document?: TitleInterface<number> | null | undefined;
@@ -45,10 +45,10 @@
       <div class="input">
         <UpdatedCustomInputSelect
           id="doc-subject"
+          v-model="SelectedSubject as TitleInterface<number>"
           :label="`Document Source`"
           :params="indexDocumentParams"
           :controller="documentController"
-          v-model="SelectedSubject as TitleInterface<number>"
           placeholder="Document Source"
           @update:model-value="updateData"
         />

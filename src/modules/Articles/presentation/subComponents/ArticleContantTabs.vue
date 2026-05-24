@@ -68,36 +68,42 @@ watch(() => ContentData, (newData) => {
   <div class="contant_tabs">
     <div class="form-group">
       <div class="input">
-        <UpdatedCustomInputSelect id="subject" :label="`Subject`" :params="indexDocumentTypeParams"
-          :controller="documentTypeController" v-model="SelectedSubject" placeholder="Subject"
+        <UpdatedCustomInputSelect
+id="subject" v-model="SelectedSubject" :label="`Subject`"
+          :params="indexDocumentTypeParams" :controller="documentTypeController" placeholder="Subject"
           @update:model-value="updateData" />
       </div>
       <div class="input">
-        <UpdatedCustomInputSelect id="question-sequence" :label="`question sequence`" :params="indexDocumentTypeParams"
-          :controller="documentTypeController" v-model="SelectedQuestionSequence" placeholder="Question sequence"
+        <UpdatedCustomInputSelect
+id="question-sequence" v-model="SelectedQuestionSequence" :label="`question sequence`"
+          :params="indexDocumentTypeParams" :controller="documentTypeController" placeholder="Question sequence"
           @update:model-value="updateData" />
       </div>
       <div class="input">
-        <UpdatedCustomInputSelect id="topics" :label="`topics`" :params="indexDocumentTypeParams"
-          :controller="documentTypeController" v-model="SelectedTopic" :type="2" placeholder="Topics"
+        <UpdatedCustomInputSelect
+id="topics" v-model="SelectedTopic" :label="`topics`"
+          :params="indexDocumentTypeParams" :controller="documentTypeController" :type="2" placeholder="Topics"
           @update:model-value="updateData" />
       </div>
       <div class="input">
-        <UpdatedCustomInputSelect id="difficulty-level" :label="`Difficulty level`"
-          :static-options="DifficultLevels as TitleInterface<number>[]"
-          v-model="SelectedDifficultyLevel as TitleInterface<number>" placeholder="Difficulty level"
+        <UpdatedCustomInputSelect
+id="difficulty-level" v-model="SelectedDifficultyLevel as TitleInterface<number>"
+          :label="`Difficulty level`"
+          :static-options="DifficultLevels as TitleInterface<number>[]" placeholder="Difficulty level"
           @update:model-value="updateData" />
       </div>
     </div>
     <div class="new-form-group">
-      <UpdatedCustomInputSelect id="skills" :label="`skill`" :type="2" :params="indexDocumentTypeParams"
-        :controller="documentTypeController" v-model="SelectedSkill" placeholder="Subject Type"
+      <UpdatedCustomInputSelect
+id="skills" v-model="SelectedSkill" :label="`skill`" :type="2"
+        :params="indexDocumentTypeParams" :controller="documentTypeController" placeholder="Subject Type"
         @update:model-value="updateData" />
-      <div class="skill-percentage" v-for="(skill, index) in SelectedSkill" :key="index">
+      <div v-for="(skill, index) in SelectedSkill" :key="index" class="skill-percentage">
         <label :for="`skill-percentage-${index}`">
           {{ skill.title }}
         </label>
-        <input :id="`skill-percentage-${index}`" type="number" v-model="skill.subtitle" placeholder="Percentage"
+        <input
+:id="`skill-percentage-${index}`" v-model="skill.subtitle" type="number" placeholder="Percentage"
           @input="updateData" />
       </div>
     </div>

@@ -24,11 +24,11 @@
 </script>
 
 <template>
-  <QuestionHeader v-if="showState?.data" :questionData="showState?.data" />
+  <QuestionHeader v-if="showState?.data" :question-data="showState?.data" />
 
   <div class="question-show-page">
     <div class="main-content-row">
-      <QuestionInfo v-if="showState?.data" :questionInfo="showState?.data" />
+      <QuestionInfo v-if="showState?.data" :question-info="showState?.data" />
 
       <QuestionAnswers
         v-if="showState?.data?.answers?.length"
@@ -43,12 +43,12 @@
       <div class="solution-container">
         <QuestionSolutionHint
           v-if="showState?.data?.solutionHint"
-          :solutionHint="showState?.data?.solutionHint"
+          :solution-hint="showState?.data?.solutionHint"
         />
 
         <QuestionSolutionSteps
           v-if="showState?.data?.solutionSteps"
-          :solutionSteps="showState?.data?.solutionSteps!"
+          :solution-steps="showState?.data?.solutionSteps!"
         />
       </div>
 
@@ -56,9 +56,9 @@
     </div>
 
     <div class="side-content">
-      <QuestionStatusBox v-if="showState?.data" :questionData="showState?.data" />
+      <QuestionStatusBox v-if="showState?.data" :question-data="showState?.data" />
 
-      <QuestionTree v-if="showState?.data" :questionData="showState?.data" />
+      <QuestionTree v-if="showState?.data" :question-data="showState?.data" />
 
       <QuestionLogHistory
         v-if="showState?.data?.questionLogHistory"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import SolutionHintIcon from '@/shared/icons/Question/SolutionHint.vue';
-  import SolutionHintModel from '@/modules/Questions/core/models/subModels/solution.hint.model';
+  import type SolutionHintModel from '@/modules/Questions/core/models/subModels/solution.hint.model';
 
   const { solutionHint } = defineProps<{ solutionHint: SolutionHintModel }>();
 </script>

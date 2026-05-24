@@ -42,7 +42,8 @@ watch([()=>SolutionStepsData ,  ()=>isSolutionStepsData] , ([newSolutionStepsdat
 </script>
 
 <template>
-  <Accordion :value="isSolutionSteps ? 1 : 0" :pt="{
+  <Accordion
+:value="isSolutionSteps ? 1 : 0" :pt="{
     root: `question-solution-steps ${isSolutionSteps ? 'active' : ''}`,
   }" @update:value="isSolutionSteps = !isSolutionSteps">
     <AccordionPanel :value="1">
@@ -60,7 +61,8 @@ watch([()=>SolutionStepsData ,  ()=>isSolutionStepsData] , ([newSolutionStepsdat
           <div class="description-container">
             <div class="description-header">
               <span>B / U</span>
-              <HandleFilesUpload :label="``" accept="image/*" :multiple="true" :index="30"  :file=file :have-content="true"
+              <HandleFilesUpload
+:label="``" accept="image/*" :multiple="true" :index="30"  :file=file :have-content="true"
                 :class="`image-input`" @change="(files) => handleFile(files)">
                 <template #content>
                   <div class="upload-attachment-container">
@@ -70,7 +72,7 @@ watch([()=>SolutionStepsData ,  ()=>isSolutionStepsData] , ([newSolutionStepsdat
                 </template>
               </HandleFilesUpload>
             </div>
-            <textarea name="descreption" id="descreption" v-model="description" @input="updateData"></textarea>
+            <textarea id="descreption" v-model="description" name="descreption" @input="updateData"></textarea>
           </div>
         </div>
       </AccordionContent>

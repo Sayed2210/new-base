@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { QuestionTypeEnum } from '@/modules/Questions/core/constant/question.type.enum';
-  import ShowQuestionsModel from '../../../core/models/show.questions.model';
+  import type ShowQuestionsModel from '../../../core/models/show.questions.model';
   import { QuestionDifficultyEnum } from '@/modules/Questions/core/constant/question.difficulty.enum';
 
   const { questionInfo } = defineProps<{ questionInfo: ShowQuestionsModel }>();

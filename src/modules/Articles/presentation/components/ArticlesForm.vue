@@ -120,7 +120,7 @@ const GetAllBasicData = (data: AddArticlesParams) => {
     </header>
 
 
-    <BasicArticleDataForm @updateData="GetAllBasicData" />
+    <BasicArticleDataForm @update-data="GetAllBasicData" />
     <ArticleAnswersDataForm :article-data="employee!" :article-type="1" />
   </div>
 </template>

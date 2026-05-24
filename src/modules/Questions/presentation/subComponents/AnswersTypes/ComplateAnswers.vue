@@ -3,7 +3,7 @@
   import { onMounted, ref, watch } from 'vue';
   import AddNewAnswerIcon from '@/shared/icons/AddNewAnswerIcon.vue';
   import SelectionTabs from '../SelectionTabs.vue';
-  import TitleInterface from '@/base/Data/Models/titleInterface';
+  import type TitleInterface from '@/base/Data/Models/titleInterface';
   import { AnswerEvaluationTypeEnum } from '@/modules/Questions/core/constant/answer.evaluation.type.enum';
   import type AnswerModel from '@/modules/Questions/core/models/subModels/answer.model';
   import AnswersParams from '@/modules/Questions/core/params/subParams/answers.params';
@@ -108,14 +108,14 @@
       @update:model-value="selectTab"
     />
     <div
-      class="timeline-item"
       v-for="(item, index) in Answers"
       :key="index"
+      class="timeline-item"
       :style="{ animationDelay: `${index * 0.15}s` }"
     >
       <div class="timeline-content">
         <div class="timeline-form-content">
-          <div class="matching-section" v-if="selectedTab == AnswerEvaluationTypeEnum.similar">
+          <div v-if="selectedTab == AnswerEvaluationTypeEnum.similar" class="matching-section">
             <label :for="`similar-${index}`">{{ $t(`similar_answer`) }}</label>
             <input
               :id="`similar-${index}`"
@@ -126,17 +126,17 @@
             />
           </div>
 
-          <div class="matching-section" v-if="selectedTab != AnswerEvaluationTypeEnum.need_correct">
+          <div v-if="selectedTab != AnswerEvaluationTypeEnum.need_correct" class="matching-section">
             <label :for="`answer-${index}`"> {{ $t(`answer`) }}</label>
             <input
               :id="`answer-${index}`"
+              v-model="item.answer"
               type="text"
               :placeholder="$t('add_your_answer')"
-              v-model="item.answer"
               @input="UpdateData"
             />
           </div>
-          <div class="delete-icon-container" v-if="Answers.length > 1">
+          <div v-if="Answers.length > 1" class="delete-icon-container">
             <button type="button" class="delete-btn" @click="DeleteItem(index)">
               <DeletIcon />
             </button>
@@ -144,7 +144,7 @@
         </div>
       </div>
 
-      <div class="add-row" @click="addNewAnswer" v-if="Answers.length - 1 == index">
+      <div v-if="Answers.length - 1 == index" class="add-row" @click="addNewAnswer">
         <div class="add-icon">
           <AddNewAnswerIcon />
           <span class="add-text">{{ $t('add_another_answer') }}</span>
