@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { ref, watch } from 'vue';
-  import { onBeforeRouteLeave } from 'vue-router';
-  import { useFormsStore } from '@/stores/formsStore';
+  // import { onBeforeRouteLeave } from 'vue-router';
+  // import { useFormsStore } from '@/stores/formsStore';
   import type EducationClassificationModel from '../../core/models/education.classification.model';
   import AddEducationClassificationParams from '../../core/params/add.educationClassification.params';
   import FolderCrudIcon from '@/shared/icons/FolderCrudIcon.vue';
@@ -10,6 +10,7 @@
   import FilterDialog from '@/shared/HelpersComponents/FilterDialog/FilterDialog.vue';
   import DatePicker from 'primevue/datepicker';
   import { dialogManager } from '@/base/Presentation/Dialogs/dialog.manager';
+  import LoadingIcon from '@/assets/images/loading.webp';
 
   const emit = defineEmits(['updateData', 'save-education-classification']);
 
@@ -19,17 +20,17 @@
     loading?: boolean;
   }>();
 
-  const FormStore = useFormsStore();
+  // const FormStore = useFormsStore();
 
-  onBeforeRouteLeave((to, from) => {
-    if (formKey) {
-      const savedData = FormStore.getFormData(formKey);
+  // onBeforeRouteLeave((to, from) => {
+  //   if (formKey) {
+  //     const savedData = FormStore.getFormData(formKey);
 
-      if (savedData && to.path !== from.path) {
-        FormStore.showReturnWarning(formKey);
-      }
-    }
-  });
+  //     if (savedData && to.path !== from.path) {
+  //       FormStore.showReturnWarning(formKey);
+  //     }
+  //   }
+  // });
 
   // Form state
   const title = ref<Record<string, string>>({});
@@ -48,11 +49,11 @@
   // const route = useRoute();
 
   const updateData = () => {
-    if (formKey) {
-      FormStore.setFormData(formKey, {
-        title: title.value,
-      });
-    }
+    // if (formKey) {
+    //   FormStore.setFormData(formKey, {
+    //     title: title.value,
+    //   });
+    // }
 
     const params = new AddEducationClassificationParams({
       translation: new TranslationParams({
@@ -127,7 +128,14 @@
         />
       </div>
       <button class="save-btn" :class="{ disabled: loading }" @click="SendRequest">
-        <span v-if="loading" class="loader-skills"></span>
+        <img
+          v-if="loading"
+          :src="LoadingIcon"
+          class="loader-skills"
+          alt="loading"
+          width="30"
+          height="30"
+        />
         <span v-else> {{ $t('save') }} <IconAccept /> </span>
       </button>
     </div>
@@ -139,7 +147,15 @@
     &.disabled {
       cursor: not-allowed;
       pointer-events: none;
-      opacity: 0.7;
+      opacity: 0.5;
+    }
+  }
+  .save-btn {
+    margin-top: 40px;
+    &.disabled {
+      cursor: not-allowed;
+      pointer-events: none;
+      opacity: 0.5;
     }
   }
 </style>

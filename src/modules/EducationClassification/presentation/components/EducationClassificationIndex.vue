@@ -22,7 +22,6 @@
   import deleteEducationClassificationParams from '../../core/params/delete.educationClassification.params';
   import RenameEducatuinClassificationDialog from '../../subComponent/RenameEducatuinClassificationDialog.vue';
   import TableSkelaton from '@/shared/HelpersComponents/TableSkelaton.vue';
-
   // Controller instance
   const controller = EducationClassificationController.getInstance();
   const { t } = useI18n();
@@ -42,15 +41,8 @@
   const word = ref('');
 
   const fetchEducationClassifications = async (page: number = 1, word: string = '') => {
-    await controller.fetchList(
-      new IndexEducationClassificationParams(
-        word,
-        page,
-        perPage.value,
-      ),
-    );
+    await controller.fetchList(new IndexEducationClassificationParams(word, page, perPage.value));
   };
-
 
   const onPageChange = (page: number) => {
     fetchEducationClassifications(page);
@@ -224,7 +216,6 @@ const ToggleStatus = async (id: number) => {
           </svg>
           <h3>{{ $t('no_education_classifications_yet') }}</h3>
           <p>{{ $t('add_first_education_classification') }}</p>
-
         </div>
       </template>
       <template #loader>
