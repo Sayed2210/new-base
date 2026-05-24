@@ -10,18 +10,17 @@
   import EditquestionsParams from '@/modules/Questions/core/params/edit.question.params';
   import AnswersTimeLine from '../../subComponents/AnswersTimeLine.vue';
   import AnswersParams from '@/modules/Questions/core/params/subParams/answers.params';
-  import type AnswersParams from '@/modules/Questions/core/params/subParams/answers.params';
   import QuestionClarification from '../../subComponents/QuestionClarification.vue';
   import QuestionClarificationParams from '@/modules/Questions/core/params/subParams/question.clarification.params';
   import QuestionSolutionSteps from '../../subComponents/QuestionSolutionSteps.vue';
   import SolutionStepsParams from '@/modules/Questions/core/params/subParams/soluation.steps.params';
   import QuestionSolutionHints from '../../subComponents/QuestionSolutionHints.vue';
-  import { QuestionTypeEnum } from '@/modules/Questions/core/constant/question.type.enum';
   import type ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
   import type QuestionClarificationModel from '@/modules/Questions/core/models/subModels/question.clarification.model';
   import type SolutionStepsModel from '@/modules/Questions/core/models/subModels/solution.steps.model';
   import type SolutionHintModel from '@/modules/Questions/core/models/subModels/solution.hint.model';
   import AttachmentsParams from '@/modules/Questions/core/params/subParams/attachments.params';
+import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/question.type.enum';
 
   const emit = defineEmits(['updateData']);
   const route = useRoute();
