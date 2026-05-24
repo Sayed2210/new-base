@@ -25,7 +25,7 @@ export default class AnswersParams implements Params {
     matchAnswer?: string;
     answerEvaluation?: AnswerEvaluationTypeEnum;
     similarPrecentage?: string;
-    rank?:number
+    rank?: number;
   }) {
     this.title = data.title;
     this.file = data.file;

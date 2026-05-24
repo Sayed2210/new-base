@@ -8,6 +8,7 @@ import type QuestionSourceParams from './subParams/question.source.params';
 import type SolutionStepsParams from './subParams/soluation.steps.params';
 import type QuestionClarificationParams from './subParams/question.clarification.params';
 import type TopicsParams from './subParams/topics.params';
+import type { AnswerEvaluationTypeEnum } from '../constant/answer.evaluation.type.enum';
 
 /**
  * Parameters for adding a new employee
@@ -30,6 +31,8 @@ export default class EditquestionsParams implements Params {
   public solutionSteps?: SolutionStepsParams;
   public isSolutionHint?: boolean;
   public solutionHint?: SolutionStepsParams;
+  public answerEvaluation?: AnswerEvaluationTypeEnum;
+  public similarPrecentage?: string;
 
   public static readonly validation = new ClassValidation().setRules({
     title: { required: true },
@@ -61,6 +64,8 @@ export default class EditquestionsParams implements Params {
     solutionSteps?: SolutionStepsParams;
     isSolutionHint?: boolean;
     solutionHint?: SolutionStepsParams;
+    answerEvaluation?: AnswerEvaluationTypeEnum;
+    similarPrecentage?: string;
   }) {
     this.id = data.id;
     this.title = data.title;
@@ -79,6 +84,8 @@ export default class EditquestionsParams implements Params {
     this.solutionSteps = data.solutionSteps;
     this.isSolutionHint = data.isSolutionHint;
     this.solutionHint = data.solutionHint;
+    this.answerEvaluation = data.answerEvaluation;
+    this.similarPrecentage = data.similarPrecentage;
   }
 
   toMap(): { [p: string]: any } {
@@ -100,6 +107,8 @@ export default class EditquestionsParams implements Params {
       solution_steps: this.solutionSteps,
       is_solution_hint: this.isSolutionHint,
       solution_hint: this.solutionHint,
+      correct_status: this.answerEvaluation,
+      identical_precentage: this.similarPrecentage,
     };
   }
 

@@ -34,6 +34,8 @@
         solutionSteps: AnswerData.value?.solutionSteps,
         isSolutionHint: AnswerData.value?.isSolutionHint,
         solutionHint: AnswerData.value?.solutionHint,
+        answerEvaluation: AnswerData.value?.answers?.[0]?.answerEvaluation,
+        similarPrecentage: AnswerData.value?.answers?.[0]?.similarPrecentage,
       });
     } else {
       params = new AddquestionsParams({
@@ -53,6 +55,8 @@
         solutionSteps: AnswerData.value?.solutionSteps,
         isSolutionHint: AnswerData.value?.isSolutionHint,
         solutionHint: AnswerData.value?.solutionHint,
+        answerEvaluation: AnswerData.value?.answers?.[0]?.answerEvaluation,
+        similarPrecentage: AnswerData.value?.answers?.[0]?.similarPrecentage,
       });
     }
 
