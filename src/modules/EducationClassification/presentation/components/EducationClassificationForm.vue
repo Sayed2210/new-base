@@ -9,6 +9,7 @@
   import MultiLangInput from '@/shared/MultiLangInput.vue';
   import FilterDialog from '@/shared/HelpersComponents/FilterDialog/FilterDialog.vue';
   import DatePicker from 'primevue/datepicker';
+  import { dialogManager } from '@/base/Presentation/Dialogs/dialog.manager';
 
   const emit = defineEmits(['updateData', 'save-education-classification']);
 
@@ -53,7 +54,6 @@
       });
     }
 
-    console.log(title.value, 'title');
     const params = new AddEducationClassificationParams({
       translation: new TranslationParams({
         title: title.value,
@@ -74,6 +74,19 @@
   };
   const CloseFiletrDialog = () => {
     FilterDialogShow.value = false;
+  };
+
+  const SendRequest = () => {
+    console.log(title.value, 'Object.keys(title.value).length');
+    if (loading) {
+      return;
+    } else if (Object.keys(title.value).length === 0) {
+      dialogManager.toastWarning('title is required');
+    } else {
+      emit('save-education-classification');
+      title.value = {};
+      updateData();
+    }
   };
 </script>
 
@@ -113,12 +126,9 @@
           @update:model-value="getTitle"
         />
       </div>
-      <button
-        class="save-btn"
-        :class="{ disabled: loading }"
-        @click="emit('save-education-classification')"
-      >
-        {{ $t('Save') }}
+      <button class="save-btn" :class="{ disabled: loading }" @click="SendRequest">
+        <span v-if="loading" class="loader-skills"></span>
+        <span v-else> {{ $t('save') }} <IconAccept /> </span>
       </button>
     </div>
   </div>

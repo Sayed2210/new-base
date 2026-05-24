@@ -9,7 +9,7 @@ export default class AddEducationClassificationParams implements Params {
   public translation: TranslationParams;
 
   public static readonly validation = new ClassValidation().setRules({
-    // translation: { required: true },
+    translation: { required: true },
   });
 
   constructor(data: { translation: TranslationParams }) {
