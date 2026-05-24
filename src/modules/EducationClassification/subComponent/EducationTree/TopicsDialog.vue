@@ -108,6 +108,11 @@
   const updatetitle = (newTitle: Record<string, string>) => {
     title.value = newTitle;
   };
+  const CloseDialog = () => {
+    isEdit.value = false;
+    editId.value = null;
+    resetForm();
+  };
 </script>
 
 <template>
@@ -171,7 +176,7 @@
         <button class="btn btn-primary" :disabled="isInputEmpty" @click="handleSave">
           {{ isEdit ? $t('save') : $t('add') }}
         </button>
-        <button v-if="isEdit" class="btn btn-secondary" @click="resetForm">
+        <button v-if="isEdit" @click="CloseDialog" class="btn btn-secondary">
           {{ $t('cancel') }}
         </button>
         <button class="btn btn-secondary" @click="dialogVisible = false">

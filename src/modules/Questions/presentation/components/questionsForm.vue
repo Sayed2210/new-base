@@ -60,7 +60,6 @@
       });
     }
 
-    console.log(BasicData.value?.difficultyLevel, 'BasicData.value?.difficultyLevel');
     emit('updateData', params);
   };
 
