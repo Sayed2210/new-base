@@ -11077,7 +11077,7 @@ body::-webkit-scrollbar-thumb:hover {
   min-width: 0;
 }
 .info img {
-  width: var(var(--xl-size-3)var(--xs-size-2));
+  width: calc(var(--xl-size-3) + var(--xs-size-2));
   -o-object-fit: contain;
      object-fit: contain;
   flex-shrink: 0;
@@ -11581,12 +11581,12 @@ body::-webkit-scrollbar-thumb:hover {
 .question-tree-card {
   background: var(--gray-soft);
   border-radius: var(--xl-size-1);
-  border: var(BaseBorderWidth) solid var(--border-color);
+  border: var(--BaseBorderWidth) solid var(--border-color);
   overflow: hidden;
 }
 .question-tree-card .section {
   padding: var(--md-size);
-  border-bottom: var(BaseBorderWidth) solid var(--border-color);
+  border-bottom: var(--BaseBorderWidth) solid var(--border-color);
 }
 .question-tree-card .section:last-child {
   border-bottom: none;
@@ -11802,7 +11802,7 @@ body::-webkit-scrollbar-thumb:hover {
 /* ── Core ──────────────────────────────────────────────────────── */
 .question-log-history {
   border-radius: var(--xl-size-1);
-  border: var(BaseBorderWidth) solid var(--border-color);
+  border: var(--BaseBorderWidth) solid var(--border-color);
   background: var(--gray-soft);
 }
 .question-log-history .card-header {

@@ -29,7 +29,7 @@
   const DrawerVisible = ref(false);
   const { user } = useUserStore();
 
-  const { query, results, isOpen, activeIndex, navigate, onKeydown, reset } = useRouteSearch();
+  const { query, results, isOpen, activeIndex, navigate, onKeydown } = useRouteSearch();
 
   watch(results, (val) => {
     isOpen.value = val.length > 0;
@@ -47,7 +47,6 @@
           type="search"
           placeholder="Search What You Want"
           autocomplete="off"
-          @blur="() => setTimeout(reset, 150)"
         />
 
         <Transition name="dropdown">
@@ -121,7 +120,7 @@
       top: calc(100% + 8px);
       left: 0;
       right: 0;
-      background: var(--color-bg, #fff);
+      background: #fff;
       border: 1px solid #e2e8f0;
       border-radius: 8px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);

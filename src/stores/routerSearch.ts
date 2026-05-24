@@ -68,7 +68,7 @@ export function useRouteSearch() {
       e.preventDefault();
       activeIndex.value = Math.max(activeIndex.value - 1, 0);
     } else if (e.key === 'Enter' && activeIndex.value >= 0) {
-      navigate(results.value[activeIndex.value]);
+      navigate(results.value![activeIndex.value]!);
     } else if (e.key === 'Escape') {
       reset();
     }

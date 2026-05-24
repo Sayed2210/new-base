@@ -100,8 +100,8 @@ import type SolutionHintModel from '../../core/models/subModels/solution.hint.mo
 </template>
 
 <style scoped lang="scss">
-  @import '../../../../styles/variables';
-  @import '../../../../styles/mixins/flex';
+  @use '../../../../styles/variables' as *;
+  @use '../../../../styles/mixins/flex' as *;
   .question-solution-hints {
     border: 1px solid $PrimaryColor;
     border-radius: 50px;
