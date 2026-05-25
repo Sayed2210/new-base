@@ -78,7 +78,7 @@
   };
 
   const SendRequest = () => {
-    console.log(title.value, 'Object.keys(title.value).length');
+    // console.log(title.value, 'Object.keys(title.value).length');
     if (loading) {
       return;
     } else if (Object.keys(title.value).length === 0) {

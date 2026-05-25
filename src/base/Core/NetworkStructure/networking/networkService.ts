@@ -110,10 +110,10 @@ export default class NetworkService {
 
         // Log request if enabled
         if (env.isLoggingEnabled) {
-          console.log(`[Network] [${requestId}] ${config.method?.toUpperCase()} ${config.url}`, {
-            params: config.params,
-            data: config.data,
-          });
+          // console.log(`[Network] [${requestId}] ${config.method?.toUpperCase()} ${config.url}`, {
+          //   params: config.params,
+          //   data: config.data,
+          // });
         }
 
         return config;
@@ -135,9 +135,9 @@ export default class NetworkService {
 
         // Log response if enabled
         if (env.isLoggingEnabled) {
-          console.log(`[Network] [${requestId}] Response ${response.status} (${duration}ms)`, {
-            data: response.data,
-          });
+          // console.log(`[Network] [${requestId}] Response ${response.status} (${duration}ms)`, {
+          //   data: response.data,
+          // });
         }
 
         return response;
@@ -244,9 +244,9 @@ export default class NetworkService {
         );
 
         if (env.isLoggingEnabled) {
-          console.log(
-            `[Network] Retry attempt ${attempt}/${retryOptions.maxAttempts} after ${delay}ms`,
-          );
+          // console.log(
+          //   `[Network] Retry attempt ${attempt}/${retryOptions.maxAttempts} after ${delay}ms`,
+          // );
         }
 
         await new Promise((resolve) => setTimeout(resolve, delay));

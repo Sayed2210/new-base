@@ -68,7 +68,7 @@
     const res = await educationSkillsController.fetchList(
       new IndexEducationSubjectSkillsParams({ subjectId: props.branchId }),
     );
-    console.log(res.data, 'res');
+    // console.log(res.data, 'res');
   };
 
   const updateSelectedSkill = (skill: TitleInterface<number>) => {

@@ -47,7 +47,7 @@ export default class EducationPricingRepository extends BaseRepository<
   }
 
   protected parseItem(data: unknown): EducationPricingModel {
-    console.log(data);
+    // console.log(data);
     return EducationPricingModel.fromJson(data as Record<string, unknown>);
   }
 

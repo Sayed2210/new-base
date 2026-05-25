@@ -29,7 +29,7 @@ export const displayBrowserNotification = (
     // Optional: request permission
     Notification.requestPermission().then((permission) => {
       if (permission === 'granted') {
-        console.log('Notification permission granted.');
+        // console.log('Notification permission granted.');
       }
     });
   }

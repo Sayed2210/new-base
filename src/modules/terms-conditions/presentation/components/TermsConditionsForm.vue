@@ -47,7 +47,7 @@
     await termsConditionsController.fetchList();
 
     const firstItem = status.value.data?.[0];
-    console.log(firstItem, 'firstItem');
+    // console.log(firstItem, 'firstItem');
     if (firstItem) {
       title.value = firstItem?.title;
       description.value = firstItem?.description;

@@ -110,9 +110,15 @@ import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/questio
       documentId: data?.data?.documentId,
       source: data?.data?.source,
       clarification: data?.data?.clarification,
-      file: data?.data?.file,
+      file: data?.data?.file?.map(
+        (file) =>
+          new AttachmentsParams({
+            alt: '',
+            file: file.file,
+          }),
+      ),
     });
-
+  
     updateData();
   };
 
@@ -121,7 +127,13 @@ import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/questio
   const GetSolutionSteps = (data: { data: SolutionStepsParams; isSolutionSteps: boolean }) => {
     isSolutionSteps.value = data.isSolutionSteps;
     SolutionSteps.value = new SolutionStepsParams({
-      image: data.data.image,
+      image:data.data.image?.map(
+        (file) =>
+          new AttachmentsParams({
+            alt: '',
+            file: file.file,
+          }),
+      ),
       explanation: data.data.explanation,
     });
     updateData();
@@ -132,7 +144,13 @@ import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/questio
   const GetSolutionHints = (data: { data: SolutionStepsParams; isSolutionHints: boolean }) => {
     isSolutionHints.value = data.isSolutionHints;
     SolutionHints.value = new SolutionStepsParams({
-      image: data.data.image,
+      image: data.data.image  ?.map(
+        (file) =>
+          new AttachmentsParams({
+            alt: '',
+            file: file.file,
+          }),
+      ),
       explanation: data.data.explanation,
     });
     updateData();

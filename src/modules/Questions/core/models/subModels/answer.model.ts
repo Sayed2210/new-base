@@ -1,9 +1,10 @@
 import { AnswerEvaluationTypeEnum } from '../../constant/answer.evaluation.type.enum';
+import AttachmentModel from './attachment.model';
 
 export default class AnswerModel {
   public id?: number;
   public answer?: string;
-  public image?: string;
+  public image?: AttachmentModel[] | null;
   public is_right_answer?: boolean;
   public match?: string;
   public rank?: number;
@@ -13,7 +14,7 @@ export default class AnswerModel {
   constructor(data: {
     id?: number;
     answer?: string;
-    image?: string;
+    image?: AttachmentModel[] | null;
     is_right_answer?: boolean;
     match?: string;
     rank?: number;
@@ -22,7 +23,7 @@ export default class AnswerModel {
   }) {
     this.id = data.id;
     this.answer = data.answer || '';
-    this.image = data.image || '';
+    this.image = data.image || null;
     this.is_right_answer = data.is_right_answer || false;
     this.match = data.match || '';
     this.rank = data.rank || 0;
@@ -38,10 +39,10 @@ export default class AnswerModel {
     }
 
     return new AnswerModel({
-      id: json.id,
+      id: json.answer_id,
       answer: json.answer,
-      image: json.image,
-      is_right_answer: json.is_right_answer,
+      image: json.attachments ? json.attachments.map((el)=> AttachmentModel.fromJson(el)) : null,
+      is_right_answer: json.is_correct,
       match: json.match,
       rank: json.rank,
       similar: json.similar,
@@ -51,7 +52,7 @@ export default class AnswerModel {
 
   static example: AnswerModel = new AnswerModel({
     answer: 'answer',
-    image: `https://cyber.comolho.com/static/img/avatar.png`,
+    image: [new AttachmentModel({ file: `https://cyber.comolho.com/static/img/avatar.png` })],
     is_right_answer: true,
     match: 'match',
     rank: 10,

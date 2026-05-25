@@ -9,13 +9,14 @@ import type QuestionClarificationParams from './subParams/question.clarification
 import type TopicsParams from './subParams/topics.params';
 import { ClassValidation } from '@/base/Presentation/Utils/classValidation';
 import type { AnswerEvaluationTypeEnum } from '../constant/answer.evaluation.type.enum';
+import type AttachmentsParams from './subParams/attachments.params';
 
 /**
  * Parameters for adding a new employee
  */
 export default class AddquestionsParams implements Params {
   public title?: string;
-  public image?: string[];
+  public image?: AttachmentsParams[];
   public questionType?: QuestionTypeEnum;
   public subjectId?: number | null;
   public topics?: TopicsParams[] | null;
@@ -47,7 +48,7 @@ export default class AddquestionsParams implements Params {
 
   constructor(data: {
     title?: string;
-    image?: string[];
+    image?: AttachmentsParams[];
     questionType?: QuestionTypeEnum;
     subjectId?: number | null;
     topics?: TopicsParams[] | null;
@@ -88,11 +89,11 @@ export default class AddquestionsParams implements Params {
   toMap(): { [p: string]: any } {
     return {
       question: this.title,
-      image: this.image,
+       attachments  : this.image?.map ((f) => f.toMap()),
       question_type: this.questionType,
       e_c_subject_id: this.questionSequenceId
       ,
-      // e_c_branch_id: this.branchId,
+      e_c_branch_id: this.subjectId,
       topics: this.topics?.map((item) => item.toMap()),
       question_sequence_id: this.questionSequenceId,
       difficulty_level: this.difficultyLevel,
@@ -100,7 +101,7 @@ export default class AddquestionsParams implements Params {
       answers: this.answers?.map((item) => item.toMap()),
       question_source: this.questionSource?.toMap(),
       is_question_clarification: this.isQuestionClarification,
-      question_clarification: this.questionClarification?.toMap(),
+      explanation: this.questionClarification?.toMap(),
       is_solution_steps: this.isSolutionSteps,
       solution_steps: this.solutionSteps?.toMap(),
       is_solution_hint: this.isSolutionHint,

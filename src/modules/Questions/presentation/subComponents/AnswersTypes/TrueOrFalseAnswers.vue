@@ -16,12 +16,12 @@
     {
       answer: '',
       is_right_answer: false,
-      image: '',
+      image: [new AttachmentsParams({ file: '' })],
     },
     {
       answer: '',
       is_right_answer: false,
-      image: '',
+      image: [new AttachmentsParams({ file: '' })],
     },
   ]);
 
@@ -34,8 +34,8 @@
           file: el.image
             ? [
                 new AttachmentsParams({
-                  alt: el.image,
-                  file: el.image,
+                  alt: el.image[0]?.alt || '',
+                  file: el.image[0]?.file,
                 }),
               ]
             : [],
@@ -53,9 +53,9 @@
           title: el.answer,
           file: el.image
             ? [
-                new AttachmentsParams({
-                  alt: el.image,
-                  file: el.image,
+               new AttachmentsParams({
+                  alt: el.image[0]?.alt || '',
+                  file: el.image[0]?.file,
                 }),
               ]
             : [],
@@ -66,7 +66,7 @@
   });
 
   const setImage = (files: any[], index: number) => {
-    Answers.value[index]!.image = files[0]?.base64 ? (files[0]?.base64 as string) : '';
+    Answers.value[index]!.image = files[0]?.base64 ? [new AttachmentsParams({ file: files[0]?.base64 as string })] : [];
     UpdateData();
   };
 

@@ -2,17 +2,17 @@ import type Params from '@/base/Core/Params/params';
 import { ClassValidation } from '@/base/Presentation/Utils/classValidation';
 
 export default class IndexEducationSubjectTopicParams implements Params {
-  public TopicId: number;
+  public SubjectId: number;
 
   public static readonly validation = new ClassValidation().setRules({});
 
-  constructor(data: { TopicId: number }) {
-    this.TopicId = data.TopicId;
+  constructor(data: { SubjectId: number }) {
+    this.SubjectId = data.SubjectId;
   }
 
   toMap(): { [p: string]: any } {
     return {
-      education_classification_subject_topic_id: this.TopicId,
+      education_classification_subject_id: this.SubjectId,
     };
   }
 

@@ -116,10 +116,10 @@ export default abstract class ServicesInterface {
     try {
       // Log request if enabled
       if (env.isLoggingEnabled) {
-        console.log(`[ApiService] ${type.toUpperCase()} ${url}`, {
-          params: params?.toMap(),
-          details,
-        });
+        // console.log(`[ApiService] ${type.toUpperCase()} ${url}`, {
+        //   params: params?.toMap(),
+        //   details,
+        // });
       }
 
       switch (type) {

@@ -91,7 +91,7 @@
   });
 
   const updateTranslations = (newTranslations: Record<string, string>) => {
-    console.log(newTranslations, 'newTranslations');
+    // console.log(newTranslations, 'newTranslations');
     translations.value = newTranslations;
     updateData();
   };

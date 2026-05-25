@@ -40,7 +40,7 @@
     emit('update:name');
   };
   onMounted(() => {
-    console.log(props.itemId, 'props.itemId');
+    // console.log(props.itemId, 'props.itemId');
   });
 </script>
 

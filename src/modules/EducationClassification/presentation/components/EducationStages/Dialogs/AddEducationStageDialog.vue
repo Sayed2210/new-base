@@ -20,7 +20,7 @@
     });
     ClassificationId ? (EmmitedData.value.classification_id = ClassificationId) : null;
     parent_id ? (EmmitedData.value.parent_id = parent_id) : null;
-    console.log(EmmitedData.value);
+    // console.log(EmmitedData.value);
     emit('update:data', EmmitedData.value);
   };
 </script>

@@ -11,7 +11,7 @@
   import HandleFilesUpload from '@/shared/FormInputs/HandleFilesUpload.vue';
   import UplaodImageInput from '@/shared/icons/UploadImage/UplaodImageInput.vue';
   import SelectionTabs from '../../subComponents/SelectionTabs.vue';
-  import type TitleInterface from '@/base/Data/Models/titleInterface';
+  import TitleInterface from '@/base/Data/Models/titleInterface';
   import { QuestionTypeEnum } from '@/modules/Questions/core/constant/question.type.enum';
   import QuestionContantTabs from '../../subComponents/QuestionContantTabs.vue';
   import QuestionSource from '../../subComponents/QuestionSource.vue';
@@ -22,6 +22,7 @@
   import ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
   import QuestionDocumentModel from '@/modules/Questions/core/models/subModels/question.document.model';
   import TopicsParams from '@/modules/Questions/core/params/subParams/topics.params';
+import AttachmentsParams from '@/modules/Questions/core/params/subParams/attachments.params';
 
   const emit = defineEmits(['updateData']);
   const route = useRoute();
@@ -43,7 +44,7 @@
       params = new EditquestionsParams({
         id: Number(route.params.id),
         title: title.value,
-        image: UploadedImage.value || [],
+        image:UploadedImage.value.map((file) => new AttachmentsParams({ alt: '', file })) || [],
         questionType: selectedTab.value as QuestionTypeEnum,
         subjectId: SelectedSubject.value ? SelectedSubject.value : null,
         skills: SelectedSkill.value || [],
@@ -62,7 +63,7 @@
     } else {
       params = new AddquestionsParams({
         title: title.value,
-        image: UploadedImage.value || [],
+        image: UploadedImage.value.map((file) => new AttachmentsParams({ alt: '', file })) || [],
         questionType: selectedTab.value as QuestionTypeEnum,
         subjectId: SelectedSubject.value ? SelectedSubject.value : null,
         skills: SelectedSkill.value || [],
@@ -79,7 +80,7 @@
         }),
       });
     }
-    console.log(params, 'updateData');
+    // console.log(params, 'updateData');
     emit('updateData', params);
   };
   const UploadedImage = ref<string[]>([]);
@@ -120,12 +121,12 @@
 
   const getQuestionCOntent = (data: AddquestionsParams) => {
     selectedDifficultyLevel.value = data.difficultyLevel!;
-    SelectedSkill.value = data.skills!.map((item) => {
+    SelectedSkill.value = data.skills ? data.skills!.map((item) => {
       return new QuestionSkillParams({
         skillId: item.skillId,
         percentage: item?.percentage,
       });
-    });
+    }) : [];
     SelectedTopic.value = data.topics ? data.topics.map((item: any) => item.id) : [];
     SelectedQuestionSequence.value = data.questionSequenceId!;
     SelectedSubject.value = data.subjectId!;
@@ -149,10 +150,11 @@
     () => questionData,
     (newValue) => {
       if (newValue) {
+        console.log(newValue, 'questionDataquestionDataquestionData');
         title.value = newValue?.questionTitle || '';
-        UploadedImage.value = newValue?.questionImage ? [newValue?.questionImage] : [];
+        UploadedImage.value = newValue?.questionImage ? newValue?.questionImage.map((img) => img.file!  ) : [];
         selectedTab.value = newValue?.questionType || null;
-        SelectedSubject.value = newValue?.subjectTree?.id || null;
+        SelectedSubject.value = newValue?.subjectTree;
         SelectedSkill.value =
           newValue?.skills!.map((item) => {
             return new QuestionSkillParams({
@@ -161,7 +163,7 @@
             });
           }) || [];
         selectedDifficultyLevel.value = newValue?.difficulty || null;
-        SelectedTopic.value = newValue?.topics?.map((item) => item.id) || [];
+        SelectedTopic.value = newValue?.topics ? newValue?.topics.map((item: any) => item.id) : [];
         SelectedQuestionSequence.value = newValue?.sequenceTree?.id || null;
         SelectedDocumet.value = newValue?.questionDocuments?.id || null;
         questionSource.value = newValue?.questionDocuments?.source || '';

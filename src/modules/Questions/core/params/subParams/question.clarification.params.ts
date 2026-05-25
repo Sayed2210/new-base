@@ -1,11 +1,12 @@
 import type Params from '@/base/Core/Params/params';
 import { ClassValidation } from '@/base/Presentation/Utils/classValidation';
+import type AttachmentsParams from './attachments.params';
 
 export default class QuestionClarificationParams implements Params {
   public documentId?: number;
   public source?: string;
   public clarification?: string;
-  public file?: string[];
+  public file?: AttachmentsParams[];
 
   public static readonly validation = new ClassValidation().setRules({
     documentId: { required: true },
@@ -18,7 +19,7 @@ export default class QuestionClarificationParams implements Params {
     documentId?: number;
     source?: string;
     clarification?: string;
-    file?: string[];
+    file?: AttachmentsParams[];
   }) {
     this.documentId = data.documentId;
     this.source = data.source;
@@ -30,8 +31,8 @@ export default class QuestionClarificationParams implements Params {
     return {
       ...(this.documentId ? { document_id: this.documentId } : {}),
       ...(this.source ? { source: this.source } : {}),
-      ...(this.clarification ? { clarification: this.clarification } : {}),
-      ...(this.file ? { file: this.file } : {}),
+      ...(this.clarification ? { explanation: this.clarification } : {}),
+      ...(this.file ? { attachments: this.file.map((f) => f.toMap()) } : []),
     };
   }
 

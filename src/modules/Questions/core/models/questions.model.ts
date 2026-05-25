@@ -35,12 +35,12 @@ export default class questionsModel {
     }
  
     return new questionsModel({
-      id: json.id,
-      title: json.title,
+      id: json.question_id,
+      title: json.question,
       generatedBy: json.generated_by,
       questionType: json.question_type,
-      difficulty: json.difficulty,
-      status: json.status,
+      difficulty: json.difficulty_level,
+      status: json.review_status,
     });
   }
 

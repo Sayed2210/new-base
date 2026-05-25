@@ -9,8 +9,9 @@ import SolutionStepsModel from './subModels/solution.steps.model';
 import SubjectTreeModel from './subModels/subject.tree.model';
 import sequenceTreeModel from './subModels/sequence.model';
 import QuestionDocumentModel from './subModels/question.document.model';
+import AttachmentModel from './subModels/attachment.model';
 import QuestionSkillsModel from './subModels/question.skills.model';
-import type TitleInterface from '@/base/Data/Models/titleInterface';
+import TitleInterface from '@/base/Data/Models/titleInterface';
 import { AnswerEvaluationTypeEnum } from '../constant/answer.evaluation.type.enum';
 
 export default class ShowQuestionsModel {
@@ -19,7 +20,7 @@ export default class ShowQuestionsModel {
   public readonly difficulty?: QuestionDifficultyEnum;
   public readonly topics?: TitleInterface<number>[];
   public readonly questionTitle?: string;
-  public readonly questionImage?: string;
+  public readonly questionImage?: AttachmentModel[];
 
   public readonly status?: QuestionStatusEnum;
   public readonly generatedBy?: QuestionGeneratedByEnum;
@@ -30,7 +31,7 @@ export default class ShowQuestionsModel {
   public readonly questionClarification?: QuestionClarificationModel;
   public readonly solutionSteps?: SolutionStepsModel;
   public readonly solutionHint?: SolutionHintModel;
-  public readonly subjectTree?: SubjectTreeModel;
+  public readonly subjectTree?: TitleInterface<number>;
   public readonly sequenceTree?: sequenceTreeModel;
   public readonly questionDocuments?: QuestionDocumentModel;
   public readonly skills?: QuestionSkillsModel[];
@@ -48,14 +49,14 @@ export default class ShowQuestionsModel {
     status?: QuestionStatusEnum;
     topics?: TitleInterface<number>[];
     questionTitle?: string;
-    questionImage?: string;
+    questionImage?: AttachmentModel[];
     createdAt?: string;
     approvedBy?: string;
     answers?: AnswerModel[];
     questionClarification?: QuestionClarificationModel;
     solutionSteps?: SolutionStepsModel;
     solutionHint?: SolutionHintModel;
-    subjectTree?: SubjectTreeModel;
+    subjectTree?: TitleInterface<number>;
     sequenceTree?: sequenceTreeModel;
     questionDocuments?: QuestionDocumentModel;
     skills?: QuestionSkillsModel[];
@@ -99,21 +100,24 @@ export default class ShowQuestionsModel {
       id: json.id,
       generatedBy: json.generated_by,
       questionType: json.question_type,
-      difficulty: json.difficulty,
+      difficulty: json.difficulty_level,
       status: json.status,
       createdAt: json.created_at,
       approvedBy: json.approved_by,
-      questionTitle: json.question_title,
-      questionImage: json.question_image,
-      topics: json.topics,
-      answers: json.answers.map((answer: any) => AnswerModel.fromJson(answer)),
-      questionClarification: QuestionClarificationModel.fromJson(json.question_clarification),
-      solutionSteps: SolutionStepsModel.fromJson(json.solution_steps),
-      solutionHint: SolutionHintModel.fromJson(json.solution_hint),
-      subjectTree: SubjectTreeModel.fromJson(json.subject_tree),
-      sequenceTree: sequenceTreeModel.fromJson(json.sequence_tree),
-      questionDocuments: QuestionDocumentModel.fromJson(json.question_documents),
-      skills: json.skills.map((skill: any) => QuestionSkillsModel.fromJson(skill)),
+      questionTitle: json.question,
+      questionImage: json.attachments ? json.attachments.map(AttachmentModel.fromJson) : [],
+      topics: json.topics.map((topic: any) => new TitleInterface<number>({
+        id: topic.e_c_s_topic_id,
+        title: topic.title,
+      })),
+      answers: json.answers ? json.answers.map((answer: any) => AnswerModel.fromJson(answer)) : [],
+      questionClarification:json.question_clarification ?  QuestionClarificationModel.fromJson(json.question_clarification) : {},
+      solutionSteps:  json.solution_steps ? SolutionStepsModel.fromJson(json.solution_steps) : undefined,
+      solutionHint:json.solution_hint ?  SolutionHintModel.fromJson(json.solution_hint  ) : undefined,
+      subjectTree:json.e_c_subject_id,
+      sequenceTree: json.sequence_tree ? sequenceTreeModel.fromJson(json.sequence_tree) : undefined,
+      questionDocuments:json.question_documents ? QuestionDocumentModel.fromJson(json.question_documents) : undefined,
+      skills: json.skills ? json.skills.map((skill: any) => QuestionSkillsModel.fromJson(skill)) : [],
       questionLogHistory: json.question_logs_history,
       isClarification: json.is_clarification,
       isQusetionSteps: json.is_question_steps,

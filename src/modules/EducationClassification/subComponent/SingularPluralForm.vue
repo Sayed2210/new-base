@@ -28,7 +28,7 @@ const branches = reactive<Branch[]>(
 watch(
   [() => props.numberOfBranches, () => props.initialBranches],
   ([newCount, newInitial]) => {
-    console.log(newCount, 'new');
+    // console.log(newCount, 'new');
     branches.splice(0);
     for (let i = 0; i < newCount; i++) {
       branches.push({
@@ -40,7 +40,7 @@ watch(
   { deep: true },
 );
 onMounted(() => {
-  console.log(props.numberOfBranches, 'numberOfBranches');
+  // console.log(props.numberOfBranches, 'numberOfBranches');
 });
 const SaveData = () => {
   emit('update', branches);

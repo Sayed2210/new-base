@@ -74,7 +74,7 @@ export default class EducationConfigurationController extends BaseController<
     options?: ApiCallOptions,
   ): Promise<DataState<EducationConfigurationModel[]>> {
     const result = super.fetchList(params, options);
-    console.log((await result).data, 'result');
+    // console.log((await result).data, 'result');
     return result;
   }
 }

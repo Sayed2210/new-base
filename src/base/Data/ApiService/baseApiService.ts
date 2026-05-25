@@ -402,7 +402,7 @@ export default abstract class BaseApiService extends ServicesInterface {
         // Wait before retrying
         if (attempt < retryConfig.maxAttempts - 1) {
           if (env.isLoggingEnabled) {
-            console.log(`[BaseApiService] Retry attempt ${attempt + 1}/${retryConfig.maxAttempts}`);
+            // console.log(`[BaseApiService] Retry attempt ${attempt + 1}/${retryConfig.maxAttempts}`);
           }
           await new Promise((resolve) => setTimeout(resolve, delay));
           delay *= retryConfig.backoffMultiplier;

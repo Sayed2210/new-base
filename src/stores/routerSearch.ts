@@ -27,7 +27,7 @@ function flattenRoutes(routes: RouteRecordRaw[], parentPath = '/eg'): Searchable
         path: fullPath,
       });
     }
-    console.log(acc, 'acc');
+    // console.log(acc, 'acc');
 
     if (route.children?.length) {
       acc.push(...flattenRoutes(route.children, fullPath));

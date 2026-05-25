@@ -31,7 +31,7 @@ class HeaderHandler {
     }
 
     const savedLocale = localStorage.getItem('lang') || 'en';
-    console.log(savedLocale , 'savedLocale')
+    // console.log(savedLocale , 'savedLocale')
     if (savedLocale) {
       headers['Accept-Language'] = savedLocale;
     }

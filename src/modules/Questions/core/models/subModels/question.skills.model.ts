@@ -16,8 +16,8 @@ export default class QuestionSkillsModel {
     }
 
     return new QuestionSkillsModel({
-      id: json.id,
-      skill: json.skill,
+      id: json.skill_id,
+      skill: json.title,
       precentage: json.precentage,
     });
   }

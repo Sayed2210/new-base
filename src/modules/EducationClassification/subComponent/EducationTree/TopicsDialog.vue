@@ -59,7 +59,7 @@
   const fetchTopics = async () => {
     if (!props.branchId) return;
     await educationTopicsController.fetchList(
-      new IndexEducationSubjectTopicParams({ TopicId: props.branchId }),
+      new IndexEducationSubjectTopicParams({ SubjectId: props.branchId }),
     );
   };
 
