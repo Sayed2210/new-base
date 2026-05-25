@@ -4,6 +4,7 @@
   import { onMounted, ref, watch } from 'vue';
   import Checkbox from 'primevue/checkbox';
   import AnswerModel from '@/modules/Questions/core/models/subModels/answer.model';
+  import type AttachmentModel from '@/modules/Questions/core/models/subModels/attachment.model';
   import AnswersParams from '@/modules/Questions/core/params/subParams/answers.params';
   import AttachmentsParams from '@/modules/Questions/core/params/subParams/attachments.params';
 
@@ -70,6 +71,9 @@
     UpdateData();
   };
 
+  const getImageUrls = (image: AnswerModel['image']): string[] =>
+    (image?.map((img: AttachmentModel) => img.file).filter(Boolean) as string[]) ?? [];
+
   const setCorrect = (index: number) => {
     Answers.value.map((item) => {
       item.is_right_answer = false;
@@ -81,17 +85,14 @@
     () => questionData,
     (newValue) => {
       if (newValue && newValue.length > 0) {
-        console.log(newValue , "newValue")
-        Answers.value = newValue.map((item) => {
-          return new AnswerModel({
-            answer: item.answer,
-            image: item.image,
-            is_right_answer: item.is_right_answer,
-          });
-        });
+        Answers.value = newValue.map((item) => ({
+          answer: item.answer,
+          image: item.image ?? null,
+          is_right_answer: item.is_right_answer,
+        }));
       }
     },
-    { immediate: true ,deep: true },
+    { immediate: true, deep: true },
   );
 
   
@@ -126,7 +127,7 @@
                 accept="image/*"
                 :multiple="true"
                 :index="index + 5"
-                :file="item.image"
+                :file="item.image?.map((img) => img.file).filter(Boolean) as string[]"
                 :have-content="true"
                 :class="`image-input`"
                 @change="(files) => setImage(files, index)"
