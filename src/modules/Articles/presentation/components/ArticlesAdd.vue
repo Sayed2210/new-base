@@ -48,6 +48,7 @@ const updateData = (updatedParams: AddEmployeeParams) => {
       </AppButton>
       <button class="btn btn-draft">{{ $t(`Save As draft`) }}</button>
       <button class="btn btn-cancel">{{ $t(`cancel`) }}</button>
+
     </div>
 
     <!-- Error Display -->
