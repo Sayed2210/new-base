@@ -2,19 +2,26 @@
 import { ArticleDifficultyEnum } from '@/modules/Articles/core/constant/Article.difficulty.enum';
 import ArticleCardModel from '../../../core/models/article.card';
 import { ArticleTypeEnum } from '@/modules/Articles/core/constant/Article.type.enum';
-
-const {question} = defineProps<{
-    question : ArticleCardModel[];
+import DropList from '@/shared/HelpersComponents/DropList.vue';
+import EditIcon from '@/shared/icons/DropListIcons/EditIcon.vue';
+import DeletIcon from '@/shared/icons/DropListIcons/DeletIcon.vue';
+import { useI18n } from 'vue-i18n';
+import ArticleController from '../../../presentation/controllers/Article.controller';
+import DeleteArticlesParams from '../../../core/params/delet.Articles.params';
+  import { ref } from 'vue';
+const { question } = defineProps<{
+    question: ArticleCardModel[];
 }>()
-
+ const controller = ArticleController.getInstance();
+const { t } = useI18n();
 const getDifficultyClass = (difficulty: ArticleDifficultyEnum) => {
     switch (difficulty) {
         case ArticleDifficultyEnum.easy:
-            return "easy";
+            return t("easy");
         case ArticleDifficultyEnum.medium:
-            return "medium";
+            return t("medium");
         case ArticleDifficultyEnum.hard:
-            return "hard";
+            return t("hard");
         default:
             return "N/A";
     }
@@ -23,17 +30,44 @@ const getDifficultyClass = (difficulty: ArticleDifficultyEnum) => {
 const getStatusClass = (status: ArticleTypeEnum) => {
     switch (status) {
         case ArticleTypeEnum.mcq:
-            return "mcq";
+            return t("MCQ");
         case ArticleTypeEnum.ranking:
-            return "ranking";
+            return t("Ranking");
         case ArticleTypeEnum.true_false:
-            return "true_false";
+            return t("True/False");
         case ArticleTypeEnum.complate:
-            return "complate";
+            return t("Complate");
+            case ArticleTypeEnum.matching:
+            return t("Matching");
         default:
             return "N/A";
     }
 };
+  const ShoweEditDialog = ref<boolean>(false);
+  const selectedItemId = ref<number>(0);
+  const deleteArticleQuestion = async (id: number) => {
+    await controller.delete(
+      new DeleteArticlesParams({
+        id: id,
+      }),
+    );
+  };
+// droplist
+const actionList = (id: number, deleteArticleQuestion: (id: number) => void) => [
+    {
+      text: t('Edit'),
+      icon: EditIcon,
+      action: () => {
+        selectedItemId.value = id;
+        ShoweEditDialog.value = true;
+      },
+    },
+    {
+      text: t('delete'),
+      icon: DeletIcon,
+      action: () => deleteArticleQuestion(id),
+    },
+  ];
 
 </script>
 <template>
@@ -43,7 +77,17 @@ const getStatusClass = (status: ArticleTypeEnum) => {
                 <div class="header-card">
                      <div class="title"> <h6>questions {{ index + 1 }}</h6>   </div>  
             <div class="actions">
-                icon
+                 <DropList
+                  :action-list="actionList(value.id, deleteArticleQuestion)"
+                  :delete-dialog-title="
+                    $t('are_you_sure_you_want_to_remove_this_education_classification')
+                  "
+                  :delete-dialog-message="
+                    $t(
+                      'Deleting_this_classification_will_remove_all_related_data_including_any_configurations_and_tree_structures_This_action_is_irreversible_and_the_classification_must_be_created_again_if_needed',
+                    )
+                  "
+                />
             </div>
                 </div>
                 <div class="types-date">
@@ -143,6 +187,16 @@ const getStatusClass = (status: ArticleTypeEnum) => {
                     background-color: #E9F9EE;
                     color: #18A957;
                     border: 1px solid #B7E9C9;
+                }
+                  .medium{
+                    background-color: rgba(255, 247, 230, 1);
+                    color: rgba(217, 145, 0, 1);
+                    border: 1px solid rgba(242, 213, 156, 1);
+                }
+                  .hard{
+                    background-color: var(--background-btn-outline-color);
+                    color: var(--btn-red);
+                    border: 1px solid rgba(245, 194, 192, 1);
                 }
                 .value-status{
                      padding: $XsSize5 $XlSize2;

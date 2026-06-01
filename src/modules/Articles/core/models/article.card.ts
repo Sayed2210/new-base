@@ -59,8 +59,8 @@ export default class ArticleCardModel {
       createdAt: '2022-01-01',
       questions: 'Which of the following best describes the primary mechanism through which rising ocean ?',
       answer: ArticleAnswerModel.examples,
-      articledifficulty: ArticleDifficultyEnum.easy,
-      status: ArticleTypeEnum.mcq,
+      articledifficulty: ArticleDifficultyEnum.hard,
+      status: ArticleTypeEnum.true_false,
     }),
       new ArticleCardModel({
       id: 1,
@@ -68,8 +68,8 @@ export default class ArticleCardModel {
       createdAt: '2022-01-01',
       questions: 'Which of the following best describes the primary mechanism through which rising ocean ?',
       answer: ArticleAnswerModel.examples,
-      articledifficulty: ArticleDifficultyEnum.easy,
-      status: ArticleTypeEnum.mcq,
+      articledifficulty: ArticleDifficultyEnum.medium,
+      status: ArticleTypeEnum.matching,
     }),
     // new ArticleCardModel({
     //   id: 2,

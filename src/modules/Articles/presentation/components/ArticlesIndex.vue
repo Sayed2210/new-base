@@ -17,7 +17,7 @@ import { ArticleStatusEnum } from '../../core/constant/Article.status.enum';
 import ShowIcon from '@/shared/icons/ShowIcon.vue';
 import ArticleController from '../controllers/Article.controller';
 import IndexArticleParams from '../../core/params/index.Articles.params';
-import DeleteArticleParams from '../../core/params/Articles.question.params';
+import DeleteArticleParams from '../../core/params/delet.Articles.params';
 import type ShowArticleModel from '../../core/models/show.Article.model';
 import Articlearrow from '@/shared/icons/articlearrow.vue';
 import Articlesubject from '@/shared/icons/articlesubject.vue';

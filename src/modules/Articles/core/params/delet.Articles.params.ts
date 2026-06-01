@@ -2,9 +2,9 @@ import type Params from '@/base/Core/Params/params';
 import { ClassValidation } from '@/base/Presentation/Utils/classValidation';
 
 /**
- * Parameters for deleting an employee
+ * Parameters for showing an employee
  */
-export default class DeleteArticleParams implements Params {
+export default class DeleteArticlesParams implements Params {
   public id: number;
 
   public static readonly validation = new ClassValidation().setRules({
@@ -17,15 +17,15 @@ export default class DeleteArticleParams implements Params {
 
   toMap(): { [p: string]: any } {
     return {
-      employee_id: this.id,
+      article_id: this.id,
     };
   }
 
   validate() {
-    return DeleteArticleParams.validation.validate(this);
+    return DeleteArticlesParams.validation.validate(this);
   }
 
   validateOrThrow() {
-    return DeleteArticleParams.validation.validateOrThrow(this);
+    return DeleteArticlesParams.validation.validateOrThrow(this);
   }
 }
