@@ -45,11 +45,6 @@ const handleFile = (files: UploadedFile[]) => {
   updateData();
 };
 
-const indexDocumentParams = ref(new IndexDocumentParams());
-const documentController = ref<any>(DocumentController.getInstance());
-const SelectedSubject = ref<any>(null);
-const articleSource = ref<string>('');
-
 const updateData = () => {
   let params: any;
   if (route?.params?.id) {
@@ -84,9 +79,17 @@ const updateData = () => {
   emit('updateData', params);
 };
 
-const BasicData = ref<AddArticlesParams>(new AddArticlesParams({ articleType: ArticleTypeEnum.mcq }));
+const BasicData = ref<AddArticlesParams>();
+const GetAllBasicData = (data: AddArticlesParams) => {
+  BasicData.value = data;
+  updateData();
+};
 
-const AnswerData = ref<AddArticlesParams>(new AddArticlesParams({}));
+const AnswerData = ref<AddArticlesParams>();
+const GetAllAnswers = (data: AddArticlesParams) => {
+  AnswerData.value = data;
+  updateData();
+};
 
 watch(
   () => article,
@@ -109,8 +112,7 @@ watch(
         </div>
       </div>
     </header>
-    <Accordion
-:value="isSolutionSteps ? 1 : 0" :pt="{
+    <Accordion :value="isSolutionSteps ? 1 : 0" :pt="{
       root: `article-solution-steps ${isSolutionSteps ? 'active' : ''}`,
     }" @update:value="isSolutionSteps = !isSolutionSteps">
       <AccordionPanel :value="1">
@@ -132,8 +134,7 @@ watch(
             <div class="description-container">
               <div class="description-header">
                 <span>B / U</span>
-                <HandleFilesUpload
-:label="``" accept="image/*" :multiple="true" :index="30" :file=file
+                <HandleFilesUpload :label="``" accept="image/*" :multiple="true" :index="30" :file=file
                   :have-content="true" :class="`image-input`" @change="(files) => handleFile(files)">
                   <template #content>
                     <div class="upload-attachment-container">
@@ -152,8 +153,8 @@ watch(
               <div class="field-group">
                 <label class="field-label" for="name">{{ $t('title of artical') }}</label>
                 <div class="input-wrap">
-                  <input id="article-source" v-model="question" type="text"
-                    :placeholder="$t('enter title of artical ')" class="field-input" @input="updateData" />
+                  <input id="article-source" v-model="question" type="text" :placeholder="$t('enter title of artical ')"
+                    class="field-input" @input="updateData" />
                 </div>
               </div>
               <div class="input">
@@ -169,8 +170,7 @@ watch(
       </AccordionPanel>
     </Accordion>
 
-    <Accordion
-:value="isSolutionHint ? 1 : 0" :pt="{
+    <Accordion :value="isSolutionHint ? 1 : 0" :pt="{
       root: `article-solution-steps ${isSolutionHint ? 'active' : ''}`,
     }" @update:value="isSolutionHint = !isSolutionHint">
       <AccordionPanel :value="1">
@@ -199,8 +199,7 @@ watch(
               <div class="field-group">
                 <label class="field-label" for="name">{{ $t('source') }}</label>
                 <div class="input-wrap">
-                  <input
-id="article-source" v-model="articleSource" type="text" :placeholder="$t('enter source')"
+                  <input id="article-source" v-model="articleSource" type="text" :placeholder="$t('enter source')"
                     class="field-input" @input="updateData" />
                 </div>
               </div>
@@ -209,8 +208,7 @@ id="article-source" v-model="articleSource" type="text" :placeholder="$t('enter 
         </AccordionContent>
       </AccordionPanel>
     </Accordion>
-    <Accordion
-:value="isExplain ? 1 : 0" :pt="{
+    <Accordion :value="isExplain ? 1 : 0" :pt="{
       root: `article-solution-steps-explain ${isExplain ? 'active' : ''}`,
     }" @update:value="isExplain = !isExplain">
       <AccordionPanel :value="1">
@@ -228,8 +226,7 @@ id="article-source" v-model="articleSource" type="text" :placeholder="$t('enter 
             <div class="description-container">
               <div class="description-header">
                 <span>B / U</span>
-                <HandleFilesUpload
-:label="``" accept="image/*" :multiple="true" :index="30" :file=file
+                <HandleFilesUpload :label="``" accept="image/*" :multiple="true" :index="30" :file=file
                   :have-content="true" :class="`image-input`" @change="(files) => handleFile(files)">
                   <template #content>
                     <div class="upload-attachment-container">

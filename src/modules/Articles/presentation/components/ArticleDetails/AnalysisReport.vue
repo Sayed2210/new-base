@@ -4,17 +4,22 @@ import type ArticalDetailsModel from '@/modules/Articles/core/models/artical.det
 import { DocumentController, IndexDocumentParams } from '@/modules/document';
 import UpdatedCustomInputSelect from '@/shared/FormInputs/UpdatedCustomInputSelect.vue';
 import AnalysisIcon from '@/shared/icons/AnalysisIcon.vue';
+
 import ProgressBar from 'primevue/progressbar';
-import { DocumentController, IndexDocumentParams } from '@/modules/document';
+
 
 const { article } = defineProps<{
     article?: ArticalDetailsModel;
 }>();
 
-const indexDocumentParams = ref(new IndexDocumentParams());
-const documentController = ref<any>(DocumentController.getInstance());
+const indexDocumentParams = new IndexDocumentParams();
+const documentController = DocumentController.getInstance();
 const SelectedSubject = ref<any>(null);
-const updateData = () => {};
+
+const emit = defineEmits(['updateData']);
+const updateData = () => {
+    emit('updateData', SelectedSubject.value);
+};
 </script>
 <template>
     <div class="Analysis_Report">
