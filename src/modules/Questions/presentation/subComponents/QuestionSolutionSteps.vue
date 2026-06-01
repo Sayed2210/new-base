@@ -43,7 +43,7 @@
   watch(
     [() => SolutionStepsData, () => isSolutionStepsData],
     ([newSolutionStepsdata, newIsSolution]) => {
-      isSolutionSteps.value = newIsSolution;
+      isSolutionSteps.value = newIsSolution || !!newSolutionStepsdata;
       description.value = newSolutionStepsdata?.step;
       file.value = newSolutionStepsdata?.attachments;
     },

@@ -156,7 +156,7 @@
           ? newValue?.questionImage.map((img) => img.file!)
           : [];
         selectedTab.value = newValue?.questionType || null;
-        SelectedSubject.value = newValue?.subjectTree;
+        // SelectedSubject.value = newValue?.subjectTree;
         SelectedSkill.value =
           newValue?.skills!.map((item) => {
             return new QuestionSkillParams({

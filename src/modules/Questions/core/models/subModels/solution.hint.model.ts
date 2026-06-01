@@ -18,8 +18,8 @@ export default class SolutionHintModel {
     }
 
     return new SolutionHintModel({
-      id: json.id,
-      hint: json.hint,
+      id: json.question_answer_hint_id,
+      hint: json.text,
       attachments: json.attachments,
     });
   }

@@ -117,13 +117,13 @@ export default class ShowQuestionsModel {
           }),
       ),
       answers: json.answers ? json.answers.map((answer: any) => AnswerModel.fromJson(answer)) : [],
-      questionClarification: json.question_clarification
-        ? QuestionClarificationModel.fromJson(json.question_clarification)
+      questionClarification: json.explanation
+        ? QuestionClarificationModel.fromJson(json.explanation)
         : {},
       solutionSteps: json.solution_steps
         ? SolutionStepsModel.fromJson(json.solution_steps)
         : undefined,
-      solutionHint: json.solution_hint ? SolutionHintModel.fromJson(json.solution_hint) : undefined,
+      solutionHint: json.answer_hint ? SolutionHintModel.fromJson(json.answer_hint) : undefined,
       subjectTree: new TitleInterface<number>({
         id: json.e_c_branch?.e_c_branch_id,
         title: json.e_c_branch?.title,

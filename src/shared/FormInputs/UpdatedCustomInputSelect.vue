@@ -138,7 +138,15 @@
   watch([params, controller], handleOptionUpdates, { immediate: true });
 
   watch(mergedOptions, () => {
-    if (modelValue.value) syncLocalValue(modelValue.value);
+    if (!modelValue.value || Array.isArray(modelValue.value)) {
+      syncLocalValue(modelValue.value);
+      return;
+    }
+    const id = (modelValue.value as TitleInterface<string | number>).id;
+    const match = mergedOptions.value.find((opt) => opt.id === id);
+    if (match && match !== localValue.value) {
+      localValue.value = match;
+    }
   });
 
   // Initialization

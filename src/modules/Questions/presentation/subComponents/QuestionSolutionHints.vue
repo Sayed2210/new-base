@@ -31,7 +31,7 @@
     });
   };
 
-  const isSolutionSteps = ref(isSolutionHintsData);
+  const isSolutionSteps = ref(isSolutionHintsData );
   const description = ref('');
   const file = ref();
   const handleFile = (f: any) => {
@@ -41,9 +41,9 @@
   watch(
     [() => SolutionHintsData, () => isSolutionHintsData],
     ([newSolutionHinrdata, newIsSolution]) => {
-      isSolutionSteps.value = newIsSolution;
+      isSolutionSteps.value = newIsSolution || !!newSolutionHinrdata;
       description.value = newSolutionHinrdata?.hint;
-      file.value = newSolutionHinrdata?.attachments;
+      file.value = newSolutionHinrdata?.attachments[0]?.file;
     },
   );
 </script>

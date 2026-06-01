@@ -25,7 +25,7 @@
     ContentData: ShowQuestionsModel;
   }>();
 
-  const SelectedSubject = ref<TitleInterface<number> | null>(null);
+  // const SelectedSubject = ref<TitleInterface<number> | null>(null);
   const SelectedQuestionSequence = ref<TitleInterface<number> | null>(null);
   const SelectedTopic = ref<TitleInterface<number>[] | null>(null);
   const SelectedDifficultyLevel = ref<TitleInterface<number> | null>(null);
@@ -60,7 +60,7 @@
             });
           }) || undefined,
         topics: SelectedTopic.value?.map((item) => new TopicsParams({ id: item.id })) || [],
-        questionSequenceId: SelectedSubject.value?.id,
+        questionSequenceId: SelectedQuestionSequence.value?.id,
         subjectId: selectedBranchTitle.value?.id,
       }),
     );
@@ -158,11 +158,10 @@
           @update:model-value="handleBranchChange($event)"
         />
       </div>
-      <!-- {{ SelectedQuestionSequence }} -->
       <div class="input">
         <UpdatedCustomInputSelect
           id="question-sequence"
-          :model-value="SelectedQuestionSequence"
+          v-model="SelectedQuestionSequence"
           :label="`question sequence`"
           :static-options="subjectOptions"
           placeholder="Question sequence"

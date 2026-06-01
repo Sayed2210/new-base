@@ -63,7 +63,7 @@
     });
     description.value = newValue.clarification!;
     file.value = newValue.attachments?.map((a) => a.file).filter(Boolean) as string[];
-    isClarification.value = neIsClarification;
+    isClarification.value = neIsClarification || !!newValue;
   });
 </script>
 
