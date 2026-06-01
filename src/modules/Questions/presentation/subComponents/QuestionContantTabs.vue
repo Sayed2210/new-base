@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import IndexDocumentTypeParams from '@/modules/document/core/params/documntType/index.document.type.params';
 import UpdatedCustomInputSelect from '@/shared/FormInputs/UpdatedCustomInputSelect.vue';
-import DocumentTypeController from '@/modules/document/presentation/controllers/DocumentType/document.type.controller';
 import TitleInterface from '@/base/Data/Models/titleInterface';
 import { computed, onMounted, ref, watch } from 'vue';
 import { QuestionDifficultyEnum } from '../../core/constant/question.difficulty.enum';
@@ -84,6 +83,7 @@ watch(
           subtitle: item.precentage!,
         }),
     );
+    selectedBranchTitle.value = newData.subjects;
   },
 );
 

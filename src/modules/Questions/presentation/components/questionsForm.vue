@@ -60,6 +60,7 @@
       });
     }
 
+    console.log(params, 'params params');
     emit('updateData', params);
   };
 

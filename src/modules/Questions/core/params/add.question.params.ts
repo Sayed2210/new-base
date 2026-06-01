@@ -89,7 +89,7 @@ export default class AddquestionsParams implements Params {
   toMap(): { [p: string]: any } {
     return {
       question: this.title,
-       attachments  : this.image?.map ((f) => f.toMap()),
+      attachments  : this.image?.map ((f) => f.toMap()),
       question_type: this.questionType,
       e_c_subject_id: this.questionSequenceId
       ,
@@ -99,7 +99,7 @@ export default class AddquestionsParams implements Params {
       difficulty_level: this.difficultyLevel,
       skills: this.skills?.map((item) => item.toMap()),
       answers: this.answers?.map((item) => item.toMap()),
-      question_source: this.questionSource?.toMap(),
+      documents: [this.questionSource?.toMap()],
       is_question_clarification: this.isQuestionClarification,
       explanation: this.questionClarification?.toMap(),
       is_solution_steps: this.isSolutionSteps,

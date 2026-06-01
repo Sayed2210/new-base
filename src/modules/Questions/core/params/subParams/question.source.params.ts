@@ -18,7 +18,7 @@ export default class QuestionSourceParams implements Params {
   toMap(): { [p: string]: any } {
     return {
       document_id: this.documentId,
-      source: this.source,
+      text: this.source,
     };
   }
 

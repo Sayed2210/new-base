@@ -9,7 +9,10 @@ import type questionsModel from '../../core/models/questions.model';
 import questionsRepository from '../../data/repositories/question.repository';
 import type ShowQuestionsModel from '../../core/models/show.questions.model';
 
-export default class questionsController extends BaseController<ShowQuestionsModel, questionsModel[]> {
+export default class questionsController extends BaseController<
+  ShowQuestionsModel,
+  questionsModel[]
+> {
   private static instance: questionsController;
 
   protected get repository() {
@@ -44,7 +47,7 @@ export default class questionsController extends BaseController<ShowQuestionsMod
 
     const result = await super.create(params, { ...options, useJson: true });
     if (result instanceof DataSuccess) {
-      router.push({ name: 'Employees' });
+      router.push({ name: 'Questions' });
       if (formKey) {
         FormStore.clearFormData(formKey);
       }
@@ -57,7 +60,7 @@ export default class questionsController extends BaseController<ShowQuestionsMod
 
     const result = await super.update(params, options);
     if (result instanceof DataSuccess) {
-      router.push({ name: 'Employees' });
+      router.push({ name: 'Questions' });
       if (formKey) {
         FormStore.clearFormData(formKey);
       }

@@ -40,6 +40,7 @@ export default class ShowQuestionsModel {
   public readonly isClarification?: boolean;
   public readonly isQusetionSteps?: boolean;
   public readonly isQusetionHints?: boolean;
+  public readonly subjects?: TitleInterface<number>;
 
   constructor(data: {
     id?: number;
@@ -64,6 +65,7 @@ export default class ShowQuestionsModel {
     isClarification?: boolean;
     isQusetionSteps?: boolean;
     isQusetionHints?: boolean;
+    subjects?: TitleInterface<number>;
   }) {
     this.id = data.id;
     this.generatedBy = data.generatedBy;
@@ -87,6 +89,7 @@ export default class ShowQuestionsModel {
     this.isClarification = data.isClarification;
     this.isQusetionSteps = data.isQusetionSteps;
     this.isQusetionHints = data.isQusetionHints;
+    this.subjects = data.subjects;
 
     Object.freeze(this);
   }
@@ -106,22 +109,34 @@ export default class ShowQuestionsModel {
       approvedBy: json.approved_by,
       questionTitle: json.question,
       questionImage: json.attachments ? json.attachments.map(AttachmentModel.fromJson) : [],
-      topics: json.topics.map((topic: any) => new TitleInterface<number>({
-        id: topic.e_c_s_topic_id,
-        title: topic.title,
-      })),
+      topics: json.topics.map(
+        (topic: any) =>
+          new TitleInterface<number>({
+            id: topic.e_c_s_topic_id,
+            title: topic.title,
+          }),
+      ),
       answers: json.answers ? json.answers.map((answer: any) => AnswerModel.fromJson(answer)) : [],
-      questionClarification:json.question_clarification ?  QuestionClarificationModel.fromJson(json.question_clarification) : {},
-      solutionSteps:  json.solution_steps ? SolutionStepsModel.fromJson(json.solution_steps) : undefined,
-      solutionHint:json.solution_hint ?  SolutionHintModel.fromJson(json.solution_hint  ) : undefined,
-      subjectTree:json.e_c_subject_id,
+      questionClarification: json.question_clarification
+        ? QuestionClarificationModel.fromJson(json.question_clarification)
+        : {},
+      solutionSteps: json.solution_steps
+        ? SolutionStepsModel.fromJson(json.solution_steps)
+        : undefined,
+      solutionHint: json.solution_hint ? SolutionHintModel.fromJson(json.solution_hint) : undefined,
+      subjectTree: json.e_c_subject_id,
       sequenceTree: json.sequence_tree ? sequenceTreeModel.fromJson(json.sequence_tree) : undefined,
-      questionDocuments:json.question_documents ? QuestionDocumentModel.fromJson(json.question_documents) : undefined,
-      skills: json.skills ? json.skills.map((skill: any) => QuestionSkillsModel.fromJson(skill)) : [],
+      questionDocuments: json.question_documents
+        ? QuestionDocumentModel.fromJson(json.question_documents)
+        : undefined,
+      skills: json.skills
+        ? json.skills.map((skill: any) => QuestionSkillsModel.fromJson(skill))
+        : [],
       questionLogHistory: json.question_logs_history,
       isClarification: json.is_clarification,
       isQusetionSteps: json.is_question_steps,
       isQusetionHints: json.is_question_hint,
+      subjects: json.e_c_subjects,
     });
   }
 
@@ -134,7 +149,18 @@ export default class ShowQuestionsModel {
     createdAt: '2022-01-01',
     approvedBy: 'Mohamed Abdelmoneam',
     questionTitle: 'Question Title',
-    questionImage: `https://cyber.comolho.com/static/img/avatar.png`,
+    questionImage: [
+      {
+        id: 2,
+        alt: 'Document 2',
+        file: 'https://cyber.comolho.com/static/img/avatar.png',
+      },
+      {
+        id: 3,
+        alt: 'Document 3',
+        file: 'https://cyber.comolho.com/static/img/avatar.png',
+      },
+    ],
     topics: [
       { id: 2, title: 'Document 2' },
       { id: 3, title: 'Document 3' },
@@ -153,8 +179,14 @@ export default class ShowQuestionsModel {
     questionClarification: QuestionClarificationModel.example,
     solutionSteps: SolutionStepsModel.example,
     solutionHint: SolutionHintModel.example,
-    subjectTree: SubjectTreeModel.example,
-    sequenceTree: sequenceTreeModel.example,
+    subjectTree: {
+      id: 2,
+      title: 'Document 2',
+    },
+    sequenceTree: {
+      id: 3,
+      title: 'Document 3',
+    },
     questionDocuments: QuestionDocumentModel.example,
     skills: [
       new QuestionSkillsModel({

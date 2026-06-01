@@ -8,18 +8,24 @@
   import HandleFilesUpload, { type UploadedFile } from '@/shared/FormInputs/HandleFilesUpload.vue';
   import UploadFileIcon from '@/shared/icons/UploadFileIcon.vue';
   import SolutionStepsParams from '../../core/params/subParams/soluation.steps.params';
-import type SolutionHintModel from '../../core/models/subModels/solution.hint.model';
+  import type SolutionHintModel from '../../core/models/subModels/solution.hint.model';
+  import AttachmentsParams from '../../core/params/subParams/attachments.params';
 
   const emit = defineEmits(['updateData']);
-  const {SolutionHintsData ,isSolutionHintsData } = defineProps<{
-    SolutionHintsData:SolutionHintModel,
-    isSolutionHintsData:boolean
-  }>()
+  const { SolutionHintsData, isSolutionHintsData } = defineProps<{
+    SolutionHintsData: SolutionHintModel;
+    isSolutionHintsData: boolean;
+  }>();
   const updateData = () => {
     emit('updateData', {
       isSolutionSteps: isSolutionSteps.value,
       data: new SolutionStepsParams({
-        image: file.value,
+        image: file.value?.map(
+          (f: UploadedFile) =>
+            new AttachmentsParams({
+              file: f?.base64,
+            }),
+        ),
         explanation: description.value,
       }),
     });
@@ -29,15 +35,18 @@ import type SolutionHintModel from '../../core/models/subModels/solution.hint.mo
   const description = ref('');
   const file = ref();
   const handleFile = (files: UploadedFile[]) => {
-    file.value = files[0]?.base64;
+    file.value = files;
     updateData();
   };
 
-  watch([()=>SolutionHintsData ,  ()=>isSolutionHintsData] , ([newSolutionHinrdata , newIsSolution])=>{
-  isSolutionSteps.value = newIsSolution
-  description.value = newSolutionHinrdata.hint
-  file.value = newSolutionHinrdata.image
-})
+  watch(
+    [() => SolutionHintsData, () => isSolutionHintsData],
+    ([newSolutionHinrdata, newIsSolution]) => {
+      isSolutionSteps.value = newIsSolution;
+      description.value = newSolutionHinrdata.hint;
+      file.value = newSolutionHinrdata.image;
+    },
+  );
 </script>
 
 <template>
@@ -45,7 +54,7 @@ import type SolutionHintModel from '../../core/models/subModels/solution.hint.mo
     :pt="{
       root: `question-solution-hints ${isSolutionSteps ? 'active' : ''}`,
     }"
-    :value="isSolutionSteps ? 1 :0"
+    :value="isSolutionSteps ? 1 : 0"
     @update:value="isSolutionSteps = !isSolutionSteps"
   >
     <AccordionPanel :value="1">

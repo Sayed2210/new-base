@@ -22,7 +22,7 @@
   import ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
   import QuestionDocumentModel from '@/modules/Questions/core/models/subModels/question.document.model';
   import TopicsParams from '@/modules/Questions/core/params/subParams/topics.params';
-import AttachmentsParams from '@/modules/Questions/core/params/subParams/attachments.params';
+  import AttachmentsParams from '@/modules/Questions/core/params/subParams/attachments.params';
 
   const emit = defineEmits(['updateData']);
   const route = useRoute();
@@ -44,7 +44,7 @@ import AttachmentsParams from '@/modules/Questions/core/params/subParams/attachm
       params = new EditquestionsParams({
         id: Number(route.params.id),
         title: title.value,
-        image:UploadedImage.value.map((file) => new AttachmentsParams({ alt: '', file })) || [],
+        image: UploadedImage.value.map((file) => new AttachmentsParams({ alt: '', file })) || [],
         questionType: selectedTab.value as QuestionTypeEnum,
         subjectId: SelectedSubject.value ? SelectedSubject.value : null,
         skills: SelectedSkill.value || [],
@@ -80,7 +80,7 @@ import AttachmentsParams from '@/modules/Questions/core/params/subParams/attachm
         }),
       });
     }
-    // console.log(params, 'updateData');
+    console.log(SelectedSubject.value, 'SelectedSubject');
     emit('updateData', params);
   };
   const UploadedImage = ref<string[]>([]);
@@ -121,12 +121,14 @@ import AttachmentsParams from '@/modules/Questions/core/params/subParams/attachm
 
   const getQuestionCOntent = (data: AddquestionsParams) => {
     selectedDifficultyLevel.value = data.difficultyLevel!;
-    SelectedSkill.value = data.skills ? data.skills!.map((item) => {
-      return new QuestionSkillParams({
-        skillId: item.skillId,
-        percentage: item?.percentage,
-      });
-    }) : [];
+    SelectedSkill.value = data.skills
+      ? data.skills!.map((item) => {
+          return new QuestionSkillParams({
+            skillId: item.skillId,
+            percentage: item?.percentage,
+          });
+        })
+      : [];
     SelectedTopic.value = data.topics ? data.topics.map((item: any) => item.id) : [];
     SelectedQuestionSequence.value = data.questionSequenceId!;
     SelectedSubject.value = data.subjectId!;
@@ -152,7 +154,9 @@ import AttachmentsParams from '@/modules/Questions/core/params/subParams/attachm
       if (newValue) {
         console.log(newValue, 'questionDataquestionDataquestionData');
         title.value = newValue?.questionTitle || '';
-        UploadedImage.value = newValue?.questionImage ? newValue?.questionImage.map((img) => img.file!  ) : [];
+        UploadedImage.value = newValue?.questionImage
+          ? newValue?.questionImage.map((img) => img.file!)
+          : [];
         selectedTab.value = newValue?.questionType || null;
         SelectedSubject.value = newValue?.subjectTree;
         SelectedSkill.value =
