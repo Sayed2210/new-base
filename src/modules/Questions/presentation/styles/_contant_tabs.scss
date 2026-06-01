@@ -7,7 +7,6 @@
   &.document-tab {
     width: 100%;
     display: grid;
-    // grid-template-columns: repeat(2, 1fr);
     gap: $MdSize;
     margin-bottom: $XsSize;
     width: 100%;
@@ -43,7 +42,7 @@
         color: var(--title-header-color);
         font-weight: $BaseFontSemiBoldWeight;
         font-size: $SmSize;
-        font-family: 'Medium';
+        font-family: 'Demi' !important;
       }
       .input-select {
         background-color: var(--standard-white);

@@ -136,7 +136,7 @@ class EnvironmentManager {
    * Check if running in test mode
    */
   get isTest(): boolean {
-    console.log(this._stage.value, 'this._stage.value');
+    // console.log(this._stage.value, 'this._stage.value');
     return this._stage.value === 'test';
   }
 
@@ -151,9 +151,9 @@ class EnvironmentManager {
       this._stage.value = stage;
       this._config.value = environments[stage];
 
-      if (this.isLoggingEnabled) {
-        console.info(`[EnvironmentManager] Switched to ${stage} environment`);
-      }
+      // if (this.isLoggingEnabled) {
+      //   console.info(`[EnvironmentManager] Switched to ${stage} environment`);
+      // }
     }
   }
 
@@ -181,7 +181,7 @@ class EnvironmentManager {
    */
   log(message: string, ...args: any[]): void {
     if (this.isLoggingEnabled) {
-      console.log(`[${this.currentStage}] ${message}`, ...args);
+      // console.log(`[${this.currentStage}] ${message}`, ...args);
     }
   }
 
@@ -189,16 +189,16 @@ class EnvironmentManager {
    * Log warning if logging is enabled
    */
   warn(message: string, ...args: any[]): void {
-    if (this.isLoggingEnabled) {
-      console.warn(`[${this.currentStage}] ${message}`, ...args);
-    }
+    // if (this.isLoggingEnabled) {
+    //   console.warn(`[${this.currentStage}] ${message}`, ...args);
+    // }
   }
 
   /**
    * Log error (always logged)
    */
   error(message: string, ...args: any[]): void {
-    console.error(`[${this.currentStage}] ${message}`, ...args);
+    // console.error(`[${this.currentStage}] ${message}`, ...args);
   }
 }
 

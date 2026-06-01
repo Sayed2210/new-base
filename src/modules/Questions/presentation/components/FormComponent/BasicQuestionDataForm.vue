@@ -186,6 +186,7 @@
       }
     },
   );
+  const isActive = ref(true);
 </script>
 
 <template>
@@ -193,15 +194,16 @@
     :pt="{
       root: 'basic-data-form',
     }"
-    value="0"
+    :value="isActive ? '0' : ''"
     :lazy="true"
+    @update:value="isActive = !isActive"
   >
     <AccordionPanel value="0">
       <AccordionHeader>
         <template #toggleicon>
           <div class="toggll-container">
-            <div>basic question data</div>
-            <AccordionToggleIcon />
+            <p class="title">basic question data</p>
+            <AccordionToggleIcon :class="{ 'rotate-180': !isActive }" />
           </div>
           <span class="dashed-border"></span>
         </template>
@@ -267,22 +269,3 @@
     </AccordionPanel>
   </Accordion>
 </template>
-
-<style scoped>
-  .toggll-container {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .dashed-border {
-    width: 85%;
-    height: 1px;
-    border-bottom: 1px dashed #d0d0d0;
-  }
-
-  .p-accordionpanel:last-child > .p-accordionheader {
-    padding-left: 0 !important;
-  }
-</style>

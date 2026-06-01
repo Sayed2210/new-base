@@ -6,6 +6,7 @@
   import BasicQuestionDataForm from './FormComponent/BasicQuestionDataForm.vue';
   import QuestionAnswersDataForm from './FormComponent/QuestionAnswersDataForm.vue';
   import EditquestionsParams from '../../core/params/edit.question.params';
+  import FolderIcon from '@/shared/icons/Question/FolderIcon.vue';
 
   const route = useRoute();
   const emit = defineEmits(['updateData']);
@@ -14,7 +15,7 @@
   }>();
 
   const updateData = () => {
-    let params: any;
+    let params: EditquestionsParams | AddquestionsParams;
     if (route.params.id) {
       params = new EditquestionsParams({
         id: Number(route.params.id),
@@ -60,7 +61,6 @@
       });
     }
 
-    console.log(params, 'params params');
     emit('updateData', params);
   };
 
@@ -109,7 +109,12 @@
     <header class="form-header">
       <div class="form-title">
         <div class="header-text">
-          <h3>{{ route.params.id ? 'Edit Question' : 'Add New Question' }}</h3>
+          <h3>
+            <FolderIcon />
+            <span>
+              {{ route.params.id ? 'Edit Question' : 'Add New Question' }}
+            </span>
+          </h3>
         </div>
       </div>
     </header>

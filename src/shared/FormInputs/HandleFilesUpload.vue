@@ -121,15 +121,13 @@
     file: string | string[] | undefined,
     base64File: string | string[] | undefined,
   ) => {
-    console.log(file, 'file');
-    console.log(base64File, 'base64File');
+
 
     if (!file && !base64File) return;
 
     const fileList = Array.isArray(file) ? file : file ? [file] : [];
     const base64List = Array.isArray(base64File) ? base64File : base64File ? [base64File] : [];
 
-    console.log(fileList, 'fileList');
     files.value = fileList.map((url, i) => {
       let name = 'file';
       let ext = '';

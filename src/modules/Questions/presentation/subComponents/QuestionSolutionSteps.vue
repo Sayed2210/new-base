@@ -44,8 +44,8 @@
     [() => SolutionStepsData, () => isSolutionStepsData],
     ([newSolutionStepsdata, newIsSolution]) => {
       isSolutionSteps.value = newIsSolution;
-      description.value = newSolutionStepsdata.step;
-      file.value = newSolutionStepsdata.attachments;
+      description.value = newSolutionStepsdata?.step;
+      file.value = newSolutionStepsdata?.attachments;
     },
   );
 </script>

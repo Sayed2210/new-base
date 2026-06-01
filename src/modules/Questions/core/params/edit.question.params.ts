@@ -9,6 +9,7 @@ import type SolutionStepsParams from './subParams/soluation.steps.params';
 import type QuestionClarificationParams from './subParams/question.clarification.params';
 import type TopicsParams from './subParams/topics.params';
 import type { AnswerEvaluationTypeEnum } from '../constant/answer.evaluation.type.enum';
+import type AttachmentsParams from './subParams/attachments.params';
 
 /**
  * Parameters for adding a new employee
@@ -16,7 +17,7 @@ import type { AnswerEvaluationTypeEnum } from '../constant/answer.evaluation.typ
 export default class EditquestionsParams implements Params {
   public id: number;
   public title?: string;
-  public image?: string[];
+  public image?: AttachmentsParams[];
   public questionType?: QuestionTypeEnum;
   public subjectId?: number | null;
   public topics?: TopicsParams[];
@@ -49,7 +50,7 @@ export default class EditquestionsParams implements Params {
   constructor(data: {
     id: number;
     title?: string;
-    image?: string[];
+    image?: AttachmentsParams[];
     questionType?: QuestionTypeEnum;
     subjectId?: number | null;
     topics?: TopicsParams[];
@@ -92,7 +93,7 @@ export default class EditquestionsParams implements Params {
     return {
       id: this.id,
       title: this.title,
-      image: this.image,
+      attachments: this.image?.map((f) => f.toMap()),
       question_type: this.questionType,
       subject_id: this.subjectId,
       question_sequence_id: this.questionSequenceId,

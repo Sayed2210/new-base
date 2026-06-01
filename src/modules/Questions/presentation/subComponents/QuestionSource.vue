@@ -31,7 +31,7 @@
   watch(
     () => documentSource,
     (newValue) => {
-      console.log(newValue, 'newValuenewValue');
+      
       SelectedSubject.value = newValue?.id
         ? new TitleInterface<number>({ id: newValue.id, title: newValue.title })
         : null;

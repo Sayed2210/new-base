@@ -475,7 +475,8 @@ ul {
 @font-face {
   /* stylelint-disable-next-line declaration-property-value-allowed-list */
   font-family: "Demi";
-  src: url("./fonts/URW/URW DIN Arabic Cond Demi.ttf") format("truetype");
+  src: url("../assets/fonts/URW/URW DIN Arabic Demi.ttf") format("truetype");
+  font-weight: 600;
 }
 /* ── Utilities ─────────────────────────────────────────────────── */
 .hidden {
@@ -1428,7 +1429,7 @@ html[dir=rtl] .input-search .icon-remove {
   font-family: var(--font-family);
   font-size: var(--sm-size);
   font-weight: 600;
-  padding: 12px 18px !important;
+  padding: 12px 9px !important;
   margin-top: var(--xs-size-3);
 }
 .p-select:focus {
@@ -1443,8 +1444,9 @@ html[dir=rtl] .input-search .icon-remove {
   font-weight: 600;
 }
 .p-select-overlay .p-inputtext {
+  color: var(--gray-900) !important;
   background-color: var(--BgWhite) !important;
-  border: none !important;
+  border: 1px solid var(--gray-200) !important;
 }
 
 .p-select-option {
@@ -1507,7 +1509,7 @@ html[dir=rtl] .input-search .icon-remove {
   font-size: var(--sm-size);
   font-weight: 600;
   border-color: var(--gray-200) !important;
-  padding: var(--xs-size-3);
+  padding: 4px;
   margin-top: var(--xs-size-3);
 }
 .p-multiselect:focus {
@@ -1615,7 +1617,7 @@ html[dir=rtl] .input-search .icon-remove {
   width: fit-content;
   text-align: start;
   font-family: "Medium";
-  color: var(--Gray-5);
+  color: var(--gray-5);
   font-size: 16px;
   font-weight: 600;
 }
@@ -1660,6 +1662,10 @@ html[dir=rtl] .input-search .icon-remove {
 .p-checkbox {
   width: 28px !important;
   height: 20px !important;
+}
+
+.p-inputtext.p-component.p-filled.p-select-filter {
+  color: black !important;
 }
 
 /* =============================================================================
@@ -5195,7 +5201,7 @@ body::-webkit-scrollbar-thumb:hover {
   gap: var(--xs-size-5);
 }
 .employee-details-form-card .form-fields .field-group .image-input .add-imaegs-data .first-text {
-  color: var(--Gray-5);
+  color: var(--gray-5);
   font-size: var(--xs-size);
   font-weight: 600;
 }
@@ -6311,7 +6317,7 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: 13px;
   color: var(--gray-900-std);
   outline: none;
-  background: var(--Gray-5);
+  background: var(--gray-5);
   transition: border-color 0.2s, box-shadow 0.2s;
   box-sizing: border-box;
 }
@@ -6472,7 +6478,7 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: 13px;
   color: var(--gray-900-std);
   outline: none;
-  background: var(--Gray-5);
+  background: var(--gray-5);
   transition: border-color 0.2s, box-shadow 0.2s;
   box-sizing: border-box;
 }
@@ -6639,7 +6645,7 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: 13px;
   color: var(--gray-900-std);
   outline: none;
-  background: var(--Gray-5);
+  background: var(--gray-5);
   transition: border-color 0.2s, box-shadow 0.2s;
   box-sizing: border-box;
 }
@@ -7832,7 +7838,7 @@ body::-webkit-scrollbar-thumb:hover {
   gap: 3px;
 }
 .document-form-card .field-group .image-input .add-imaegs-data .first-text {
-  color: var(--Gray-5);
+  color: var(--gray-5);
   font-size: 12px;
   font-weight: 600;
 }
@@ -9526,7 +9532,7 @@ body::-webkit-scrollbar-thumb:hover {
   align-items: center;
 }
 .p-dialog.delete-reason-dialog .document-type-content .is-master span {
-  color: var(--Gray-5);
+  color: var(--gray-5);
   font-size: 16px;
   font-weight: 600;
 }
@@ -10359,13 +10365,26 @@ body::-webkit-scrollbar-thumb:hover {
 .questions-details-form-card .form-header {
   padding-left: 0 !important;
 }
-.questions-details-form-card .form-fields {
-  padding: 0 !important;
+.questions-details-form-card .form-header .header-text h3 {
+  color: var(--PrimaryColor-hover);
+  font-size: var(--xl-size-base);
+  font-weight: 600;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--xs-size-2);
+}
+.questions-details-form-card .form-header .header-text h3 span {
+  padding-top: 2px;
+}
+.questions-details-form-card .form-header .header-text h3 svg {
+  width: 24px;
+  height: 21px;
 }
 .questions-details-form-card .form-fields {
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  padding: 0 !important;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--xl-size-base);
@@ -10431,7 +10450,7 @@ body::-webkit-scrollbar-thumb:hover {
   gap: var(--xs-size-5);
 }
 .questions-details-form-card .form-fields .field-group .image-input .add-imaegs-data .first-text {
-  color: var(--Gray-5);
+  color: var(--gray-5);
   font-size: var(--xs-size);
   font-weight: 600;
 }
@@ -10444,18 +10463,24 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: var(--xs-size);
   font-weight: 400;
 }
+.questions-details-form-card .form-fields .field-group .input-label {
+  font-size: var(--md-size) !important;
+}
 .questions-details-form-card .form-fields .field-group .field-label {
-  font-size: var(--md-size);
-  color: var(--gray-5) !important;
-  text-transform: none;
+  width: -moz-fit-content;
+  width: fit-content;
+  text-align: start;
+  color: var(--gray-5);
+  font-size: var(--md-size) !important;
   font-weight: 600 !important;
+  text-transform: capitalize !important;
 }
 .questions-details-form-card .form-fields .field-group .input-wrap {
   width: 100%;
 }
 .questions-details-form-card .form-fields .field-group .input-wrap .field-input {
   width: 100%;
-  padding: var(--xs-size) var(--md-size);
+  padding: 13px var(--md-size);
   border: 1px solid var(--input-border-color) !important;
   border-radius: var(--xl-size-3) !important;
   font-size: var(--sm-size);
@@ -10606,7 +10631,7 @@ body::-webkit-scrollbar-thumb:hover {
   color: var(--title-header-color);
   font-weight: 600;
   font-size: var(--sm-size);
-  font-family: "Medium";
+  font-family: "Demi" !important;
 }
 .contant_tabs .form-group .input .input-select {
   background-color: var(--standard-white);
@@ -11591,39 +11616,68 @@ body::-webkit-scrollbar-thumb:hover {
    MAIN STYLESHEET — Organized Import Hub
    ============================================================================= */
 /* ── Core ──────────────────────────────────────────────────────── */
+.basic-data-form {
+  font-family: "Demi";
+}
+.basic-data-form .toggll-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--xs-size-4);
+}
+.basic-data-form .toggll-container .title {
+  color: var(--PrimaryColor);
+  font-size: var(--md-size-2);
+  font-weight: 600;
+}
+.basic-data-form .toggll-container svg {
+  transition: all 0.3s ease-in-out;
+}
+.basic-data-form .toggll-container svg.rotate-180 {
+  transform: rotate(180deg);
+}
+.basic-data-form .dashed-border {
+  flex: 1;
+  height: 1px;
+  border-bottom: 1px dashed #d0d0d0;
+}
+.basic-data-form .p-accordionpanel:last-child > .p-accordionheader {
+  padding-left: 0 !important;
+}
 .basic-data-form .form-fields .field-group .field-label {
   width: -moz-fit-content;
   width: fit-content;
   text-align: start;
-  font-family: "Medium";
-  color: var(--Gray-5);
-  font-size: 14px;
+  color: var(--gray-5);
+  font-size: var(--md-size);
   font-weight: 600;
   text-transform: capitalize !important;
 }
 .basic-data-form .form-fields .field-group .input-wrap input {
-  font-size: 14px;
+  font-size: var(--md-size);
   font-weight: 600;
 }
 .basic-data-form .form-fields .field-group .input-wrap input::-moz-placeholder {
-  font-family: "Medium";
-  color: #94a3b8;
-  font-size: 16px;
-  font-weight: 300;
+  color: var(--second-text);
+  font-size: var(--md-size);
+  font-weight: 500;
+  font-family: "Demi";
 }
 .basic-data-form .form-fields .field-group .input-wrap input::placeholder {
-  font-family: "Medium";
-  color: #94a3b8;
-  font-size: 16px;
-  font-weight: 300;
+  color: var(--second-text);
+  font-size: var(--md-size);
+  font-weight: 500;
+  font-family: "Demi";
 }
 .basic-data-form .form-fields .image-input .upload-label {
   width: -moz-fit-content;
   width: fit-content;
   text-align: start;
-  font-family: "Medium";
-  color: #5d5d5d;
-  font-size: 14px !important;
+  font-family: "Demi";
+  color: var(--gray-5) !important;
+  font-size: var(--md-size) !important;
   font-weight: 600 !important;
   text-transform: capitalize !important;
 }
@@ -11808,7 +11862,7 @@ body::-webkit-scrollbar-thumb:hover {
   gap: var(--xs-size-5);
 }
 .mcq-answers-time-line-container .timeline-form-content .field-group .image-input .add-imaegs-data .first-text {
-  color: var(--Gray-5);
+  color: var(--gray-5);
   font-size: var(--xs-size);
   font-weight: 600;
 }
@@ -11950,7 +12004,7 @@ body::-webkit-scrollbar-thumb:hover {
   gap: var(--xs-size-5);
 }
 .true-false-answers-time-line-container .timeline-form-content .field-group .image-input .add-imaegs-data .first-text {
-  color: var(--Gray-5);
+  color: var(--gray-5);
   font-size: var(--xs-size);
   font-weight: 600;
 }
@@ -12399,7 +12453,7 @@ body::-webkit-scrollbar-thumb:hover {
   gap: var(--xs-size-5);
 }
 .artical-details-form-card .form-fields .field-group .image-input .add-imaegs-data .first-text {
-  color: var(--Gray-5);
+  color: var(--gray-5);
   font-size: var(--xs-size);
   font-weight: 600;
 }
@@ -12775,7 +12829,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 .login .login-form .title p {
   font-family: "Medium";
-  color: var(--Gray-5);
+  color: var(--gray-5);
   font-size: 16px;
   font-weight: 400;
   line-height: 1.5;
@@ -12820,6 +12874,7 @@ body::-webkit-scrollbar-thumb:hover {
   background: var(--standard-white) !important;
   box-shadow: 0 0 0 1000px var(--standard-white) inset !important;
   -webkit-text-fill-color: var(--standard-black) !important;
+  caret-color: #000;
 }
 .login .login-form .inputs .input-wrapper input:focus {
   outline: none;
@@ -13034,7 +13089,7 @@ body::-webkit-scrollbar-thumb:hover {
   font-family: "Bold";
 }
 .auth-layout .auth-header .sub-title {
-  color: var(--Gray-5);
+  color: var(--gray-5);
   font-size: var(--md-size);
   font-weight: 500;
   font-family: "Medium";
@@ -13164,8 +13219,9 @@ body::-webkit-scrollbar-thumb:hover {
   font-weight: 400;
   font-size: var(--sm-size);
   color: var(--bread-crumb-color-span);
-  max-width: 100%;
   max-height: 200px;
+  max-width: 100%;
+  resize: vertical;
 }
 .multi-lang-input .field-input::-moz-placeholder {
   color: var(--bread-crumb-color-span);

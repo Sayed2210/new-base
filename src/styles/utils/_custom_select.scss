@@ -12,7 +12,7 @@
   font-family: var(--font-family);
   font-size: var(--sm-size);
   font-weight: $BaseFontSemiBoldWeight;
-  padding: 12px 18px !important;
+  padding: 12px 9px !important;
   margin-top: var(--xs-size-3);
 
   &:focus {
@@ -98,7 +98,7 @@
   font-size: var(--sm-size);
   font-weight: $BaseFontSemiBoldWeight;
   border-color: var(--gray-200) !important;
-  padding: var(--xs-size-3);
+  padding: 4px;
   margin-top: var(--xs-size-3);
 
   &:focus {

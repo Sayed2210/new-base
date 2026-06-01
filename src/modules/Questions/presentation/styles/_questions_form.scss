@@ -5,16 +5,26 @@
 .questions-details-form-card {
   .form-header {
     padding-left: 0 !important;
+    .header-text {
+      h3 {
+        color: $PrimaryColorHover;
+        font-size: $XlSize;
+        font-weight: $BaseFontSemiBoldWeight;
+        @include flex-row(nowrap, center, center);
+        gap: $XsSize2;
+        span {
+          padding-top: 2px;
+        }
+        svg {
+          width: 24px;
+          height: 21px;
+        }
+      }
+    }
   }
+
   .form-fields {
     padding: 0 !important;
-  }
-
-  .form-fields {
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-
     @include grid(
       2,
       $XlSize,
@@ -25,8 +35,8 @@
 
     .field-group {
       @include flex-column(nowrap, flex-start, flex-start);
-
       gap: 6px;
+
       &.disabled {
         cursor: not-allowed;
         pointer-events: none;
@@ -65,9 +75,7 @@
 
         .add-imaegs-data {
           @include flex-column(nowrap, center, center);
-
           gap: $XsSize5;
-
           .first-text {
             color: $Gray-5;
             font-size: $XsSize;
@@ -87,11 +95,16 @@
         }
       }
 
+      .input-label {
+        font-size: $MdSize !important;
+      }
       .field-label {
-        font-size: $MdSize;
-        color: $InputLabelText !important;
-        text-transform: none;
+        width: fit-content;
+        text-align: start;
+        color: $InputLabelText;
+        font-size: $MdSize !important;
         font-weight: $BaseFontSemiBoldWeight !important;
+        text-transform: capitalize !important;
       }
 
       .input-wrap {
@@ -99,7 +112,7 @@
 
         .field-input {
           width: 100%;
-          padding: $XsSize $MdSize;
+          padding: 13px $MdSize;
           border: 1px solid $InputBorder !important;
           border-radius: $XlSize4 !important;
           font-size: $SmSize;

@@ -42,8 +42,8 @@
     [() => SolutionHintsData, () => isSolutionHintsData],
     ([newSolutionHinrdata, newIsSolution]) => {
       isSolutionSteps.value = newIsSolution;
-      description.value = newSolutionHinrdata.hint;
-      file.value = newSolutionHinrdata.attachments;
+      description.value = newSolutionHinrdata?.hint;
+      file.value = newSolutionHinrdata?.attachments;
     },
   );
 </script>

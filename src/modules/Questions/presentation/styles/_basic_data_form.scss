@@ -3,26 +3,53 @@
 @use '../../../../styles/mixins/grid' as *;
 
 .basic-data-form {
+  font-family: 'Demi';
+
+  .toggll-container {
+    @include flex-row(nowrap, flex-start, center);
+    gap: $XsSize4;
+    .title {
+      color: $PrimaryColor;
+      font-size: $MdSize2;
+      font-weight: $BaseFontSemiBoldWeight;
+    }
+    svg {
+      transition: all 0.3s ease-in-out;
+      &.rotate-180 {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .dashed-border {
+    flex: 1;
+    height: 1px;
+    border-bottom: 1px dashed #d0d0d0;
+  }
+
+  .p-accordionpanel:last-child > .p-accordionheader {
+    padding-left: 0 !important;
+  }
+
   .form-fields {
     .field-group {
       .field-label {
         width: fit-content;
         text-align: start;
-        font-family: 'Medium';
         color: $Gray-5;
-        font-size: 14px;
-        font-weight: 600;
+        font-size: $MdSize;
+        font-weight: $BaseFontSemiBoldWeight;
         text-transform: capitalize !important;
       }
       .input-wrap {
         input {
-          font-size: 14px;
-          font-weight: 600;
+          font-size: $MdSize;
+          font-weight: $BaseFontSemiBoldWeight;
           &::placeholder {
-            font-family: 'Medium';
-            color: #94a3b8;
-            font-size: 16px;
-            font-weight: 300;
+            color: $SecondText;
+            font-size: $MdSize;
+            font-weight: $BaseFontMediumWeight;
+            font-family: 'Demi';
           }
         }
       }
@@ -31,10 +58,10 @@
       .upload-label {
         width: fit-content;
         text-align: start;
-        font-family: 'Medium';
-        color: #5d5d5d;
-        font-size: 14px !important;
-        font-weight: 600 !important;
+        font-family: 'Demi';
+        color: $Gray-5 !important;
+        font-size: $MdSize !important;
+        font-weight: $BaseFontSemiBoldWeight !important;
         text-transform: capitalize !important;
       }
     }
