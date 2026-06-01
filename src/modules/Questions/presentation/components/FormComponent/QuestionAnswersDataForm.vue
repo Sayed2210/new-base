@@ -20,7 +20,7 @@
   import type SolutionStepsModel from '@/modules/Questions/core/models/subModels/solution.steps.model';
   import type SolutionHintModel from '@/modules/Questions/core/models/subModels/solution.hint.model';
   import AttachmentsParams from '@/modules/Questions/core/params/subParams/attachments.params';
-import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/question.type.enum';
+  import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/question.type.enum';
 
   const emit = defineEmits(['updateData']);
   const route = useRoute();
@@ -118,7 +118,7 @@ import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/questio
           }),
       ),
     });
-  
+
     updateData();
   };
 
@@ -127,7 +127,7 @@ import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/questio
   const GetSolutionSteps = (data: { data: SolutionStepsParams; isSolutionSteps: boolean }) => {
     isSolutionSteps.value = data.isSolutionSteps;
     SolutionSteps.value = new SolutionStepsParams({
-      image:data.data.image?.map(
+      image: data.data.image?.map(
         (file) =>
           new AttachmentsParams({
             alt: '',
@@ -144,7 +144,7 @@ import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/questio
   const GetSolutionHints = (data: { data: SolutionStepsParams; isSolutionHints: boolean }) => {
     isSolutionHints.value = data.isSolutionHints;
     SolutionHints.value = new SolutionStepsParams({
-      image: data.data.image  ?.map(
+      image: data.data.image?.map(
         (file) =>
           new AttachmentsParams({
             alt: '',
@@ -174,6 +174,7 @@ import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/questio
     },
   );
   const safeAnswers = computed(() => questionData ?? []);
+  const isActive = ref(true);
 </script>
 
 <template>
@@ -182,11 +183,18 @@ import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/questio
       <AccordionHeader>
         <template #toggleicon>
           <div class="toggll-container">
-            <div>answers</div>
-            <AccordionToggleIcon />
+            <p class="title">answers</p>
+            <AccordionToggleIcon :class="{ 'rotate-180': !isActive }" />
           </div>
           <span class="dashed-border"></span>
         </template>
+        <!-- <template #toggleicon>
+          <div class="toggll-container">
+            <div>answers</div>
+            <AccordionToggleIcon :class="{ 'rotate-180': !isActive }" />
+          </div>
+          <span class="dashed-border"></span>
+        </template> -->
       </AccordionHeader>
       <AccordionContent>
         <AnswersTimeLine
@@ -214,21 +222,34 @@ import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/questio
   </Accordion>
 </template>
 
-<style scoped>
-  .toggll-container {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 5px;
-  }
+<style scoped lang="scss">
+  @use '../../../../../styles/variables' as *;
+  @use '../../../../../styles/mixins/flex' as *;
+  .answers-data-form {
+    .toggll-container {
+      @include flex-row(nowrap, flex-start, center);
+      gap: $XsSize4;
+      .title {
+        color: $PrimaryColor;
+        font-size: $MdSize2;
+        font-weight: $BaseFontSemiBoldWeight;
+      }
+      svg {
+        transition: all 0.3s ease-in-out;
+        &.rotate-180 {
+          transform: rotate(180deg);
+        }
+      }
+    }
 
-  .dashed-border {
-    width: 90%;
-    height: 1px;
-    border-bottom: 1px dashed #d0d0d0;
-  }
+    .dashed-border {
+      flex: 1;
+      height: 1px;
+      border-bottom: 1px dashed #d0d0d0;
+    }
 
-  .p-accordionpanel:last-child > .p-accordionheader {
-    padding-left: 0 !important;
+    .p-accordionpanel:last-child > .p-accordionheader {
+      padding-left: 0 !important;
+    }
   }
 </style>

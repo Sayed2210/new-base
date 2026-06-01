@@ -120,8 +120,8 @@ export default class ShowQuestionsModel {
       questionClarification: json.explanation
         ? QuestionClarificationModel.fromJson(json.explanation)
         : {},
-      solutionSteps: json.solution_steps
-        ? SolutionStepsModel.fromJson(json.solution_steps)
+      solutionSteps: json.answer_step
+        ? SolutionStepsModel.fromJson(json.answer_step)
         : undefined,
       solutionHint: json.answer_hint ? SolutionHintModel.fromJson(json.answer_hint) : undefined,
       subjectTree: new TitleInterface<number>({

@@ -45,7 +45,7 @@
     ([newSolutionStepsdata, newIsSolution]) => {
       isSolutionSteps.value = newIsSolution || !!newSolutionStepsdata;
       description.value = newSolutionStepsdata?.step;
-      file.value = newSolutionStepsdata?.attachments;
+      file.value = newSolutionStepsdata?.attachments?.[0]?.file;
     },
   );
 </script>

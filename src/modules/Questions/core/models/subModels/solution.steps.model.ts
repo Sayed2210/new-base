@@ -18,8 +18,8 @@ export default class SolutionStepsModel {
     }
 
     return new SolutionStepsModel({
-      id: json.id,
-      step: json.step,
+      id: json.question_answer_hint_id,
+      step: json.text,
       attachments: json.attachments,
     });
   }
