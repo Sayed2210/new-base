@@ -55,7 +55,7 @@ export default class AddArticlesParams implements Params {
       question: this.question,
       question_type: this.question_type,
       e_c_subject_id: this.e_c_subject_id,
-      documents: this.documents,
+      documents: [this.documents],
       explanation: this.explanation,
     };
   }
