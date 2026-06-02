@@ -7,9 +7,11 @@
   import { AnswerEvaluationTypeEnum } from '@/modules/Questions/core/constant/answer.evaluation.type.enum';
   import type AnswerModel from '@/modules/Questions/core/models/subModels/answer.model';
   import AnswersParams from '@/modules/Questions/core/params/subParams/answers.params';
+  import { useRoute } from 'vue-router';
   const emit = defineEmits(['update:data']);
-  const { questionData } = defineProps<{
+  const { questionData, draftData } = defineProps<{
     questionData: AnswerModel[];
+    draftData: AnswersParams[];
   }>();
 
   const selectedTab = ref<number | null>(
@@ -97,6 +99,22 @@
       immediate: true,
     },
   );
+  const route = useRoute();
+  watch(
+    () => draftData,
+    (newvalue) => {
+      if (route.params.id) return;
+      if (newvalue && newvalue.length > 0) {
+        Answers.value = newvalue.map((item) => {
+          return {
+            answer: item.title,
+          } as AnswerModel;
+        });
+      }
+      selectedTab.value = newvalue?.[0]?.answerEvaluation as AnswerEvaluationTypeEnum;
+    },
+    { deep: true, immediate: true },
+  );
 </script>
 
 <template>
@@ -121,7 +139,7 @@
               :id="`similar-${index}`"
               v-model="item.similar"
               type="text"
-              :placeholder="$t('similar_answer')"
+              :placeholder="$t('similar_percentage')"
               @input="UpdateData"
             />
           </div>

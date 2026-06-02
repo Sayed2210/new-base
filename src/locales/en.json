@@ -478,5 +478,6 @@
   "easy": "Easy",
   "medium": "Medium",
   "hard": "Hard",
-  "select_difficulty": "Select Difficulty"
+  "select_difficulty": "Select Difficulty",
+  "similar_percentage": "Similar Percentage"
 }

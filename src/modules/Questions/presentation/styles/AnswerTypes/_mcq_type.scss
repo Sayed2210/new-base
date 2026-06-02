@@ -11,10 +11,11 @@
     display: grid;
     grid-template-columns: 75% 20% 5%;
     gap: 10px;
+    align-items: end;
 
     @media (max-width: 767px) {
       grid-template-columns: 1fr;
-      gap: 0px;
+      gap: 0;
     }
 
     .timeline-content {
@@ -25,17 +26,25 @@
       position: relative;
 
       .field-label {
-        text-transform: none;
+        width: fit-content;
+        text-align: start;
+        color: black !important;
+        font-size: $MdSize;
+        font-weight: $BaseFontSemiBoldWeight;
+        text-transform: capitalize !important;
+        font-family: 'Demi';
+        margin-bottom: 5px;
       }
 
       .field-input {
         border-radius: 50px;
         background-color: white;
+        padding: 10px;
       }
 
       .files-input {
         position: absolute;
-        bottom: 39%;
+        bottom: 34%;
         transform: translateY(50%);
         right: 10px;
         border-radius: 50px;
@@ -97,8 +106,8 @@
     border: 1px solid #e6e6e6;
     border-radius: 50px;
     padding: 10px !important;
-    height: 50px;
-    margin-top: 23px;
+    // height: 50px;
+    // margin-top: 23px;
 
     label {
       color: #121212;
@@ -118,6 +127,7 @@
 
   .add-icon {
     @include flex-row(nowrap, flex-start, center);
+
     margin-block: 10px;
     cursor: pointer;
 

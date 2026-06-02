@@ -5,16 +5,20 @@
   import AccordionContent from 'primevue/accordioncontent';
   import Checkbox from 'primevue/checkbox';
   import { ref, watch } from 'vue';
+  import { useRoute } from 'vue-router';
   import HandleFilesUpload from '@/shared/FormInputs/HandleFilesUpload.vue';
   import UploadFileIcon from '@/shared/icons/UploadFileIcon.vue';
   import SolutionStepsParams from '../../core/params/subParams/soluation.steps.params';
   import type SolutionHintModel from '../../core/models/subModels/solution.hint.model';
   import AttachmentsParams from '../../core/params/subParams/attachments.params';
+  import type AddquestionsParams from '../../core/params/add.question.params';
 
+  const route = useRoute();
   const emit = defineEmits(['updateData']);
-  const { SolutionHintsData, isSolutionHintsData } = defineProps<{
+  const { SolutionHintsData, isSolutionHintsData, draftData } = defineProps<{
     SolutionHintsData: SolutionHintModel;
     isSolutionHintsData: boolean;
+    draftData?: AddquestionsParams;
   }>();
   const updateData = () => {
     emit('updateData', {
@@ -31,7 +35,7 @@
     });
   };
 
-  const isSolutionSteps = ref(isSolutionHintsData );
+  const isSolutionSteps = ref(isSolutionHintsData);
   const description = ref('');
   const file = ref();
   const handleFile = (f: any) => {
@@ -45,6 +49,17 @@
       description.value = newSolutionHinrdata?.hint;
       file.value = newSolutionHinrdata?.attachments[0]?.file;
     },
+  );
+
+  watch(
+    () => draftData,
+    () => {
+      if (route.params.id) return;
+      isSolutionSteps.value = !!draftData?.isSolutionHint || !!draftData?.solutionHint?.explanation;
+      description.value = draftData?.solutionHint?.explanation ?? '';
+      file.value = draftData?.solutionHint?.image?.map((f) => f.file as string) ?? [];
+    },
+    { immediate: true },
   );
 </script>
 

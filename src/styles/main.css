@@ -145,18 +145,18 @@
   /* ── Sizing (responsive clamp) ─────────────────────────────── */
   --base-width: 1440;
   --base-height: 900;
-  --xl-size-3: clamp(calc(50 * 0.8px), calc(50 * 100vw / var(--base-width)), calc(50 * 1.2px));
-  --xl-size-2: clamp(calc(30 * 0.8px), calc(30 * 100vw / var(--base-width)), calc(30 * 1.2px));
-  --xl-size-1: clamp(calc(24 * 0.8px), calc(24 * 100vw / var(--base-width)), calc(24 * 1.2px));
-  --xl-size-base: clamp(calc(20 * 0.8px), calc(20 * 100vw / var(--base-width)), calc(20 * 1.2px));
-  --md-size: clamp(calc(16 * 0.8px), calc(16 * 100vw / var(--base-width)), calc(16 * 1.2px));
-  --md-size-2: clamp(calc(18 * 0.8px), calc(18 * 100vw / var(--base-width)), calc(18 * 1.2px));
-  --sm-size: clamp(calc(14 * 0.8px), calc(14 * 100vw / var(--base-width)), calc(14 * 1.2px));
-  --xs-size: clamp(calc(12 * 0.8px), calc(12 * 100vw / var(--base-width)), calc(12 * 1.2px));
-  --xs-size-2: clamp(calc(10 * 0.8px), calc(10 * 100vw / var(--base-width)), calc(10 * 1.2px));
-  --xs-size-3: clamp(calc(8 * 0.8px), calc(8 * 100vw / var(--base-width)), calc(8 * 1.2px));
-  --xs-size-4: clamp(calc(6 * 0.8px), calc(6 * 100vw / var(--base-width)), calc(6 * 1.2px));
-  --xs-size-5: clamp(calc(4 * 0.8px), calc(4 * 100vw / var(--base-width)), calc(4 * 1.2px));
+  --xl-size-3: clamp(calc(50 * 0.8px), calc(50 * 100vw / var(--base-width)), calc(50 * 1px));
+  --xl-size-2: clamp(calc(30 * 0.8px), calc(30 * 100vw / var(--base-width)), calc(30 * 1px));
+  --xl-size-1: clamp(calc(24 * 0.8px), calc(24 * 100vw / var(--base-width)), calc(24 * 1px));
+  --xl-size-base: clamp(calc(20 * 0.8px), calc(20 * 100vw / var(--base-width)), calc(20 * 1px));
+  --md-size: clamp(calc(16 * 0.8px), calc(16 * 100vw / var(--base-width)), calc(16 * 1px));
+  --md-size-2: clamp(calc(18 * 0.8px), calc(18 * 100vw / var(--base-width)), calc(18 * 1px));
+  --sm-size: clamp(calc(14 * 0.8px), calc(14 * 100vw / var(--base-width)), calc(14 * 1px));
+  --xs-size: clamp(calc(12 * 0.8px), calc(12 * 100vw / var(--base-width)), calc(12 * 1px));
+  --xs-size-2: clamp(calc(10 * 0.8px), calc(10 * 100vw / var(--base-width)), calc(10 * 1px));
+  --xs-size-3: clamp(calc(8 * 0.8px), calc(8 * 100vw / var(--base-width)), calc(8 * 1px));
+  --xs-size-4: clamp(calc(6 * 0.8px), calc(6 * 100vw / var(--base-width)), calc(6 * 1px));
+  --xs-size-5: clamp(calc(4 * 0.8px), calc(4 * 100vw / var(--base-width)), calc(4 * 1px));
   --section-padding: clamp(
     calc(120 * 0.8px),
     calc(120 * 100vw / var(--base-width)),
@@ -11808,11 +11808,12 @@ body::-webkit-scrollbar-thumb:hover {
   display: grid;
   grid-template-columns: 75% 20% 5%;
   gap: 10px;
+  align-items: end;
 }
 @media (max-width: 767px) {
   .mcq-answers-time-line-container .timeline-form-content {
     grid-template-columns: 1fr;
-    gap: 0px;
+    gap: 0;
   }
 }
 .mcq-answers-time-line-container .timeline-form-content .timeline-content {
@@ -11826,15 +11827,24 @@ body::-webkit-scrollbar-thumb:hover {
   position: relative;
 }
 .mcq-answers-time-line-container .timeline-form-content .field-group .field-label {
-  text-transform: none;
+  width: -moz-fit-content;
+  width: fit-content;
+  text-align: start;
+  color: black !important;
+  font-size: var(--md-size);
+  font-weight: 600;
+  text-transform: capitalize !important;
+  font-family: "Demi";
+  margin-bottom: 5px;
 }
 .mcq-answers-time-line-container .timeline-form-content .field-group .field-input {
   border-radius: 50px;
   background-color: white;
+  padding: 10px;
 }
 .mcq-answers-time-line-container .timeline-form-content .field-group .files-input {
   position: absolute;
-  bottom: 39%;
+  bottom: 34%;
   transform: translateY(50%);
   right: 10px;
   border-radius: 50px;
@@ -11886,8 +11896,6 @@ body::-webkit-scrollbar-thumb:hover {
   border: 1px solid #e6e6e6;
   border-radius: 50px;
   padding: 10px !important;
-  height: 50px;
-  margin-top: 23px;
 }
 .mcq-answers-time-line-container .is-correct-section label {
   color: #121212;
@@ -12272,6 +12280,38 @@ body::-webkit-scrollbar-thumb:hover {
   align-self: center;
   border: none;
   padding: 5px;
+}
+
+/* =============================================================================
+   MAIN STYLESHEET — Organized Import Hub
+   ============================================================================= */
+/* ── Core ──────────────────────────────────────────────────────── */
+.answers-data-form .toggll-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--xs-size-4);
+}
+.answers-data-form .toggll-container .title {
+  color: var(--PrimaryColor);
+  font-size: var(--md-size-2);
+  font-weight: 600;
+}
+.answers-data-form .toggll-container svg {
+  transition: all 0.3s ease-in-out;
+}
+.answers-data-form .toggll-container svg.rotate-180 {
+  transform: rotate(180deg);
+}
+.answers-data-form .dashed-border {
+  flex: 1;
+  height: 1px;
+  border-bottom: 1px dashed #d0d0d0;
+}
+.answers-data-form .p-accordionpanel:last-child > .p-accordionheader {
+  padding-left: 0 !important;
 }
 
 /* =============================================================================
@@ -13160,12 +13200,14 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: var(--sm-size);
 }
 .multi-lang-input .field-label {
-  font-family: "Medium";
-  text-transform: none;
+  width: -moz-fit-content;
+  width: fit-content;
+  text-align: start;
   color: var(--gray-5);
-  font-size: var(--sm-size);
+  font-size: var(--md-size);
   font-weight: 600;
-  letter-spacing: 0.04em;
+  text-transform: capitalize !important;
+  font-family: "Demi";
 }
 .multi-lang-input .lang-switcher {
   display: flex;

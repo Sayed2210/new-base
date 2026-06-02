@@ -1,7 +1,7 @@
 @use '../variables' as *;
 @use '../mixins/flex' as *;
 
-.multi-lang-input { 
+.multi-lang-input {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -19,12 +19,13 @@
   }
 
   .field-label {
-    font-family: 'Medium';
-    text-transform: none;
-    color: var(--gray-5);
-    font-size: $SmSize;
+    width: fit-content;
+    text-align: start;
+    color: $Gray-5;
+    font-size: $MdSize;
     font-weight: $BaseFontSemiBoldWeight;
-    letter-spacing: 0.04em;
+    text-transform: capitalize !important;
+    font-family: 'Demi';
   }
 
   .lang-switcher {
@@ -93,8 +94,8 @@
     max-width: 100%;
     resize: vertical;
     // @media (max-width: 1400px) {
-    //   max-width: 1500px;  
-    // } 
+    //   max-width: 1500px;
+    // }
 
     &::placeholder {
       color: var(--bread-crumb-color-span);

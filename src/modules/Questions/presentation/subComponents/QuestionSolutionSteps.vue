@@ -5,16 +5,20 @@
   import AccordionContent from 'primevue/accordioncontent';
   import Checkbox from 'primevue/checkbox';
   import { ref, watch } from 'vue';
+  import { useRoute } from 'vue-router';
   import HandleFilesUpload from '@/shared/FormInputs/HandleFilesUpload.vue';
   import UploadFileIcon from '@/shared/icons/UploadFileIcon.vue';
   import SolutionStepsParams from '../../core/params/subParams/soluation.steps.params';
   import type SolutionStepsModel from '../../core/models/subModels/solution.steps.model';
   import AttachmentsParams from '../../core/params/subParams/attachments.params';
+  import type AddquestionsParams from '../../core/params/add.question.params';
 
+  const route = useRoute();
   const emit = defineEmits(['updateData']);
-  const { SolutionStepsData, isSolutionStepsData } = defineProps<{
+  const { SolutionStepsData, isSolutionStepsData, draftData } = defineProps<{
     SolutionStepsData: SolutionStepsModel;
     isSolutionStepsData: boolean;
+    draftData?: AddquestionsParams;
   }>();
   const updateData = () => {
     emit('updateData', {
@@ -47,6 +51,17 @@
       description.value = newSolutionStepsdata?.step;
       file.value = newSolutionStepsdata?.attachments?.[0]?.file;
     },
+  );
+
+  watch(
+    () => draftData,
+    () => {
+      if (route.params.id) return;
+      isSolutionSteps.value = !!draftData?.isSolutionSteps;
+      description.value = draftData?.solutionSteps?.explanation ?? '';
+      file.value = draftData?.solutionSteps?.image?.map((f) => f.file as string) ?? [];
+    },
+    { immediate: true },
   );
 </script>
 

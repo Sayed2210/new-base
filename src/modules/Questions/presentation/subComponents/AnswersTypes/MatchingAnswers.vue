@@ -7,8 +7,9 @@
   import AnswersParams from '@/modules/Questions/core/params/subParams/answers.params';
 
   const emit = defineEmits(['update:data']);
-  const { questionData } = defineProps<{
+  const { questionData, draftData } = defineProps<{
     questionData: AnswerModel[];
+    draftData?: AnswersParams[];
   }>();
 
   const Answers = ref<AnswerModel[]>([
@@ -63,6 +64,18 @@
     {
       deep: true,
       immediate: true,
+    },
+  );
+
+  watch(
+    () => draftData,
+    (newvalue) => {
+      if (newvalue && newvalue.length > 0) {
+        Answers.value = newvalue.map((item) => ({
+          answer: item.title ?? '',
+          match: item.matchAnswer ?? '',
+        }));
+      }
     },
   );
 </script>

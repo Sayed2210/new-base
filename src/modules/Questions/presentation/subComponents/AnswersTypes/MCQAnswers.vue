@@ -12,8 +12,9 @@
   type LocalAnswer = Omit<AnswerModel, 'image'> & { image?: string };
 
   const emit = defineEmits(['update:data']);
-  const { questionData } = defineProps<{
+  const { questionData, draftData } = defineProps<{
     questionData: AnswerModel[];
+    draftData: AnswersParams[];
   }>();
 
   const Answers = ref<LocalAnswer[]>([
@@ -100,6 +101,19 @@
     {
       deep: true,
       immediate: true,
+    },
+  );
+  watch(
+    () => draftData,
+    (newvalue) => {
+      if (newvalue && newvalue.length > 0) {
+        console.log(newvalue, 'newvalue');
+        Answers.value = newvalue.map((item) => ({
+          answer: item.title,
+          file: item.file,
+          is_right_answer: item.isCorrect,
+        }));
+      }
     },
   );
 </script>

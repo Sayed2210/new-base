@@ -5,6 +5,7 @@
   import AccordionContent from 'primevue/accordioncontent';
   import Checkbox from 'primevue/checkbox';
   import { ref, watch } from 'vue';
+  import { useRoute } from 'vue-router';
   import QuestionSource from './QuestionSource.vue';
   import QuestionClarificationParams from '../../core/params/subParams/question.clarification.params';
   import HandleFilesUpload from '@/shared/FormInputs/HandleFilesUpload.vue';
@@ -12,10 +13,13 @@
   import type QuestionClarificationModel from '../../core/models/subModels/question.clarification.model';
   import QuestionDocumentModel from '../../core/models/subModels/question.document.model';
   import AttachmentsParams from '../../core/params/subParams/attachments.params';
+  import type AddquestionsParams from '../../core/params/add.question.params';
 
-  const { ClarificationData, isclarification } = defineProps<{
+  const route = useRoute();
+  const { ClarificationData, isclarification, draftData } = defineProps<{
     ClarificationData: QuestionClarificationModel;
     isclarification: boolean;
+    draftData?: AddquestionsParams;
   }>();
   const isClarification = ref(isclarification);
 
@@ -65,6 +69,21 @@
     file.value = newValue.attachments?.map((a) => a.file).filter(Boolean) as string[];
     isClarification.value = neIsClarification || !!newValue;
   });
+
+  watch(
+    () => draftData,
+    () => {
+      if (route.params.id) return;
+      isClarification.value = !!draftData?.isQuestionClarification;
+      description.value = draftData?.questionClarification?.clarification ?? '';
+      file.value = draftData?.questionClarification?.file?.map((f) => f.file as string) ?? [];
+      DocumentSource.value = new QuestionDocumentModel({
+        id: draftData?.questionClarification?.documentId,
+        source: draftData?.questionClarification?.source,
+      });
+    },
+    { immediate: true },
+  );
 </script>
 
 <template>

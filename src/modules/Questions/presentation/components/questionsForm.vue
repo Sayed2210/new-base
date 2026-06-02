@@ -7,6 +7,7 @@
   import QuestionAnswersDataForm from './FormComponent/QuestionAnswersDataForm.vue';
   import EditquestionsParams from '../../core/params/edit.question.params';
   import FolderIcon from '@/shared/icons/Question/FolderIcon.vue';
+  import { CustomToast } from '../subComponents/CustomTosat.ts';
 
   const route = useRoute();
   const emit = defineEmits(['updateData']);
@@ -103,6 +104,16 @@
     },
     { immediate: true },
   );
+  const QuestionDraftData = ref<AddquestionsParams>();
+  const draftRef = CustomToast();
+
+  watch(draftRef, (newVal) => {
+    if (newVal) {
+      QuestionDraftData.value = newVal;
+      BasicData.value = newVal;
+      AnswerData.value = newVal;
+    }
+  });
 </script>
 
 <template>
@@ -120,8 +131,13 @@
       </div>
     </header>
 
-    <BasicQuestionDataForm :question-data="question" @update-data="GetAllBasicData" />
+    <BasicQuestionDataForm
+      :draft-data="QuestionDraftData"
+      :question-data="question"
+      @update-data="GetAllBasicData"
+    />
     <QuestionAnswersDataForm
+      :draft-data="QuestionDraftData"
       :question-data="question!"
       :question-type="BasicData?.questionType!"
       @update-data="GetAllAnswers"

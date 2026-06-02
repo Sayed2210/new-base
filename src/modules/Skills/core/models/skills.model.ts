@@ -3,9 +3,9 @@
  */
 export default class SkillModel {
   public readonly id: number;
-  public readonly title: Record<string, string>[];
+  public readonly title: Record<string, string>[] | string;
 
-  constructor(data: { id: number; title: Record<string, string>[] }) {
+  constructor(data: { id: number; title: Record<string, string>[] | string }) {
     this.id = data.id;
     this.title = data.title;
 

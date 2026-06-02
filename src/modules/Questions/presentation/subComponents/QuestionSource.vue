@@ -5,11 +5,13 @@
   import { ref, watch } from 'vue';
   import QuestionClarificationParams from '../../core/params/subParams/question.clarification.params';
   import type QuestionDocumentModel from '@/modules/Questions/core/models/subModels/question.document.model';
+  import { useRoute } from 'vue-router';
 
-  const { document, source, documentSource } = defineProps<{
+  const { document, source, documentSource, draftData } = defineProps<{
     document?: TitleInterface<number> | null | undefined;
     source?: string | null;
     documentSource?: QuestionDocumentModel | null;
+    draftData?: any;
   }>();
 
   const emit = defineEmits(['updateData']);
@@ -31,12 +33,25 @@
   watch(
     () => documentSource,
     (newValue) => {
-      
       SelectedSubject.value = newValue?.id
         ? new TitleInterface<number>({ id: newValue.id, title: newValue.title })
         : null;
       questionSource.value = newValue?.source || '';
     },
+  );
+
+  const route = useRoute();
+  watch(
+    [() => draftData?.questionSource],
+    ([data]) => {
+      if (!route.params.id) {
+        SelectedSubject.value = data?.documentId
+          ? new TitleInterface<number>({ id: data.documentId, title: data.source })
+          : null;
+        questionSource.value = data?.source || '';
+      }
+    },
+    { immediate: true },
   );
 </script>
 
