@@ -317,15 +317,19 @@
   .accordion-enter-from,
   .accordion-leave-to {
     grid-template-rows: 0fr;
+    transform: translateY(-50%);
+    opacity: 0;
   }
 
   .accordion-enter-to,
   .accordion-leave-from {
     grid-template-rows: 1fr;
+    transform: translateY(0);
+    opacity: 1;
   }
 
   .accordion-content-inner {
-    overflow: hidden;
     min-height: 0;
+    transition: all 0.3s linear;
   }
 </style>

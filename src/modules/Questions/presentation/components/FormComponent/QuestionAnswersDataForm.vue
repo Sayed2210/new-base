@@ -114,7 +114,7 @@
       file: data?.data?.file?.map(
         (file) =>
           new AttachmentsParams({
-            alt: '',
+            alt: 'clarification image',
             file: file.file,
           }),
       ),
@@ -131,7 +131,7 @@
       image: data.data.image?.map(
         (file) =>
           new AttachmentsParams({
-            alt: '',
+            alt: 'solution step image',
             file: file.file,
           }),
       ),
@@ -184,7 +184,6 @@
     leaveActiveClass: 'accordion-leave-active',
     leaveToClass: 'accordion-leave-to',
   };
-
 </script>
 
 <template>
@@ -211,7 +210,7 @@
         }"
       >
         <AnswersTimeLine
-        :draft-data="draftData?.answers"
+          :draft-data="draftData?.answers"
           :question-data="safeAnswers.answers"
           :question-type="questionType"
           @update:data="GetAnswers"
@@ -239,7 +238,7 @@
   </Accordion>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
   .accordion-enter-active,
   .accordion-leave-active {
     display: grid;
@@ -249,15 +248,19 @@
   .accordion-enter-from,
   .accordion-leave-to {
     grid-template-rows: 0fr;
+    transform: translateY(-50%);
+    opacity: 0;
   }
 
   .accordion-enter-to,
   .accordion-leave-from {
     grid-template-rows: 1fr;
+    transform: translateY(0);
+    opacity: 1;
   }
 
   .accordion-content-inner {
-    overflow: hidden;
     min-height: 0;
+    transition: all 0.3s linear;
   }
 </style>

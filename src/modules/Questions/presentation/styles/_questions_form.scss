@@ -134,6 +134,9 @@
   .all_tabs {
     @include flex-row(nowrap, space-between, center);
     flex-direction: row !important;
+    @media (max-width: 1000px) {
+      flex-wrap: wrap !important;
+    }
     gap: $MdSize;
     margin-bottom: $XlSize2;
     width: 100% !important;
@@ -149,6 +152,9 @@
       cursor: pointer;
       input[type='radio'] {
         accent-color: white;
+      }
+      @media (max-width: 1000px) {
+        width: fit-content !important;
       }
     }
     .tab-item.active {

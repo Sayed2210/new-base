@@ -132,13 +132,16 @@
       :style="{ animationDelay: `${index * 0.15}s` }"
     >
       <div class="timeline-content">
-        <div class="timeline-form-content">
+        <div
+          class="timeline-form-content"
+          :class="{ similar: selectedTab == AnswerEvaluationTypeEnum.similar }"
+        >
           <div v-if="selectedTab == AnswerEvaluationTypeEnum.similar" class="matching-section">
-            <label :for="`similar-${index}`">{{ $t(`similar_answer`) }}</label>
+            <label :for="`similar-${index}`">{{ $t(`similar_percentage`) }}</label>
             <input
               :id="`similar-${index}`"
               v-model="item.similar"
-              type="text"
+              type="number"
               :placeholder="$t('similar_percentage')"
               @input="UpdateData"
             />
@@ -154,7 +157,10 @@
               @input="UpdateData"
             />
           </div>
-          <div v-if="Answers.length > 1" class="delete-icon-container">
+          <div
+            v-if="Answers.length > 1 && selectedTab != AnswerEvaluationTypeEnum.need_correct"
+            class="delete-icon-container"
+          >
             <button type="button" class="delete-btn" @click="DeleteItem(index)">
               <DeletIcon />
             </button>
@@ -162,7 +168,11 @@
         </div>
       </div>
 
-      <div v-if="Answers.length - 1 == index" class="add-row" @click="addNewAnswer">
+      <div
+        v-if="Answers.length - 1 == index && selectedTab != AnswerEvaluationTypeEnum.need_correct"
+        class="add-row"
+        @click="addNewAnswer"
+      >
         <div class="add-icon">
           <AddNewAnswerIcon />
           <span class="add-text">{{ $t('add_another_answer') }}</span>

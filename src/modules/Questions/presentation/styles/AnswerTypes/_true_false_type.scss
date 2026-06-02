@@ -7,9 +7,10 @@
 
   .timeline-form-content {
     display: grid;
-    grid-template-columns: 75% 20% 5%;
+    grid-template-columns: 80% 20%;
     gap: 10px;
-
+    align-items: end;
+    margin-block: 10px;
     @media (max-width: 767px) {
       grid-template-columns: 1fr;
       gap: 0px;
@@ -23,7 +24,14 @@
       position: relative;
 
       .field-label {
-        text-transform: none;
+        width: fit-content;
+        text-align: start;
+        color: black !important;
+        font-size: $MdSize;
+        font-weight: $BaseFontSemiBoldWeight;
+        text-transform: capitalize !important;
+        font-family: 'Demi';
+        // margin-bottom: 5px;
       }
 
       .field-input {

@@ -10,10 +10,17 @@
     width: 100%;
     .timeline-form-content {
       width: 100%;
-      gap: $XsSize3;
+      gap: 15px !important;
       margin-block: $XsSize3 !important;
-      @include flex-column(nowrap, space-between, center);
-
+      // @include flex-column(nowrap, space-between, center);
+      display: grid;
+      grid-template-columns: 95% 5%;
+      gap: 10px;
+      align-items: end;
+      margin-block: 10px;
+      &.similar {
+        grid-template-columns: 75% 20% 5%;
+      }
       .matching-section {
         width: 100%;
         label {
@@ -69,10 +76,10 @@
     width: $XlSize3;
     height: $XlSize3;
     margin-top: auto;
-    margin-bottom: auto;
-    border: 1px solid $Red;
-    border-radius: 50%;
-    transform: translateY(10px);
+    margin-bottom: 10px;
+    // border: 1px solid $Red;
+    // border-radius: 50%;
+    // transform: translateY(10px);
     cursor: pointer;
 
     .delete-btn {

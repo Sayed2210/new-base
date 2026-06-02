@@ -127,7 +127,7 @@
       :style="{ animationDelay: `${index * 0.15}s` }"
     >
       <div class="timeline-content">
-        <div class="timeline-form-content">
+        <div class="timeline-form-content" :class="{ 'without-delete': Answers.length === 1 }">
           <div class="field-group">
             <label class="field-label" :for="`answer-${index}`">{{ $t(`answer`) }}</label>
             <div class="input-wrap">

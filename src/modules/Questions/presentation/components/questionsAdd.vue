@@ -10,6 +10,7 @@
   const controller = questionsController.getInstance();
   const route = useRoute();
   const formKey = route.fullPath;
+  const loading = ref(false);
 
   const params = ref<AddEmployeeParams | null>(null);
   const router = useRouter();
@@ -17,6 +18,7 @@
    * Save new employee
    */
   const saveEmployee = async () => {
+    loading.value = true;
     try {
       if (!params.value) {
         console.error('No employee parameters to save');
@@ -26,10 +28,13 @@
       await controller.create(params.value, undefined, formKey);
     } catch (error) {
       console.error('Error saving employee:', error);
+    } finally {
+      loading.value = false;
     }
   };
 
   const saveAsDraft = async () => {
+    loading.value = true;
     try {
       if (!params.value) {
         console.error('No question parameters to save');
@@ -40,6 +45,8 @@
       router.push({ name: 'Questions' });
     } catch (error) {
       console.error('Error saving employee:', error);
+    } finally {
+      loading.value = false;
     }
   };
   const updateData = (updatedParams: AddEmployeeParams) => {
@@ -49,7 +56,11 @@
 
 <template>
   <div class="questions-add-page">
-    <questionsForm :form-key="formKey" @update-data="updateData" />
+    <questionsForm
+      :class="loading ? 'disabled' : ''"
+      :form-key="formKey"
+      @update-data="updateData"
+    />
 
     <div class="actions">
       <AppButton
@@ -65,8 +76,20 @@
           <IconAccept />
         </template>
       </AppButton>
-      <button class="btn btn-draft" @click="saveAsDraft">{{ $t(`Save As draft`) }}</button>
-      <button class="btn btn-cancel" @click="$router.push({ name: 'Questions' })">
+      <button
+        class="btn btn-draft"
+        :disabled="loading"
+        :class="loading ? 'disabled' : ''"
+        @click="saveAsDraft"
+      >
+        {{ $t(`Save As draft`) }}
+      </button>
+      <button
+        class="btn btn-cancel"
+        :disabled="loading"
+        :class="loading ? 'disabled' : ''"
+        @click="$router.push({ name: 'Questions' })"
+      >
         {{ $t(`cancel`) }}
       </button>
     </div>
@@ -105,6 +128,11 @@
 
   .save-emp {
     width: 60%;
+  }
+
+  .disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 
   .actions {

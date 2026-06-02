@@ -61,12 +61,21 @@
     },
     { immediate: true },
   );
+    const accordionTransition = {
+    enterFromClass: 'accordion-enter-from',
+    enterActiveClass: 'accordion-enter-active',
+    enterToClass: 'accordion-enter-to',
+    leaveFromClass: 'accordion-leave-from',
+    leaveActiveClass: 'accordion-leave-active',
+    leaveToClass: 'accordion-leave-to',
+  };
 </script>
 
 <template>
   <Accordion
     :pt="{
       root: `question-solution-hints ${isSolutionSteps ? 'active' : ''}`,
+      panel: 'accordion-panel',
     }"
     :value="isSolutionSteps ? 1 : 0"
     @update:value="isSolutionSteps = !isSolutionSteps"
@@ -85,7 +94,13 @@
           </div>
         </template>
       </AccordionHeader>
-      <AccordionContent>
+      <AccordionContent
+        :pt="{
+          root: 'accordion-content-root',
+          content: 'accordion-content-inner',
+          transition: accordionTransition,
+        }"
+      >
         <div class="input-wrapper">
           <label for="descreption">{{ $t('Description') }}</label>
           <div class="description-container">
@@ -125,6 +140,32 @@
 <style scoped lang="scss">
   @use '../../../../styles/variables' as *;
   @use '../../../../styles/mixins/flex' as *;
+
+  .accordion-enter-active,
+  .accordion-leave-active {
+    display: grid;
+    transition: grid-template-rows 0.3s ease;
+  }
+
+  .accordion-enter-from,
+  .accordion-leave-to {
+    grid-template-rows: 0fr;
+    transform: translateY(-50%);
+    opacity: 0;
+  }
+
+  .accordion-enter-to,
+  .accordion-leave-from {
+    grid-template-rows: 1fr;
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .accordion-content-inner {
+    min-height: 0;
+    transition: all 0.3s linear;
+  }
+
   .question-solution-hints {
     border: 1px solid $PrimaryColor;
     border-radius: 50px;

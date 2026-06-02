@@ -23,7 +23,13 @@
       width: 80%;
 
       .field-label {
-        text-transform: none;
+        width: fit-content;
+        text-align: start;
+        color: black !important;
+        font-size: $MdSize;
+        font-weight: $BaseFontSemiBoldWeight;
+        text-transform: capitalize !important;
+        font-family: 'Demi';
       }
 
       .field-input {

@@ -105,9 +105,10 @@
     { immediate: true },
   );
   const QuestionDraftData = ref<AddquestionsParams>();
-  const draftRef = CustomToast();
 
-  watch(draftRef, (newVal) => {
+  const draftRef = localStorage.getItem('question-draft') ? CustomToast() : null;
+
+  watch(draftRef!, (newVal) => {
     if (newVal) {
       QuestionDraftData.value = newVal;
       BasicData.value = newVal;

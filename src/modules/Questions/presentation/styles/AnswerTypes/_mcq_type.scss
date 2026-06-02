@@ -12,6 +12,11 @@
     grid-template-columns: 75% 20% 5%;
     gap: 10px;
     align-items: end;
+    margin-block: 10px;
+
+    &.without-delete {
+      grid-template-columns: 80% 20%;
+    }
 
     @media (max-width: 767px) {
       grid-template-columns: 1fr;
@@ -33,7 +38,7 @@
         font-weight: $BaseFontSemiBoldWeight;
         text-transform: capitalize !important;
         font-family: 'Demi';
-        margin-bottom: 5px;
+        // margin-bottom: 5px;
       }
 
       .field-input {
@@ -149,10 +154,10 @@
     width: 30px;
     height: 30px;
     margin-top: auto;
-    margin-bottom: auto;
-    border: 1px solid red;
-    border-radius: 50%;
-    transform: translateY(10px);
+    margin-bottom: 5px;
+    // border: 1px solid red;
+    // border-radius: 50%;
+    // transform: translateY(10px);
     cursor: pointer;
 
     .delete-btn {

@@ -479,5 +479,6 @@
   "medium": "Medium",
   "hard": "Hard",
   "select_difficulty": "Select Difficulty",
-  "similar_percentage": "Similar Percentage"
+  "similar_percentage": "Similar Percentage",
+  "update_question": "Update Question"
 }
