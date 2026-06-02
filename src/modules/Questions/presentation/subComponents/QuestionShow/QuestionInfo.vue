@@ -71,7 +71,7 @@
       </div>
 
       <div class="question-body-img">
-        <img :src="questionInfo?.questionImage" :alt="questionInfo?.questionTitle" />
+        <img :src="questionInfo?.questionImage?.[0]?.file" :alt="questionInfo?.questionTitle" />
       </div>
     </div>
   </div>

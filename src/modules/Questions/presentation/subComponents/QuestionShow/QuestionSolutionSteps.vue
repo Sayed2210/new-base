@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import type SolutionStepsModel from '@/modules/Questions/core/models/subModels/solution.steps.model';
-  import SolutionStepsIcon from '@/shared/icons/Question/SolutionSteps.vue';
+import type SolutionStepsModel from '@/modules/Questions/core/models/subModels/solution.steps.model';
+import SolutionStepsIcon from '@/shared/icons/Question/SolutionSteps.vue';
 
-  const { solutionSteps } = defineProps<{ solutionSteps: SolutionStepsModel }>();
+const { solutionSteps } = defineProps<{ solutionSteps: SolutionStepsModel }>();
 </script>
 
 <template>
@@ -18,8 +18,8 @@
           {{ solutionSteps?.step }}
         </p>
 
-        <div v-if="solutionSteps?.image" class="question-solution-steps-img">
-          <img :src="solutionSteps?.image" alt="" />
+        <div v-if="solutionSteps?.attachments[0]?.file" class="question-solution-steps-img">
+          <img :src="solutionSteps?.attachments[0]?.file" alt="" />
         </div>
       </div>
     </div>

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-  // import { computed } from 'vue';
+// import { computed } from 'vue';
 
-  import Arrow from '@/shared/icons/Question/Arrow.vue';
-  import NextStepIcon from '@/shared/icons/Question/NextStepIcon.vue';
-  import type ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
+import Arrow from '@/shared/icons/Question/Arrow.vue';
+import NextStepIcon from '@/shared/icons/Question/NextStepIcon.vue';
+import type ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
 
-  const { questionData } = defineProps<{ questionData: ShowQuestionsModel }>();
+const { questionData } = defineProps<{ questionData: ShowQuestionsModel }>();
 </script>
 
 <template>
@@ -60,13 +60,13 @@
 
       <div class="document">
         <h5>
-          {{ questionData.questionDocuments?.title }}
+          {{ questionData.questionDocuments![0]?.title }}
         </h5>
 
-        <NextStepIcon v-if="questionData?.questionDocuments?.source" class="arrow-next" />
+        <NextStepIcon v-if="questionData?.questionDocuments![0]?.source" class="arrow-next" />
         <p>
           Source:
-          {{ questionData.questionDocuments?.source }}
+          {{ questionData.questionDocuments![0]?.source }}
         </p>
       </div>
     </div>

@@ -41,7 +41,7 @@ export default class AnswerModel {
     return new AnswerModel({
       id: json.answer_id,
       answer: json.answer,
-      image: json.attachments ? json.attachments.map((el)=> AttachmentModel.fromJson(el)) : null,
+      image: json.attachments ? json.attachments.map((el:any)=> AttachmentModel.fromJson(el)) : null,
       is_right_answer: json.is_correct,
       match: json.match,
       rank: json.rank,

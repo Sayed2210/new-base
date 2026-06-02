@@ -193,7 +193,7 @@ export default class ShowQuestionsModel {
       id: 3,
       title: 'Document 3',
     },
-    questionDocuments: QuestionDocumentModel.example,
+    questionDocuments: [QuestionDocumentModel.example,QuestionDocumentModel.example],
     skills: [
       new QuestionSkillsModel({
         id: 2,
