@@ -6,7 +6,6 @@ import IconAccept from '@/shared/icons/IconAccept.vue';
 import type EditQuestionParams from '../../core/params/edit.question.params';
 import ShowQuestionParams from '../../core/params/show.question.params';
 import questionsController from '../controllers/questions.controller';
-import QuestionsForm from './questionsForm.vue';
 
 const controller = questionsController.getInstance();
 const route = useRoute();

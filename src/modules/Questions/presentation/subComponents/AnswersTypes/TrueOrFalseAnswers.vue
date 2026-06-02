@@ -71,8 +71,8 @@
     UpdateData();
   };
 
-  const getImageUrls = (image: AnswerModel['image']): string[] =>
-    (image?.map((img: AttachmentModel) => img.file).filter(Boolean) as string[]) ?? [];
+  // const getImageUrls = (image: AnswerModel['image']): string[] =>
+  //   (image?.map((img: AttachmentModel) => img.file).filter(Boolean) as string[]) ?? [];
 
   const setCorrect = (index: number) => {
     Answers.value.map((item) => {
