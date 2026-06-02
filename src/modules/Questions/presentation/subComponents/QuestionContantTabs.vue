@@ -137,6 +137,15 @@
     }) as TitleInterface<number>[];
   });
 
+  const skillsOptions = computed<TitleInterface<number>[]>(() => {
+    return skillsController.listData.value?.map((item) => {
+      return new TitleInterface<number>({
+        id: item.id!,
+        title: item.title as string,
+      });
+    }) as TitleInterface<number>[];
+  });
+
   const handelSubjectUpdate = async (selected: TitleInterface<number> | undefined) => {
     SelectedQuestionSequence.value = selected!;
     await topicsControoller.fetchList(
@@ -160,7 +169,7 @@
           (item) =>
             new TitleInterface<number>({
               id: item.skillId,
-              // title: item.skill,
+              title: skillsOptions.value?.find((el) => el.id === item.skillId)?.title as string,
               subtitle: item.percentage,
             }),
         ) as TitleInterface<number>[]) ?? [];
@@ -182,6 +191,31 @@
         id: draftData?.subjectId || 0,
         title: branchOptions.value?.find((el) => el.id === draftData?.subjectId)?.title as string,
       });
+      if (draftData?.subjectId) {
+        handleBranchChange(selectedBranchTitle.value);
+      }
+      if (draftData?.questionSequenceId) {
+        handelSubjectUpdate(SelectedQuestionSequence.value);
+      }
+    },
+    { immediate: true },
+  );
+
+  watch(
+    [() => draftData, skillsOptions],
+    ([draft, options]) => {
+      if (!route.params.id) return;
+      if (!draft?.skills) return;
+      if (!options?.length) return;
+
+      SelectedSkill.value = draft?.skills?.map(
+        (item) =>
+          new TitleInterface<number>({
+            id: item.skillId,
+            title: options.find((el) => el.id === item.skillId)?.title ?? '',
+            subtitle: item.percentage,
+          }),
+      );
     },
     { immediate: true },
   );

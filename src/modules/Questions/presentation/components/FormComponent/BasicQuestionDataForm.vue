@@ -296,7 +296,7 @@
             @update-data="getQuestionCOntent"
           />
           <QuestionSource
-            :draft-data="draftData"
+            :draftData="draftData"
             :document-source="DocumentSource"
             class="field-group col-span-2"
             @update-data="GetQuestionSource"

@@ -8,8 +8,9 @@
   import type AnswerModel from '@/modules/Questions/core/models/subModels/answer.model';
   import AnswersParams from '@/modules/Questions/core/params/subParams/answers.params';
   const emit = defineEmits(['update:data']);
-  const { questionData } = defineProps<{
+  const { questionData, draftData } = defineProps<{
     questionData: AnswerModel[];
+    draftData: AnswersParams[];
   }>();
 
   const selectedTab = ref<number | null>(
@@ -95,6 +96,16 @@
     {
       deep: true,
       immediate: true,
+    },
+  );
+  watch(
+    () => draftData,
+    (newvalue) => {
+      if (newvalue && newvalue.length > 0) {
+        Answers.value = newvalue.map((item) => ({
+          answer: item.title,
+        }));
+      }
     },
   );
 </script>

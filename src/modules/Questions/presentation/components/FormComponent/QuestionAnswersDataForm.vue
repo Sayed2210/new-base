@@ -24,9 +24,10 @@
 
   const emit = defineEmits(['updateData']);
   const route = useRoute();
-  const { questionType, questionData } = defineProps<{
+  const { questionType, questionData, draftData } = defineProps<{
     questionType: QuestionTypeEnum;
     questionData: ShowQuestionsModel;
+    draftData?: AddquestionsParams;
   }>();
   const updateData = () => {
     let params: any;
@@ -186,6 +187,23 @@
     leaveActiveClass: 'accordion-leave-active',
     leaveToClass: 'accordion-leave-to',
   };
+
+  // watch(
+  //   () => draftData,
+  //   (newValue) => {
+  //     if (!newValue) return;
+  //     if (route.params.id) return;
+  //     Answers.value = newValue.answers ?? [];
+  //     isQuestionClarification.value = !!newValue.isQuestionClarification;
+  //     QuestionClarifications.value =
+  //       newValue.questionClarification ?? ({} as QuestionClarificationParams);
+  //     isSolutionSteps.value = !!newValue.isSolutionSteps;
+  //     SolutionSteps.value = newValue.solutionSteps ?? ({} as SolutionStepsParams);
+  //     isSolutionHints.value = !!newValue.isSolutionHint;
+  //     SolutionHints.value = newValue.solutionHint ?? ({} as SolutionStepsParams);
+  //   },
+  //   { immediate: true },
+  // );
 </script>
 
 <template>
@@ -212,6 +230,7 @@
         }"
       >
         <AnswersTimeLine
+        :draft-data="draftData?.answers"
           :question-data="safeAnswers.answers"
           :question-type="questionType"
           @update:data="GetAnswers"
