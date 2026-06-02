@@ -76,6 +76,7 @@
       topics: data.topics,
       questionSequenceId: data.questionSequenceId,
       questionSource: data.questionSource,
+      parentId: route.query.article_id ? Number(route.query.article_id) : null,
     });
     updateData();
   };

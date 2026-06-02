@@ -57,6 +57,7 @@ export default class AddArticlesParams implements Params {
       e_c_subject_id: this.e_c_subject_id,
       documents: [this.documents],
       explanation: this.explanation,
+      difficulty_level:1,
     };
   }
 
