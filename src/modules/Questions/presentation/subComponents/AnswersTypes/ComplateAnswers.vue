@@ -1,0 +1,155 @@
+<script setup lang="ts">
+  import DeletIcon from '@/shared/icons/DropListIcons/DeletIcon.vue';
+  import { onMounted, ref, watch } from 'vue';
+  import AddNewAnswerIcon from '@/shared/icons/AddNewAnswerIcon.vue';
+  import SelectionTabs from '../SelectionTabs.vue';
+  import type TitleInterface from '@/base/Data/Models/titleInterface';
+  import { AnswerEvaluationTypeEnum } from '@/modules/Questions/core/constant/answer.evaluation.type.enum';
+  import type AnswerModel from '@/modules/Questions/core/models/subModels/answer.model';
+  import AnswersParams from '@/modules/Questions/core/params/subParams/answers.params';
+  const emit = defineEmits(['update:data']);
+  const { questionData } = defineProps<{
+    questionData: AnswerModel[];
+  }>();
+
+  const selectedTab = ref<number | null>(
+    questionData?.[0]?.EvaluationType || AnswerEvaluationTypeEnum.typical,
+  );
+
+  const Answers = ref<AnswerModel[]>([
+    {
+      answer: '',
+      similar: '',
+      EvaluationType: selectedTab.value as AnswerEvaluationTypeEnum,
+    },
+  ]);
+
+  const addNewAnswer = () => {
+    Answers.value.push({
+      answer: '',
+      similar: '',
+      EvaluationType: selectedTab.value as AnswerEvaluationTypeEnum,
+    });
+
+    UpdateData();
+  };
+
+  const DeleteItem = (index: number) => {
+    Answers.value.splice(index, 1);
+    UpdateData();
+  };
+
+  const UpdateData = () => {
+    emit(
+      'update:data',
+      Answers.value.map((el: AnswerModel) => {
+        return new AnswersParams({
+          title: el.answer,
+          similarPrecentage: el.similar,
+          answerEvaluation: el.EvaluationType,
+        });
+      }),
+    );
+  };
+
+  onMounted(() => {
+    emit(
+      'update:data',
+      Answers.value.map((el: AnswerModel) => {
+        return new AnswersParams({
+          title: el.answer,
+          similarPrecentage: el.similar,
+          answerEvaluation: el.EvaluationType,
+        });
+      }),
+    );
+  });
+
+  const tabs = ref<TitleInterface<number>[]>([
+    {
+      id: AnswerEvaluationTypeEnum.typical,
+      title: 'typical',
+    },
+    {
+      id: AnswerEvaluationTypeEnum.similar,
+      title: 'similar',
+    },
+    {
+      id: AnswerEvaluationTypeEnum.need_correct,
+      title: 'needCorrect',
+    },
+  ]);
+
+  const selectTab = (tab: number) => {
+    selectedTab.value = tab;
+    UpdateData();
+  };
+
+  watch(
+    () => questionData,
+    (newvalue) => {
+      if (newvalue) {
+        Answers.value = newvalue;
+      }
+    },
+    {
+      deep: true,
+      immediate: true,
+    },
+  );
+</script>
+
+<template>
+  <div class="complate-answers-time-line-container">
+    <SelectionTabs
+      class="field-group col-span-2"
+      :tabs="tabs"
+      :selected-tab="selectedTab"
+      @update:model-value="selectTab"
+    />
+    <div
+      v-for="(item, index) in Answers"
+      :key="index"
+      class="timeline-item"
+      :style="{ animationDelay: `${index * 0.15}s` }"
+    >
+      <div class="timeline-content">
+        <div class="timeline-form-content">
+          <div v-if="selectedTab == AnswerEvaluationTypeEnum.similar" class="matching-section">
+            <label :for="`similar-${index}`">{{ $t(`similar_answer`) }}</label>
+            <input
+              :id="`similar-${index}`"
+              v-model="item.similar"
+              type="text"
+              :placeholder="$t('similar_answer')"
+              @input="UpdateData"
+            />
+          </div>
+
+          <div v-if="selectedTab != AnswerEvaluationTypeEnum.need_correct" class="matching-section">
+            <label :for="`answer-${index}`"> {{ $t(`answer`) }}</label>
+            <input
+              :id="`answer-${index}`"
+              v-model="item.answer"
+              type="text"
+              :placeholder="$t('add_your_answer')"
+              @input="UpdateData"
+            />
+          </div>
+          <div v-if="Answers.length > 1" class="delete-icon-container">
+            <button type="button" class="delete-btn" @click="DeleteItem(index)">
+              <DeletIcon />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="Answers.length - 1 == index" class="add-row" @click="addNewAnswer">
+        <div class="add-icon">
+          <AddNewAnswerIcon />
+          <span class="add-text">{{ $t('add_another_answer') }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
