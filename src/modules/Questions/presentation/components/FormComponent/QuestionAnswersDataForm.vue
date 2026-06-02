@@ -178,10 +178,22 @@
   );
   const safeAnswers = computed(() => questionData ?? []);
   const isActive = ref(true);
+  const accordionTransition = {
+    enterFromClass: 'accordion-enter-from',
+    enterActiveClass: 'accordion-enter-active',
+    enterToClass: 'accordion-enter-to',
+    leaveFromClass: 'accordion-leave-from',
+    leaveActiveClass: 'accordion-leave-active',
+    leaveToClass: 'accordion-leave-to',
+  };
 </script>
 
 <template>
-  <Accordion value="0" :pt="{ root: 'answers-data-form' }">
+  <Accordion
+    value="0"
+    :pt="{ root: 'answers-data-form', panel: 'accordion-panel' }"
+    @update:value="isActive = !isActive"
+  >
     <AccordionPanel value="0">
       <AccordionHeader>
         <template #toggleicon>
@@ -191,15 +203,14 @@
           </div>
           <span class="dashed-border"></span>
         </template>
-        <!-- <template #toggleicon>
-          <div class="toggll-container">
-            <div>answers</div>
-            <AccordionToggleIcon :class="{ 'rotate-180': !isActive }" />
-          </div>
-          <span class="dashed-border"></span>
-        </template> -->
       </AccordionHeader>
-      <AccordionContent>
+      <AccordionContent
+        :pt="{
+          root: 'accordion-content-root',
+          content: 'accordion-content-inner',
+          transition: accordionTransition,
+        }"
+      >
         <AnswersTimeLine
           :question-data="safeAnswers.answers"
           :question-type="questionType"
@@ -225,34 +236,25 @@
   </Accordion>
 </template>
 
-<style scoped lang="scss">
-  @use '../../../../../styles/variables' as *;
-  @use '../../../../../styles/mixins/flex' as *;
-  .answers-data-form {
-    .toggll-container {
-      @include flex-row(nowrap, flex-start, center);
-      gap: $XsSize4;
-      .title {
-        color: $PrimaryColor;
-        font-size: $MdSize2;
-        font-weight: $BaseFontSemiBoldWeight;
-      }
-      svg {
-        transition: all 0.3s ease-in-out;
-        &.rotate-180 {
-          transform: rotate(180deg);
-        }
-      }
-    }
+<style scoped>
+  .accordion-enter-active,
+  .accordion-leave-active {
+    display: grid;
+    transition: grid-template-rows 0.3s ease;
+  }
 
-    .dashed-border {
-      flex: 1;
-      height: 1px;
-      border-bottom: 1px dashed #d0d0d0;
-    }
+  .accordion-enter-from,
+  .accordion-leave-to {
+    grid-template-rows: 0fr;
+  }
 
-    .p-accordionpanel:last-child > .p-accordionheader {
-      padding-left: 0 !important;
-    }
+  .accordion-enter-to,
+  .accordion-leave-from {
+    grid-template-rows: 1fr;
+  }
+
+  .accordion-content-inner {
+    overflow: hidden;
+    min-height: 0;
   }
 </style>

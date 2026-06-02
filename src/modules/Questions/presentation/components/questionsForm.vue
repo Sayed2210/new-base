@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, watch } from 'vue';
+  import { onMounted, ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
   import type ShowQuestionsModel from '../../core/models/show.questions.model';
   import AddquestionsParams from '../../core/params/add.question.params';
@@ -103,6 +103,14 @@
     },
     { immediate: true },
   );
+  const QuestionDraftData = ref<AddquestionsParams>();
+  onMounted(() => {
+    QuestionDraftData.value = JSON.parse(localStorage.getItem(`question-draft`) || '{}');
+    if (QuestionDraftData.value) {
+      BasicData.value = QuestionDraftData.value;
+      AnswerData.value = QuestionDraftData.value;
+    }
+  });
 </script>
 
 <template>
@@ -120,8 +128,13 @@
       </div>
     </header>
 
-    <BasicQuestionDataForm :question-data="question" @update-data="GetAllBasicData" />
+    <BasicQuestionDataForm
+      :draft-data="QuestionDraftData"
+      :question-data="question"
+      @update-data="GetAllBasicData"
+    />
     <QuestionAnswersDataForm
+      :draft-data="QuestionDraftData"
       :question-data="question!"
       :question-type="BasicData?.questionType!"
       @update-data="GetAllAnswers"

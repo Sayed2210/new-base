@@ -1,37 +1,49 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import AppButton from '@/shared/HelpersComponents/AppButton.vue';
-import IconAccept from '@/shared/icons/IconAccept.vue';
-import { useRoute } from 'vue-router';
-import questionsController from '../controllers/questions.controller';
-import questionsForm from './questionsForm.vue';
-import type AddEmployeeParams from '../../core/params/add.question.params';
+  import { ref } from 'vue';
+  import AppButton from '@/shared/HelpersComponents/AppButton.vue';
+  import IconAccept from '@/shared/icons/IconAccept.vue';
+  import { useRoute } from 'vue-router';
+  import questionsController from '../controllers/questions.controller';
+  import questionsForm from './questionsForm.vue';
+  import type AddEmployeeParams from '../../core/params/add.question.params';
 
-const controller = questionsController.getInstance();
-const route = useRoute();
-const formKey = route.fullPath;
+  const controller = questionsController.getInstance();
+  const route = useRoute();
+  const formKey = route.fullPath;
 
-const params = ref<AddEmployeeParams | null>(null);
+  const params = ref<AddEmployeeParams | null>(null);
 
-/**
- * Save new employee
- */
-const saveEmployee = async () => {
-  try {
-    if (!params.value) {
-      console.error('No employee parameters to save');
-      return;
+  /**
+   * Save new employee
+   */
+  const saveEmployee = async () => {
+    try {
+      if (!params.value) {
+        console.error('No employee parameters to save');
+        return;
+      }
+
+      await controller.create(params.value, undefined, formKey);
+    } catch (error) {
+      console.error('Error saving employee:', error);
     }
+  };
 
-    await controller.create(params.value, undefined, formKey);
-  } catch (error) {
-    console.error('Error saving employee:', error);
-  }
-};
+  const saveAsDraft = async () => {
+    try {
+      if (!params.value) {
+        console.error('No question parameters to save');
+        return;
+      }
 
-const updateData = (updatedParams: AddEmployeeParams) => {
-  params.value = updatedParams;
-};
+      localStorage.setItem(`question-draft`, JSON.stringify(params.value));
+    } catch (error) {
+      console.error('Error saving employee:', error);
+    }
+  };
+  const updateData = (updatedParams: AddEmployeeParams) => {
+    params.value = updatedParams;
+  };
 </script>
 
 <template>
@@ -39,14 +51,23 @@ const updateData = (updatedParams: AddEmployeeParams) => {
     <questionsForm :form-key="formKey" @update-data="updateData" />
 
     <div class="actions">
-      <AppButton title="Save Employee" size="sm" icon="right" type="submit" class="save-emp" @click="saveEmployee">
+      <AppButton
+        title="Save Employee"
+        size="sm"
+        icon="right"
+        type="submit"
+        class="save-emp"
+        @click="saveEmployee"
+      >
         Save Employee
         <template #icon>
           <IconAccept />
         </template>
       </AppButton>
-      <button class="btn btn-draft">{{ $t(`Save As draft`) }}</button>
-      <button class="btn btn-cancel">{{ $t(`cancel`) }}</button>
+      <button class="btn btn-draft" @click="saveAsDraft">{{ $t(`Save As draft`) }}</button>
+      <button class="btn btn-cancel" @click="$router.push({ name: 'Questions' })">
+        {{ $t(`cancel`) }}
+      </button>
     </div>
 
     <!-- Error Display -->
@@ -57,48 +78,48 @@ const updateData = (updatedParams: AddEmployeeParams) => {
 </template>
 
 <style scoped lang="scss">
-.btn-cancel {
-  background-color: var(--background-btn-outline-color);
-  color: var(--danger-color);
-  border: 1px solid rgba(245, 194, 192, 1);
-  border-radius: 50px;
-  width: 20%;
+  .btn-cancel {
+    background-color: var(--background-btn-outline-color);
+    color: var(--danger-color);
+    border: 1px solid rgba(245, 194, 192, 1);
+    border-radius: 50px;
+    width: 20%;
 
-  @media (max-width: 768px) {
-    width: 50%;
+    @media (max-width: 768px) {
+      width: 50%;
+    }
   }
-}
 
-.btn-draft {
-  background-color: var(--PrimaryColor-alpha-10);
-  color: var(--PrimaryColor);
-  border: 1px solid var(--PrimaryColor-alpha-10);
-  border-radius: 50px;
-  width: 20%;
+  .btn-draft {
+    background-color: var(--PrimaryColor-alpha-10);
+    color: var(--PrimaryColor);
+    border: 1px solid var(--PrimaryColor-alpha-10);
+    border-radius: 50px;
+    width: 20%;
 
-  @media (max-width: 768px) {
-    width: 50%;
+    @media (max-width: 768px) {
+      width: 50%;
+    }
   }
-}
 
-.save-emp {
-  width: 60%;
-}
+  .save-emp {
+    width: 60%;
+  }
 
-.actions {
-  margin-top: 24px;
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-}
+  .actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
 
-.error-toast {
-  margin-top: 20px;
-  padding: 12px 16px;
-  background-color: var(--error-light);
-  color: var(--error-dark);
-  border: 1px solid var(--error-border);
-  border-radius: var(--radius-md);
-  font-size: 0.9rem;
-}
+  .error-toast {
+    margin-top: 20px;
+    padding: 12px 16px;
+    background-color: var(--error-light);
+    color: var(--error-dark);
+    border: 1px solid var(--error-border);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+  }
 </style>

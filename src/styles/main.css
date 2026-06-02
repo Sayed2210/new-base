@@ -12278,6 +12278,38 @@ body::-webkit-scrollbar-thumb:hover {
    MAIN STYLESHEET — Organized Import Hub
    ============================================================================= */
 /* ── Core ──────────────────────────────────────────────────────── */
+.answers-data-form .toggll-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--xs-size-4);
+}
+.answers-data-form .toggll-container .title {
+  color: var(--PrimaryColor);
+  font-size: var(--md-size-2);
+  font-weight: 600;
+}
+.answers-data-form .toggll-container svg {
+  transition: all 0.3s ease-in-out;
+}
+.answers-data-form .toggll-container svg.rotate-180 {
+  transform: rotate(180deg);
+}
+.answers-data-form .dashed-border {
+  flex: 1;
+  height: 1px;
+  border-bottom: 1px dashed #d0d0d0;
+}
+.answers-data-form .p-accordionpanel:last-child > .p-accordionheader {
+  padding-left: 0 !important;
+}
+
+/* =============================================================================
+   MAIN STYLESHEET — Organized Import Hub
+   ============================================================================= */
+/* ── Core ──────────────────────────────────────────────────────── */
 .artical-page {
   display: flex;
   flex-direction: column;

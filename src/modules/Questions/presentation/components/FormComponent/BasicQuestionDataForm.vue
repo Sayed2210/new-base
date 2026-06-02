@@ -26,6 +26,13 @@
 
   const emit = defineEmits(['updateData']);
   const route = useRoute();
+
+  const { loading, questionData, draftData } = defineProps<{
+    loading?: boolean;
+    questionData?: ShowQuestionsModel;
+    draftData?: AddquestionsParams;
+  }>();
+
   const selectedDifficultyLevel = ref<number | null>(null);
   const SelectedSkill = ref<QuestionSkillParams[] | null>(null);
   const SelectedTopic = ref<number[] | null>(null);
@@ -33,18 +40,13 @@
   const SelectedSubject = ref<number | null>(null);
   const title = ref<string>('');
 
-  const { loading, questionData } = defineProps<{
-    loading?: boolean;
-    questionData?: ShowQuestionsModel;
-  }>();
-
   const updateData = () => {
     let params: any;
     if (route.params.id) {
       params = new EditquestionsParams({
         id: Number(route.params.id),
         title: title.value,
-        image: UploadedImage.value.map((file) => new AttachmentsParams({ alt: '', file })) || [], 
+        image: UploadedImage.value.map((file) => new AttachmentsParams({ alt: '', file })) || [],
         questionType: selectedTab.value as QuestionTypeEnum,
         subjectId: SelectedSubject.value ? SelectedSubject.value : null,
         skills: SelectedSkill.value || [],
@@ -190,12 +192,36 @@
     },
   );
   const isActive = ref(true);
+  const accordionTransition = {
+    enterFromClass: 'accordion-enter-from',
+    enterActiveClass: 'accordion-enter-active',
+    enterToClass: 'accordion-enter-to',
+    leaveFromClass: 'accordion-leave-from',
+    leaveActiveClass: 'accordion-leave-active',
+    leaveToClass: 'accordion-leave-to',
+  };
+
+  watch(
+    () => draftData,
+    () => {
+      selectedDifficultyLevel.value = draftData?.difficultyLevel ?? null;
+      SelectedSkill.value = draftData?.skills ?? [];
+      SelectedTopic.value = draftData?.topics?.map((item) => item.id as number) ?? [];
+      SelectedQuestionSequence.value = draftData?.questionSequenceId ?? null;
+      SelectedSubject.value = draftData?.subjectId ?? null;
+      title.value = draftData?.title ?? '';
+      UploadedImage.value = draftData?.image?.map((item: any) => item.file) ?? [];
+      selectedTab.value = draftData?.questionType ?? null;
+    },
+    { immediate: true },
+  );
 </script>
 
 <template>
   <Accordion
     :pt="{
       root: 'basic-data-form',
+      panel: 'accordion-panel',
     }"
     :value="isActive ? '0' : ''"
     :lazy="true"
@@ -211,7 +237,13 @@
           <span class="dashed-border"></span>
         </template>
       </AccordionHeader>
-      <AccordionContent>
+      <AccordionContent
+        :pt="{
+          root: 'accordion-content-root',
+          content: 'accordion-content-inner',
+          transition: accordionTransition,
+        }"
+      >
         <div class="form-fields">
           <div class="field-group col-span-2" :class="{ disabled: loading }">
             <label class="field-label" for="name">{{ $t(`question title`) }}</label>
@@ -258,11 +290,13 @@
             @update:model-value="selectTab"
           />
           <QuestionContantTabs
+            :draft-data="draftData"
             :ContentData="ContentData!"
             class="field-group col-span-2"
             @update-data="getQuestionCOntent"
           />
           <QuestionSource
+            :draft-data="draftData"
             :document-source="DocumentSource"
             class="field-group col-span-2"
             @update-data="GetQuestionSource"
@@ -272,3 +306,26 @@
     </AccordionPanel>
   </Accordion>
 </template>
+
+<style scoped>
+  .accordion-enter-active,
+  .accordion-leave-active {
+    display: grid;
+    transition: grid-template-rows 0.3s ease;
+  }
+
+  .accordion-enter-from,
+  .accordion-leave-to {
+    grid-template-rows: 0fr;
+  }
+
+  .accordion-enter-to,
+  .accordion-leave-from {
+    grid-template-rows: 1fr;
+  }
+
+  .accordion-content-inner {
+    overflow: hidden;
+    min-height: 0;
+  }
+</style>

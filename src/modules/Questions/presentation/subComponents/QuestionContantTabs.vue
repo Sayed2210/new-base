@@ -18,11 +18,13 @@
   import flattenSubjectBranchTree from '@/modules/Questions/core/SubjectTreeSelectHelper';
   import EducationTopicsController from '@/modules/EducationClassification/presentation/controllers/EducationTopics/education.topics.controller';
   import IndexEducationSubjectTopicParams from '@/modules/EducationClassification/core/params/EducationTopic/index.education.subject.topic.params';
+  import { useRoute } from 'vue-router';
 
   const indexDocumentTypeParams = new IndexDocumentTypeParams();
   const emit = defineEmits(['updateData']);
-  const { ContentData } = defineProps<{
+  const { ContentData, draftData } = defineProps<{
     ContentData: ShowQuestionsModel;
+    draftData?: AddquestionsParams;
   }>();
 
   // const SelectedSubject = ref<TitleInterface<number> | null>(null);
@@ -142,10 +144,51 @@
     );
     updateData();
   };
+
+  const route = useRoute();
+  watch(
+    () => draftData,
+    () => {
+      if (route.params.id) return;
+      SelectedDifficultyLevel.value = new TitleInterface<number>({
+        id: draftData?.difficultyLevel || 0,
+        title: DifficultLevels.value.find((item) => item.id === draftData?.difficultyLevel)
+          ?.title as string,
+      });
+      SelectedSkill.value =
+        (draftData?.skills?.map(
+          (item) =>
+            new TitleInterface<number>({
+              id: item.skillId,
+              // title: item.skill,
+              subtitle: item.percentage,
+            }),
+        ) as TitleInterface<number>[]) ?? [];
+      SelectedTopic.value =
+        (draftData?.topics?.map(
+          (item) =>
+            new TitleInterface<number>({
+              id: item.id || 0,
+              title: topicsOptions.value?.find((el) => el.id === item.id)?.title as string,
+            }),
+        ) as TitleInterface<number>[]) ?? [];
+      SelectedQuestionSequence.value = new TitleInterface<number>({
+        id: draftData?.questionSequenceId || 0,
+        title: subjectOptions.value?.find((item) => item.id === draftData?.questionSequenceId)
+          ?.title as string,
+      });
+
+      selectedBranchTitle.value = new TitleInterface<number>({
+        id: draftData?.subjectId || 0,
+        title: branchOptions.value?.find((el) => el.id === draftData?.subjectId)?.title as string,
+      });
+    },
+    { immediate: true },
+  );
 </script>
 
 <template>
-  <div class="contant_tabs"> 
+  <div class="contant_tabs">
     <div class="form-group">
       <div class="input">
         <UpdatedCustomInputSelect
