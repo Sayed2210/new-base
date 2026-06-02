@@ -49,11 +49,11 @@ const updateData = () => {
       articleSequenceId: BasicData.value.articleSequenceId,
       articleSource: BasicData.value.articleSource,
       answers: AnswerData.value.answers,
-      isArticleClarification: AnswerData.value.isArticleClarification,
+      isArticleClarification: AnswerData.value.isArticleClarification ?? false,
       articleClarification: AnswerData.value.articleClarification,
-      isArticleSolutionSteps: AnswerData.value.isArticleSolutionSteps,
+      isArticleSolutionSteps: AnswerData.value.isArticleSolutionSteps ?? false,
       articleSolutionSteps: AnswerData.value.articleSolutionSteps,
-      isArticleSolutionHint: AnswerData.value.isArticleSolutionHint,
+      isArticleSolutionHint: AnswerData.value.isArticleSolutionHint ?? false,
       articleSolutionHint: AnswerData.value.articleSolutionHint,
     });
   }

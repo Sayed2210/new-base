@@ -30,10 +30,9 @@
   const word = ref('');
 
   const fetchUnits = async (page: number = 1, word: string = '') => {
-    const state = await controller.fetchList(
+    await controller.fetchList(
       new IndexUnitParams(word, route.query.page ? Number(route.query.page) : page, perPage.value),
     );
-    // console.log(state, 'state');
   };
 
   const Search = debounce(() => {

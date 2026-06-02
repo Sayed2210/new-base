@@ -165,7 +165,10 @@
   watch(
     () => questionData,
     (newValue) => {
-      ClarificationData.value = newValue.questionClarification!;
+      if (!newValue) return;
+      ClarificationData.value = newValue.questionClarification
+        ? newValue.questionClarification
+        : ({} as QuestionClarificationModel);
       isClarification.value = newValue.isClarification!;
       SolutionStepsData.value = newValue.solutionSteps!;
       isSolutionStepsData.value = newValue.isQusetionSteps!;
