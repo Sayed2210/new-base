@@ -33,6 +33,7 @@ export default class AddquestionsParams implements Params {
   public solutionHint?: SolutionStepsParams;
   public answerEvaluation?: AnswerEvaluationTypeEnum;
   public similarPrecentage?: string;
+  public parentId ?:number | null
 
   public static readonly validation = new ClassValidation().setRules({
     title: { required: true },
@@ -65,6 +66,7 @@ export default class AddquestionsParams implements Params {
     solutionHint?: SolutionStepsParams;
     answerEvaluation?: AnswerEvaluationTypeEnum;
     similarPrecentage?: string;
+    parentId ?:number | null
   }) {
     this.title = data.title;
     this.image = data.image;
@@ -84,6 +86,7 @@ export default class AddquestionsParams implements Params {
     this.solutionHint = data.solutionHint;
     this.answerEvaluation = data.answerEvaluation;
     this.similarPrecentage = data.similarPrecentage;
+    this.parentId = data.parentId;
   }
 
   toMap(): { [p: string]: any } {
@@ -107,6 +110,7 @@ export default class AddquestionsParams implements Params {
       answer_hint: this.solutionHint?.toMap(),
       correct_status: this.answerEvaluation,
       identical_precentage: this.similarPrecentage,
+      parent_id: this.parentId ?? null,
     };
   }
 
