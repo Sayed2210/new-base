@@ -15,7 +15,7 @@
 
 <template>
   <component
-    :draft-data="draftData"
+    :draftData="draftData"
     :is="AnswerTypeHelper(questionType)"
     :question-data="questionData!"
     @update:data="emit('update:data', $event)"

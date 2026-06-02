@@ -7,6 +7,7 @@
   import { AnswerEvaluationTypeEnum } from '@/modules/Questions/core/constant/answer.evaluation.type.enum';
   import type AnswerModel from '@/modules/Questions/core/models/subModels/answer.model';
   import AnswersParams from '@/modules/Questions/core/params/subParams/answers.params';
+  import { useRoute } from 'vue-router';
   const emit = defineEmits(['update:data']);
   const { questionData, draftData } = defineProps<{
     questionData: AnswerModel[];
@@ -98,15 +99,21 @@
       immediate: true,
     },
   );
+  const route = useRoute();
   watch(
     () => draftData,
     (newvalue) => {
-      if (newvalue && newvalue.length > 0) {
-        Answers.value = newvalue.map((item) => ({
-          answer: item.title,
-        }));
-      }
+      if (route.params.id) return 
+        if (newvalue && newvalue.length > 0) {
+          Answers.value = newvalue.map((item) => {
+            return {
+              answer: item.title,
+            } as AnswerModel;
+          });
+        }
+      selectedTab.value = newvalue?.[0]?.answerEvaluation as AnswerEvaluationTypeEnum;
     },
+    { deep: true, immediate: true },
   );
 </script>
 
