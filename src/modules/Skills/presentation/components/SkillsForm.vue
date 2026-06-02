@@ -32,7 +32,8 @@
     () => skill,
     (newskill) => {
       if (newskill) {
-        const raw: Record<string, string> | Array<Record<string, string>> = newskill.title;
+        // Record<string, string> | Array<Record<string, string>>
+        const raw: any = newskill.title;
         if (Array.isArray(raw)) {
           translations.value = raw.reduce(
             (acc: Record<string, string>, item: Record<string, string>) => {
