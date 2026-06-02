@@ -2,35 +2,42 @@ import type Params from '@/base/Core/Params/params';
 import { ClassValidation } from '@/base/Presentation/Utils/classValidation';
 import type { ArticleQuestionTypeEnum } from '../constant/Article.question.type.enum';
 import type TitleInterface from '@/base/Data/Models/titleInterface';
+import type AttachmentsParams from '@/modules/Questions/core/params/subParams/attachments.params';
 
 /**
  * Parameters for adding a new employee
  */
 export default class AddArticlesParams implements Params {
   public  question_description?: string;
-  public  attachments?: string;
+  public  attachments?: AttachmentsParams[];
   public  question?:string;
   public  question_type?: ArticleQuestionTypeEnum;
   public e_c_subject_id?: number;
   public documents?: TitleInterface<string>;    
-  public explanation?:string;
+  public explanation?:{
+    explanation?:string;
+    attachments?:AttachmentsParams[];
+  };
   
   
 
   public static readonly validation = new ClassValidation().setRules({
     question_type: { required: true },
-    e_c_subject_id: { required: true },
+    question: { required: true ,  minLength: 5 },
     documents: { required: true },
   });
 
   constructor(data: {
     question_description?: string;
-    attachments?: string;
+    attachments?: AttachmentsParams[];
     question?:string;
     question_type?: ArticleQuestionTypeEnum;
     e_c_subject_id?: number;
     documents?: TitleInterface<string>;    
-    explanation?:string;
+    explanation?:{
+      explanation?:string;
+      attachments?: AttachmentsParams[];
+    };
   }) {
     this.question_description=data.question_description;
     this.attachments=data.attachments;
@@ -44,11 +51,11 @@ export default class AddArticlesParams implements Params {
   toMap(): { [p: string]: any } {
     return {
       question_description: this.question_description,
-      attachments: this.attachments,
+      attachments: this.attachments?.map((f) => f.toMap()),
       question: this.question,
       question_type: this.question_type,
       e_c_subject_id: this.e_c_subject_id,
-      documents: this.documents,
+      documents: [this.documents],
       explanation: this.explanation,
     };
   }

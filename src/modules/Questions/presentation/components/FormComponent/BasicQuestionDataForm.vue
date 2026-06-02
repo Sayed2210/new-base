@@ -44,7 +44,7 @@
       params = new EditquestionsParams({
         id: Number(route.params.id),
         title: title.value,
-        image: UploadedImage.value.map((file) => new AttachmentsParams({ alt: '', file })) || [],
+        image: UploadedImage.value.map((file) => new AttachmentsParams({ alt: '', file })) || [], 
         questionType: selectedTab.value as QuestionTypeEnum,
         subjectId: SelectedSubject.value ? SelectedSubject.value : null,
         skills: SelectedSkill.value || [],

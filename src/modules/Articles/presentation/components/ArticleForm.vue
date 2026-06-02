@@ -17,6 +17,7 @@ import AccordionToggleIcon from '@/shared/icons/questions/AccordionToggleIcon.vu
 import IndexDocumentTypeParams from '@/modules/document/core/params/documntType/index.document.type.params';
 import DocumentTypeController from '@/modules/document/presentation/controllers/DocumentType/document.type.controller';
 import { DocumentController, IndexDocumentParams } from '@/modules/document';
+import AttachmentsParams from '@/modules/Questions/core/params/subParams/attachments.params';
 
 const indexDocumentTypeParams = new IndexDocumentTypeParams();
 const documentTypeController = DocumentTypeController.getInstance();
@@ -29,6 +30,8 @@ const { article } = defineProps<{
 const isSolutionSteps = ref(true);
 const isSolutionHint = ref(true);
 const isExplain = ref(false);
+const UploadedImage = ref<string[]>([]);
+const explanationAttachments = ref<string[]>([]);
 
 // Document dependencies
 const indexDocumentParams = new IndexDocumentParams();
@@ -39,11 +42,11 @@ const question = ref('');
 const articleSource = ref('');
 const descriptionArticle = ref('');
 const QuestionDescription = ref('');
-const file = ref();
-const handleFile = (files: UploadedFile[]) => {
-  file.value = files[0]?.base64;
-  updateData();
-};
+// const file = ref();
+// const handleFile = (files: UploadedFile[]) => {
+//   file.value = files[0]?.base64;
+//   updateData();
+// };
 
 const updateData = () => {
   let params: any;
@@ -64,32 +67,47 @@ const updateData = () => {
   } else {
     params = new AddArticlesParams({
       question_description: QuestionDescription.value,
-      attachments: BasicData.value?.attachments,
+      attachments: UploadedImage.value.map((file) => new AttachmentsParams({ alt: '', file })) || [],
+      // attachments: BasicData.value?.attachments,
       question: question.value,
       question_type: 5,
       e_c_subject_id: SelectedSubject.value?.id,
       documents: SelectedDocument.value?.id && {
-        id: SelectedDocument.value?.id,
+        document_id: SelectedDocument.value?.id,
         text: articleSource.value,
       },
-      explanation: descriptionArticle.value,
+      explanation: {
+        explanation: descriptionArticle.value,
+        attachments:explanationAttachments.value.map((file) => new AttachmentsParams({ alt: '', file })) || [], 
+      },
 
     });
   }
   emit('updateData', params);
 };
 
-const BasicData = ref<AddArticlesParams>();
-const GetAllBasicData = (data: AddArticlesParams) => {
-  BasicData.value = data;
+
+const handleImageChange = (file: any) => {
+  UploadedImage.value = file[0]?.base64 ? [file[0].base64] : [];
   updateData();
 };
 
-const AnswerData = ref<AddArticlesParams>();
-const GetAllAnswers = (data: AddArticlesParams) => {
-  AnswerData.value = data;
+const handleExplanationAttachments = (file: any) => {
+  explanationAttachments.value = file[0]?.base64 ? [file[0].base64] : [];
   updateData();
 };
+
+const BasicData = ref<AddArticlesParams>();
+// const GetAllBasicData = (data: AddArticlesParams) => {
+//   BasicData.value = data;
+//   updateData();
+// };
+
+const AnswerData = ref<AddArticlesParams>();
+// const GetAllAnswers = (data: AddArticlesParams) => {
+//   AnswerData.value = data;
+//   updateData();
+// };
 
 watch(
   () => article,
@@ -134,8 +152,8 @@ watch(
             <div class="description-container">
               <div class="description-header">
                 <span>B / U</span>
-                <HandleFilesUpload :label="``" accept="image/*" :multiple="true" :index="30" :file=file
-                  :have-content="true" :class="`image-input`" @change="(files) => handleFile(files)">
+                <HandleFilesUpload :label="``" accept="image/*" :multiple="true" :index="1" :file=UploadedImage
+                  :have-content="true" :class="`image-input`" @change="handleImageChange">
                   <template #content>
                     <div class="upload-attachment-container">
                       <UploadFileIcon />
@@ -153,8 +171,8 @@ watch(
               <div class="field-group">
                 <label class="field-label" for="name">{{ $t('title of artical') }}</label>
                 <div class="input-wrap">
-                  <input id="article-source" v-model="question" type="text" :placeholder="$t('enter title of artical ')"
-                    class="field-input" @input="updateData" />
+                  <input id="article-source" v-model="question" type="text"
+                    :placeholder="$t('enter title of artical ')" class="field-input" @input="updateData" />
                 </div>
               </div>
               <div class="input">
@@ -226,8 +244,8 @@ watch(
             <div class="description-container">
               <div class="description-header">
                 <span>B / U</span>
-                <HandleFilesUpload :label="``" accept="image/*" :multiple="true" :index="30" :file=file
-                  :have-content="true" :class="`image-input`" @change="(files) => handleFile(files)">
+                <HandleFilesUpload :label="``" accept="image/*" :multiple="true" :index="2" :file=explanationAttachments
+                  :have-content="true" :class="`image-input`" @change="handleExplanationAttachments">
                   <template #content>
                     <div class="upload-attachment-container">
                       <UploadFileIcon />

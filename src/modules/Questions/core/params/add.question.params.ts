@@ -16,7 +16,7 @@ import type AttachmentsParams from './subParams/attachments.params';
  */
 export default class AddquestionsParams implements Params {
   public title?: string;
-  public image?: AttachmentsParams[];
+  public image?: AttachmentsParams[]; 
   public questionType?: QuestionTypeEnum;
   public subjectId?: number | null;
   public topics?: TopicsParams[] | null;
