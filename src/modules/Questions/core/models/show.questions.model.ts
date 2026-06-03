@@ -41,6 +41,7 @@ export default class ShowQuestionsModel {
   public readonly isQusetionSteps?: boolean;
   public readonly isQusetionHints?: boolean;
   public readonly subjects?: TitleInterface<number>;
+  
 
   constructor(data: {
     id?: number;

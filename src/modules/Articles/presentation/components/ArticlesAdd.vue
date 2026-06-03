@@ -16,16 +16,21 @@ const params = ref<AddEmployeeParams | null>(null);
 /**
  * Save new article
  */
+
+ const loading = ref(false);
+
 const saveArticle = async () => {
   try {
     if (!params.value) {
       console.error('No article parameters to save');
       return;
     }
-
+    loading.value = true;
     await controller.create(params.value, undefined, formKey);
   } catch (error) {
     console.error('Error saving article:', error);
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -35,18 +40,19 @@ const updateData = (updatedParams: AddEmployeeParams) => {
 </script>
 
 <template>
-  <div class="artical-add-page">
-    <ArticleForm :form-key="formKey" @update-data="updateData" />
-
-    <div class="actions">
-      <AppButton title="Save Article" size="sm" icon="right" type="submit" class="save-emp" @click="saveArticle">
-        Save Article
+  <div class="artical-add-page" >
+    <ArticleForm :form-key="formKey" :loading="loading" @update-data="updateData" />
+  
+    <div class="actions" :class="{ disabled: loading }">
+      <AppButton  title="Save Article" size="sm" icon="right" type="submit" class="save-emp" @click="saveArticle">
         <template #icon>
-          <IconAccept />
+          <span v-if="loading" class="loader"></span>
+          <IconAccept v-else />
         </template>
+        <span v-if="!loading">{{ $t(`Save Article`) }}</span>
       </AppButton>
-      <button class="btn btn-draft">{{ $t(`Save As draft`) }}</button>
-      <button class="btn btn-cancel">{{ $t(`cancel`) }}</button>
+      <button class="btn btn-draft" >{{ $t(`Save As draft`) }}</button>
+      <button class="btn btn-cancel" >{{ $t(`cancel`) }}</button>
 
     </div>
 
@@ -58,6 +64,30 @@ const updateData = (updatedParams: AddEmployeeParams) => {
 </template>
 
 <style scoped lang="scss">
+
+  .loader {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 14px solid;
+    border-color: black transparent black transparent;
+    animation: l1 1.2s linear infinite;
+    display: inline-block;
+  }
+  @keyframes l1 {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .actions{
+    
+    &.disabled {
+      cursor: not-allowed;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+  }
+  
+//
 .btn-cancel {
   background-color: var(--background-btn-outline-color);
   color: var(--danger-color);

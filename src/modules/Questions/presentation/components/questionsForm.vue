@@ -38,6 +38,7 @@
         solutionHint: AnswerData.value?.solutionHint,
         answerEvaluation: AnswerData.value?.answers?.[0]?.answerEvaluation,
         similarPrecentage: AnswerData.value?.answers?.[0]?.similarPrecentage,
+        parentId: BasicData.value?.parentId,
       });
     } else {
       params = new AddquestionsParams({
@@ -59,6 +60,7 @@
         solutionHint: AnswerData.value?.solutionHint,
         answerEvaluation: AnswerData.value?.answers?.[0]?.answerEvaluation,
         similarPrecentage: AnswerData.value?.answers?.[0]?.similarPrecentage,
+        parentId: BasicData.value?.parentId,
       });
     }
 

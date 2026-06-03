@@ -1,4 +1,6 @@
 import { ArticleGeneratedByEnum } from '../constant/Article.generatedby.enum';
+import { ArticleStatusEnum } from '../constant/Article.status.enum';
+import { ArticleTypeEnum } from '../constant/Article.type.enum';
 import ArticleSubjectModel from './Subject.model';
 
 export default class ArticleModel {
@@ -7,6 +9,8 @@ export default class ArticleModel {
   public readonly subject: ArticleSubjectModel | null;
   public readonly generatedBy: ArticleGeneratedByEnum;
   public readonly noOfQs: number;
+  public readonly status: ArticleStatusEnum;
+  public readonly articleType?: ArticleTypeEnum;
 
   constructor(data: {
     id?: number;
@@ -14,12 +18,16 @@ export default class ArticleModel {
     subject?: ArticleSubjectModel | null;
     generatedBy?: ArticleGeneratedByEnum;
     noOfQs?: number;
+    status?: ArticleStatusEnum;
+    articleType?: ArticleTypeEnum;
   }) {
     this.id = data.id;
-    this.articleTitle = data.articleTitle || '';
-    this.subject = data.subject || null;
-    this.generatedBy = data.generatedBy || ArticleGeneratedByEnum.manual;
-    this.noOfQs = data.noOfQs || 0;
+    this.articleTitle = data.articleTitle ?? '';
+    this.subject = data.subject ?? null;
+    this.generatedBy = data.generatedBy ?? ArticleGeneratedByEnum.manual;
+    this.noOfQs = data.noOfQs ?? 5555;
+    this.status = data.status ?? ArticleStatusEnum.not_Reviewd;
+    this.articleType = data.articleType ?? ArticleTypeEnum.mcq;
 
     Object.freeze(this);
   }
@@ -30,11 +38,13 @@ export default class ArticleModel {
     return new ArticleModel({
   id: json.question_id,
   articleTitle: json.question, 
-  subject: json.subject
-    ? ArticleSubjectModel.fromJson(json.subject)
+  subject: json.e_c_subject
+    ? ArticleSubjectModel.fromJson(json.e_c_subject)
     : null,
   generatedBy: json.generated_by,
-  noOfQs: json.no_of_qs,
+  noOfQs: json.number_of_questions,
+  status: json.status,
+  articleType: json.question_type,
 });
   }
 
@@ -44,6 +54,8 @@ export default class ArticleModel {
     subject: ArticleSubjectModel.example,
     generatedBy: ArticleGeneratedByEnum.manual,
     noOfQs: 10,
+    status: ArticleStatusEnum.not_Reviewd,
+    articleType: ArticleTypeEnum.mcq,
   });
 }
 

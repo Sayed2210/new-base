@@ -17,7 +17,7 @@ export default class DeleteArticlesParams implements Params {
 
   toMap(): { [p: string]: any } {
     return {
-      article_id: this.id,
+      question_id: this.id,
     };
   }
 

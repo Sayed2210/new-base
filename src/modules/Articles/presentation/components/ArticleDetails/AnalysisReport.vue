@@ -8,8 +8,8 @@ import AnalysisIcon from '@/shared/icons/AnalysisIcon.vue';
 import ProgressBar from 'primevue/progressbar';
 
 
-const { article } = defineProps<{
-    article?: ArticalDetailsModel;
+const { artical } = defineProps<{
+    artical: ArticalDetailsModel;
 }>();
 
 const indexDocumentParams = new IndexDocumentParams();
@@ -43,7 +43,7 @@ id="doc-subject" v-model="SelectedSubject" :label="``"
         </div>
         <div class="cards_Exams">
             <div
-v-for="item in article?.analysisReport" :key="item?.id" class="items-card" :class="{
+v-for="item in artical?.analysisReport" :key="item?.id" class="items-card" :class="{
                 'progress-card': item?.percentage,
             }">
                 <div class="card">

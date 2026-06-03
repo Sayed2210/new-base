@@ -69,7 +69,7 @@
   .form-actions {
     &.disabled {
       cursor: not-allowed;
-      pointer-events: none;
+      pointer-events: none; 
       opacity: 0.7;
     }
   }

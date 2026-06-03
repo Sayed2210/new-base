@@ -5,7 +5,7 @@ import ArticleController from '../../controllers/Article.controller';
 import { onMounted } from 'vue';
 import ShowArticlesParams from '../../../core/params/show.Articles.params';
 import OverViewArticle from './OverViewArticle.vue';
-import AnalysisReport from './AnalysisReport.vue';
+// import AnalysisReport from './AnalysisReport.vue';
 import ArticleQuestion from './ArticleQuestion.vue';
 
 
@@ -23,8 +23,8 @@ onMounted(() => {
 </script>
 <template>
     <div class="Article_details">
-        <OverViewArticle :article="state.data!" />
-        <AnalysisReport :article="state.data!" />
-        <ArticleQuestion :article="state.data!" />
+        <OverViewArticle  :artical="state.data!" />
+        <!-- <AnalysisReport :artical="state.data!" /> -->
+        <ArticleQuestion :artical="state.data!" /> 
     </div>
 </template>

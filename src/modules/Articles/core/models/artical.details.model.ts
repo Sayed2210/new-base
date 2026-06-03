@@ -1,6 +1,8 @@
 import TitleInterface from '@/base/Data/Models/titleInterface';
 import ExplanationModel from './explanation.model';
 import DocumentModel from './document.model';
+import SubjectModel from '@/modules/Subjects/core/models/subject.model';
+import ArticleSubjectModel from './Subject.model';
 export default class ArticalDetailsModel {
   public readonly id: number;
   public readonly question_description: string;
@@ -8,6 +10,11 @@ export default class ArticalDetailsModel {
   public readonly document: DocumentModel[];
   public readonly explanation: ExplanationModel;
   public readonly e_c_subject: TitleInterface<number>;
+  public readonly created_at: string;
+  public readonly created_by: TitleInterface<string>; 
+  public readonly number_of_questions: number;
+  public readonly Description: string;
+  public readonly subject: SubjectModel;
 
 
   constructor(data: {
@@ -17,6 +24,11 @@ export default class ArticalDetailsModel {
     document: DocumentModel[];
     explanation: ExplanationModel;
     e_c_subject: TitleInterface<number>;
+    created_at: string;
+    created_by: TitleInterface<string>;
+    number_of_questions: number;
+    Description: string;
+    subject: SubjectModel;
   }) {
     this.id = data.id;
     this.question = data.question;
@@ -24,6 +36,11 @@ export default class ArticalDetailsModel {
     this.document = data.document;
     this.explanation = data.explanation;
     this.e_c_subject = data.e_c_subject;
+    this.created_at = data.created_at;
+    this.created_by = data.created_by;
+    this.number_of_questions = data.number_of_questions;
+    this.Description = data.Description;
+    this.subject = data.subject;
   }
 
   static fromJson(json: any): ArticalDetailsModel {
@@ -31,7 +48,7 @@ export default class ArticalDetailsModel {
       throw new Error('Cannot create ArticalDetailsModel from null or undefined');
     }
     return new ArticalDetailsModel({
-      id: json.question_id ?? json.id ?? 0,
+      id: json.question_id ?? 0,
       question: json.question ?? '',
       question_description: json.question_description ?? '',
       document:  json.documents.map((doc: any) => DocumentModel.fromJson(doc)),
@@ -40,6 +57,16 @@ export default class ArticalDetailsModel {
         id: json.e_c_subject?.e_c_subject_id,
         title: json.e_c_subject?.title ?? '',
       }),
+      created_at: json.created_at ?? '',
+      created_by: new TitleInterface({
+        id: json.created_by?.id,
+        title: json.created_by?.name ?? '',
+      }),
+      number_of_questions: json.number_of_questions ?? 0,
+      Description: json.description ?? '',
+      subject: json.subject != null
+    ? ArticleSubjectModel.fromJson(json.subject)
+    : null
     });
   }
 
@@ -53,5 +80,13 @@ export default class ArticalDetailsModel {
       id: 1,
       title: 'Subject 1',
     }),
+    created_at: '2022-01-01',
+    created_by: new TitleInterface({
+      id: 1,
+      title: 'User 1',
+    }),
+    number_of_questions: 555,
+    Description: 'Description 1',
+    subject: SubjectModel.example,
   });
 }

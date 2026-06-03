@@ -19,13 +19,19 @@ const params = ref<EditArticlesParams | null>(null);
 /**
  * Update article
  */
+const loading = ref(false)
+
 const saveArticle = async () => {
   if (!params.value) {
     console.error('No article parameters to save');
     return;
   }
-
-  await controller.update(params.value, undefined, formKey);
+  try {
+    loading.value = true;
+    await controller.update(params.value, undefined, formKey);
+  } finally {
+    loading.value = false;
+  }
 };
 
 const updateData = (updatedParams: AddArticlesParams) => {
@@ -48,14 +54,15 @@ onMounted(async () => {
 
 <template>
   <div class="article-edit-page">
-    <ArticleForm :article="controller.itemData.value!" :form-key="formKey" @update-data="updateData" />
+    <ArticleForm :loading="loading" :article="controller.itemData.value!" :form-key="formKey" @update-data="updateData" />
 
-    <div class="actions">
-      <AppButton title="Update Article" size="sm" icon="right" type="submit" @click="saveArticle">
-        {{ $t('Update Article') }}
+    <div class="actions" :class="{ disabled: loading }">
+      <AppButton  title="Save Article" size="sm" icon="right" type="submit" class="save-emp" @click="saveArticle">
         <template #icon>
-          <IconAccept />
+          <span v-if="loading" class="loader"></span>
+          <IconAccept v-else />
         </template>
+        <span v-if="!loading">{{ $t(`Save Article`) }}</span>
       </AppButton>
     </div>
 
@@ -73,12 +80,36 @@ onMounted(async () => {
 //   margin: 0 auto;
 // }
 
+.loader {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 14px solid;
+    border-color: black transparent black transparent;
+    animation: l1 1.2s linear infinite;
+    display: inline-block;
+  }
+  @keyframes l1 {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .actions{
+    
+    &.disabled {
+      cursor: not-allowed;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+  }
 .actions {
   margin-top: 24px;
   display: flex;
   justify-content: flex-end;
 }
-
+.save-emp{
+  width: 100%;
+  padding: 10px 20px;
+}
 .error-toast {
   margin-top: 20px;
   padding: 12px 16px;

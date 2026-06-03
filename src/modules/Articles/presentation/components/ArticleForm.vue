@@ -26,6 +26,7 @@ const SelectedQuestionSequence = ref<TitleInterface<number> | null>(null);
 const route = useRoute();
 const emit = defineEmits(['updateData']);
 const props = defineProps<{
+  loading?: boolean;
   article?: ArticalDetailsModel;
 }>();
 const isSolutionSteps = ref(true);
@@ -82,6 +83,9 @@ watch(
         articleSource.value = selectedDoc?.text;
       }
       descriptionArticle.value = newValue.explanation?.explanation;
+      isExplain.value = Boolean(descriptionArticle.value.length > 0);
+      explanationAttachments.value = newValue?.explanation?.attachments?.map((item: any) => item.file) ?? [];
+      // UploadedImage.value = newValue?.attachments?.map((item: any) => item.file) ?? [];
     }
   },
   { immediate: true },
@@ -92,7 +96,7 @@ const updateData = () => {
     params = new EditArticlesParams({
       id: Number(route.params.id),
       question_description: QuestionDescription.value,
-      attachments: UploadedImage.value.map((file) => new AttachmentsParams({ alt: '', file })) || [],
+      attachments: UploadedImage.value.map((file) => new AttachmentsParams({ alt: 'img', file })) || [],
       question: question.value,
       question_type: 5,
       e_c_subject_id: SelectedQuestionSequence.value?.id,
@@ -102,14 +106,14 @@ const updateData = () => {
       },
       explanation: {
         explanation: descriptionArticle.value,
-        attachments: explanationAttachments.value.map((file) => new AttachmentsParams({ alt: '', file })) || [],
+        attachments: explanationAttachments.value.map((file) => new AttachmentsParams({ alt: 'img', file })) || [],
       },
 
     });
   } else {
     params = new AddArticlesParams({
       question_description: QuestionDescription.value,
-      attachments: UploadedImage.value.map((file) => new AttachmentsParams({ alt: '', file })) || [],
+      attachments: UploadedImage.value.map((file) => new AttachmentsParams({ alt: 'img', file })) || [],
       question: question.value,
       question_type: 5,
       e_c_subject_id: SelectedQuestionSequence.value?.id,
@@ -119,7 +123,7 @@ const updateData = () => {
       },
       explanation: {
         explanation: descriptionArticle.value,
-        attachments: explanationAttachments.value.map((file) => new AttachmentsParams({ alt: '', file })) || [],
+        attachments: explanationAttachments.value.map((file) => new AttachmentsParams({ alt: 'img', file })) || [],
       },
 
     });
@@ -154,7 +158,7 @@ const handleExplanationAttachments = (file: any) => {
 </script>
 
 <template>
-  <div class="article-details-form-card">
+  <div class="article-details-form-card" >
     <header class="form-header">
       <div class="form-title">
         <div class="header-text">
@@ -164,7 +168,7 @@ const handleExplanationAttachments = (file: any) => {
         </div>
       </div>
     </header>
-    <Accordion :value="isSolutionSteps ? 1 : 0" :pt="{
+    <Accordion :class="{ disabled: props.loading }" :value="isSolutionSteps ? 1 : 0" :pt="{
       root: `article-solution-steps ${isSolutionSteps ? 'active' : ''}`,
     }" @update:value="isSolutionSteps = !isSolutionSteps">
       <AccordionPanel :value="1">
@@ -200,7 +204,7 @@ const handleExplanationAttachments = (file: any) => {
                 :placeholder="$t('Enter Question clarification')" @input="updateData"></textarea>
             </div>
           </div>
-          <div class="document-tab">
+          <div class="document-tab" >
             <div class="form-group">
               <div class="field-group">
                 <label class="field-label" for="name">{{ $t('title of artical') }}</label>
@@ -227,7 +231,7 @@ const handleExplanationAttachments = (file: any) => {
       </AccordionPanel>
     </Accordion>
 
-    <Accordion :value="isSolutionHint ? 1 : 0" :pt="{
+    <Accordion  :class="{ disabled: props.loading }" :value="isSolutionHint ? 1 : 0" :pt="{
       root: `article-solution-steps ${isSolutionHint ? 'active' : ''}`,
     }" @update:value="isSolutionHint = !isSolutionHint">
       <AccordionPanel :value="1">
@@ -265,7 +269,7 @@ const handleExplanationAttachments = (file: any) => {
         </AccordionContent>
       </AccordionPanel>
     </Accordion>
-    <Accordion :value="isExplain ? 1 : 0" :pt="{
+    <Accordion :class="{ disabled: props.loading }" :value="isExplain ? 1 : 0" :pt="{
       root: `article-solution-steps-explain ${isExplain ? 'active' : ''}`,
     }" @update:value="isExplain = !isExplain">
       <AccordionPanel :value="1">
@@ -307,25 +311,11 @@ const handleExplanationAttachments = (file: any) => {
 @use '../../../../styles/variables' as *;
 @use '../../../../styles/mixins/flex' as *;
 
-.article-solution-steps-explain {
-  border: 1px solid $PrimaryColor;
-  border-radius: 50px;
-  padding: 10px !important;
-  margin-block: 20px !important;
-
-  &.active {
-    border-radius: 12px;
-  }
-
-  .p-accordionheader {
-    padding: 5px 0 !important;
-  }
-
-  .p-accordioncontent-content {
-    padding: 10px !important;
-  }
+.disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.7;
 }
-
 .article-solution-steps-header-explain {
   @include flex-row(nowrap, space-between, center);
   gap: 10px;

@@ -18,9 +18,10 @@ import ShowIcon from '@/shared/icons/ShowIcon.vue';
 import ArticleController from '../controllers/Article.controller';
 import IndexArticleParams from '../../core/params/index.Articles.params';
 import DeleteArticleParams from '../../core/params/delet.Articles.params';
-import type ShowArticleModel from '../../core/models/show.Article.model';
+// import type ShowArticleModel from '../../core/models/show.Article.model';
 import Articlearrow from '@/shared/icons/articlearrow.vue';
 import Articlesubject from '@/shared/icons/articlesubject.vue';
+import type ArticleModel from '../../core/models/Article.model';
 
   // Controller instance
   const controller = ArticleController.getInstance();
@@ -203,7 +204,7 @@ v-model="word" placeholder="Search by employee name or email…" class="search-i
         <div class="table-frame">
           <AppTable
             :headers="headers"
-            :items="data as ShowArticleModel[]"
+            :items="data as ArticleModel[]"
             :hoverable="true"
             :striped="true"
             show-index
