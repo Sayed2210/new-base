@@ -72,6 +72,10 @@
     leaveActiveClass: 'accordion-leave-active',
     leaveToClass: 'accordion-leave-to',
   };
+  const removeFilePreview = (idx: number) => {
+    file.value = (file.value as string[]).filter((_: string, i: number) => i !== idx);
+    updateData();
+  };
 </script>
 
 <template>
@@ -118,6 +122,7 @@
                 :have-content="true"
                 :class="`image-input`"
                 @change="(files) => handleFile(files)"
+                :hidepreview="true"
               >
                 <template #content>
                   <div class="upload-attachment-container">
@@ -132,7 +137,24 @@
               v-model="description"
               name="descreption"
               @input="updateData"
+              placeholder="type solution steps text"
             ></textarea>
+
+            <div class="preview-container">
+              <div v-if="file?.length" class="preview-grid">
+                <div v-for="(src, idx) in file" :key="idx" class="preview-item">
+                  <img :src="src" class="preview-thumb" alt="attachment" />
+                  <button
+                    type="button"
+                    class="remove-btn"
+                    title="Remove"
+                    @click.stop="removeFilePreview(idx as number)"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </AccordionContent>
@@ -143,6 +165,18 @@
 <style scoped lang="scss">
   @use '../../../../styles/variables' as *;
   @use '../../../../styles/mixins/flex' as *;
+  .preview-container {
+    width: 100%;
+    border-top: 1px solid rgba(128, 128, 128, 0.353);
+  }
+  textarea {
+    min-height: 150px;
+    width: 100%;
+    &::placeholder {
+      font-weight: 400;
+      font-family: 'Light';
+    }
+  }
 
   .accordion-enter-active,
   .accordion-leave-active {
@@ -233,6 +267,86 @@
             box-shadow: none;
           }
         }
+      }
+    }
+
+    .image-input {
+      :deep(.upload-area) {
+        padding: 10px !important;
+        border-radius: 50px;
+        background-color: white;
+      }
+
+      .upload-attachment-container {
+        @include flex-row(nowrap, flex-start, center);
+        gap: 10px;
+
+        .upload-attachment {
+          color: $PrimaryColor;
+        }
+      }
+    }
+
+    .preview-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .preview-item {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      border-radius: 8px;
+      border: 1px solid var(--gray-200);
+      overflow: hidden;
+      background: var(--gray-100);
+      flex-shrink: 0;
+      transition:
+        border-color 0.15s,
+        transform 0.15s;
+
+      &:hover {
+        border-color: $PrimaryColor;
+        transform: translateY(-2px);
+      }
+
+      &:hover .remove-btn {
+        opacity: 1;
+      }
+    }
+
+    .preview-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .remove-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: none;
+      background: var(--black-alpha-45);
+      color: var(--BgWhite);
+      font-size: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition:
+        opacity 0.15s,
+        background 0.15s;
+      z-index: 10;
+
+      &:hover {
+        background: var(--danger);
       }
     }
 

@@ -21,6 +21,7 @@
     haveContent?: boolean;
     file?: string | string[];
     base64File?: string | string[];
+    hidepreview?: boolean;
   }
 
   const props = withDefaults(defineProps<Props>(), {
@@ -121,8 +122,6 @@
     file: string | string[] | undefined,
     base64File: string | string[] | undefined,
   ) => {
-
-
     if (!file && !base64File) return;
 
     const fileList = Array.isArray(file) ? file : file ? [file] : [];
@@ -271,7 +270,7 @@
       />
     </label>
 
-    <div v-if="files.length" class="preview-grid">
+    <div v-if="files.length && !hidepreview" class="preview-grid">
       <div
         v-for="fileItem in files"
         :key="fileItem.id"
