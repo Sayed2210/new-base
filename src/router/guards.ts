@@ -15,7 +15,7 @@ export function authGuard(
   const isLoginPage = to.path === '/login';
 
   if (!userData.isAuth && !isLoginPage) {
-    return next({ name: 'Login' });
+    return next({ name: 'Choose Country' });
   }
 
   if (isLoginPage && userData.isAuth) {
