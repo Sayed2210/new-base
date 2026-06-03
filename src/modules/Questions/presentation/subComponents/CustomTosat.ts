@@ -12,6 +12,7 @@ export const CustomToast = () => {
     severity: 'info',
     summary: 'Get Data From Drafts',
     detail: 'Click here to get data from drafts',
+    life: 5000,
   });
 
   const observer = new MutationObserver(() => {

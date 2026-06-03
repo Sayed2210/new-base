@@ -11,11 +11,6 @@ export const useFormsStore = defineStore(
       const isAllDataEmpty = ref(true);
       formData.value[key] = data;
       const arr = Object.values(formData.value[key]);
-      // arr.map((el: any) => {
-      //   if (el.length > 0) {
-      //     isAllDataEmpty.value = false;
-      //   }
-      // });
       isAllDataEmpty.value = arr.some((el: any) => el?.length > 0);
       if (isAllDataEmpty.value) {
         clearFormData(key);
@@ -38,6 +33,7 @@ export const useFormsStore = defineStore(
     const showReturnWarning = (targetPath: string) => {
       const toast = useToast();
       const router = useRouter();
+
       toast.add({
         severity: 'info',
         summary: 'Unsaved Changes',

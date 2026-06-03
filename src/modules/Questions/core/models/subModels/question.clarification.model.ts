@@ -27,7 +27,7 @@ export default class QuestionClarificationModel {
 
     return new QuestionClarificationModel({
       documents: json.documents,
-      source: json.source,
+      source: json.source_text,
       clarification: json.explanation,
       attachments: json.attachments,
     });

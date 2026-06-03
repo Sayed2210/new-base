@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import { ref, watch } from 'vue';
+  import { ref } from 'vue';
   // import { onBeforeRouteLeave } from 'vue-router';
   // import { useFormsStore } from '@/stores/formsStore';
-  import type EducationClassificationModel from '../../core/models/education.classification.model';
+  // import type EducationClassificationModel from '../../core/models/education.classification.model';
   import AddEducationClassificationParams from '../../core/params/add.educationClassification.params';
   import FolderCrudIcon from '@/shared/icons/FolderCrudIcon.vue';
   import TranslationParams from '@/modules/about/core/params/translation.params';
@@ -14,47 +14,27 @@
 
   const emit = defineEmits(['updateData', 'save-education-classification']);
 
-  const { country, loading } = defineProps<{
-    country?: EducationClassificationModel;
+  const { loading } = defineProps<{
+    // country?: EducationClassificationModel;
     formKey?: string;
     loading?: boolean;
   }>();
 
-  // const FormStore = useFormsStore();
-
-  // onBeforeRouteLeave((to, from) => {
-  //   if (formKey) {
-  //     const savedData = FormStore.getFormData(formKey);
-
-  //     if (savedData && to.path !== from.path) {
-  //       FormStore.showReturnWarning(formKey);
-  //     }
-  //   }
-  // });
-
-  // Form state
   const title = ref<Record<string, string>>({});
   const date = ref<Date | null>(null);
 
-  watch(
-    () => country,
-    (newCountry) => {
-      if (newCountry) {
-        title.value = newCountry.title as any;
-      }
-    },
-    { immediate: true },
-  );
-
-  // const route = useRoute();
+  // watch(
+  //   () => country,
+  //   (newCountry) => {
+  //     if (newCountry) {
+  //       console.log(newCountry, 'new');
+  //       // title.value = newCountry.title as any;
+  //     }
+  //   },
+  //   { immediate: true },
+  // );
 
   const updateData = () => {
-    // if (formKey) {
-    //   FormStore.setFormData(formKey, {
-    //     title: title.value,
-    //   });
-    // }
-
     const params = new AddEducationClassificationParams({
       translation: new TranslationParams({
         title: title.value,
@@ -85,7 +65,7 @@
       dialogManager.toastWarning('title is required');
     } else {
       emit('save-education-classification');
-      title.value = {};
+      title.value = {} as Record<string, string>;
       updateData();
     }
   };

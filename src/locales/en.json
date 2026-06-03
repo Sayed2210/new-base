@@ -480,5 +480,6 @@
   "hard": "Hard",
   "select_difficulty": "Select Difficulty",
   "similar_percentage": "Similar Percentage",
-  "update_question": "Update Question"
+  "update_question": "Update Question",
+  "save_question": "Save Question"
 }

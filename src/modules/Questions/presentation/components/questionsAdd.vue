@@ -1,23 +1,22 @@
 <script setup lang="ts">
   import { ref } from 'vue';
-  import AppButton from '@/shared/HelpersComponents/AppButton.vue';
-  import IconAccept from '@/shared/icons/IconAccept.vue';
   import { useRoute, useRouter } from 'vue-router';
   import questionsController from '../controllers/questions.controller';
   import questionsForm from './questionsForm.vue';
   import type AddEmployeeParams from '../../core/params/add.question.params';
+  import LoadingIcon from '@/assets/images/loading.webp';
+
 
   const controller = questionsController.getInstance();
   const route = useRoute();
   const formKey = route.fullPath;
   const loading = ref(false);
-
   const params = ref<AddEmployeeParams | null>(null);
   const router = useRouter();
-  /**
-   * Save new employee
-   */
-  const saveEmployee = async () => {
+ 
+
+
+  const saveQuestion = async () => {
     loading.value = true;
     try {
       if (!params.value) {
@@ -52,7 +51,9 @@
   const updateData = (updatedParams: AddEmployeeParams) => {
     params.value = updatedParams;
   };
+
 </script>
+
 
 <template>
   <div class="questions-add-page">
@@ -61,21 +62,23 @@
       :form-key="formKey"
       @update-data="updateData"
     />
-
     <div class="actions">
-      <AppButton
-        title="Save Employee"
-        size="sm"
-        icon="right"
-        type="submit"
-        class="save-emp"
-        @click="saveEmployee"
+      <button
+        class="btn btn-primary save-emp"
+        :disabled="loading"
+        :class="loading ? 'disabled' : ''"
+        @click="saveQuestion"
       >
-        Save Employee
-        <template #icon>
-          <IconAccept />
-        </template>
-      </AppButton>
+        <img
+          v-if="loading"
+          :src="LoadingIcon"
+          class="loader-skills"
+          alt="loading"
+          width="30"
+          height="30"
+        />
+        <span v-else> {{ $t(`save_question`) }} </span>
+      </button>
       <button
         class="btn btn-draft"
         :disabled="loading"
@@ -136,7 +139,7 @@
   }
 
   .actions {
-    margin-top: 24px;
+    margin-block: 18px;
     display: flex;
     gap: 10px;
     justify-content: flex-end;

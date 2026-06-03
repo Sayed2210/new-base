@@ -89,8 +89,6 @@
         solutionHint: SolutionHints.value!,
       });
     }
-    // console.log(Answers.value, 'answersanswersanswers');
-    // console.log(params, 'paramsparamsparams');
     emit('updateData', params);
   };
 

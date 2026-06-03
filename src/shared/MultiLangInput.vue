@@ -47,7 +47,7 @@
       // Emit the record of languages
       emit('update:modelValue', { ...internalValue.value });
 
-      // Emit the wrapped data with fieldKey
+      // Emit the wrapped data wititleth fieldKey
       emit('update:data', {
         [props.fieldKey]: { ...internalValue.value },
       });

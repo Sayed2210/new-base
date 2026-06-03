@@ -117,6 +117,7 @@
       AnswerData.value = newVal;
     }
   });
+
 </script>
 
 <template>

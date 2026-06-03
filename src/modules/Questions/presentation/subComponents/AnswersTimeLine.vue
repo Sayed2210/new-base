@@ -18,7 +18,7 @@
     :draftData="draftData"
     :is="AnswerTypeHelper(questionType)"
     :question-data="questionData!"
-    @update:data="emit('update:data', $event)"
+    @update:data="emit('update:data', $event);"
   />
   <!--  -->
 </template>

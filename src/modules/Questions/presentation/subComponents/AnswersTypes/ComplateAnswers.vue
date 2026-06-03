@@ -48,7 +48,7 @@
       Answers.value.map((el: AnswerModel) => {
         return new AnswersParams({
           title: el.answer,
-          similarPrecentage: el.similar,
+          similarPrecentage: similarPrecentge.value.toString(),
           answerEvaluation: el.EvaluationType,
         });
       }),
@@ -61,7 +61,7 @@
       Answers.value.map((el: AnswerModel) => {
         return new AnswersParams({
           title: el.answer,
-          similarPrecentage: el.similar,
+          similarPrecentage: similarPrecentge.value.toString(),
           answerEvaluation: el.EvaluationType,
         });
       }),
@@ -116,8 +116,7 @@
     },
     { deep: true, immediate: true },
   );
-  const UpdateSImilar = (evenet: Event) => {
-    similarPrecentge.value = Number((evenet.target as HTMLInputElement).value);
+  const UpdateSImilar = () => {
     UpdateData();
   };
 </script>
