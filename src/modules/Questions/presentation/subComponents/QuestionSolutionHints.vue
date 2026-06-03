@@ -20,9 +20,10 @@
     isSolutionHintsData: boolean;
     draftData?: AddquestionsParams;
   }>();
+
   const updateData = () => {
     emit('updateData', {
-      isSolutionSteps: isSolutionSteps.value,
+      isSolutionHints: isSolutionSteps.value,
       data: new SolutionStepsParams({
         image: file.value?.map(
           (f: any) =>
@@ -42,6 +43,7 @@
     file.value = f[0]?.base64 ? [f[0].base64] : [];
     updateData();
   };
+
   watch(
     [() => SolutionHintsData, () => isSolutionHintsData],
     ([newSolutionHinrdata, newIsSolution]) => {
@@ -58,10 +60,11 @@
       isSolutionSteps.value = !!draftData?.isSolutionHint || !!draftData?.solutionHint?.explanation;
       description.value = draftData?.solutionHint?.explanation ?? '';
       file.value = draftData?.solutionHint?.image?.map((f) => f.file as string) ?? [];
+      updateData();
     },
-    { immediate: true },
+    { immediate: true, deep: true },
   );
-    const accordionTransition = {
+  const accordionTransition = {
     enterFromClass: 'accordion-enter-from',
     enterActiveClass: 'accordion-enter-active',
     enterToClass: 'accordion-enter-to',

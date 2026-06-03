@@ -5,6 +5,11 @@
 .complate-answers-time-line-container {
   font-family: $FontFamily;
 
+  .matching-section {
+    width: 100%;
+    @include flex-column(nowrap, flex-start, stretch);
+    gap: 10px;
+  }
   .timeline-content {
     @include flex-row(nowrap, space-between, center);
     width: 100%;
@@ -19,7 +24,7 @@
       align-items: end;
       margin-block: 10px;
       &.similar {
-        grid-template-columns: 75% 20% 5%;
+        grid-template-columns: 95% 5%;
       }
       .matching-section {
         width: 100%;

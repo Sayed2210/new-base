@@ -81,8 +81,9 @@
         id: draftData?.questionClarification?.documentId,
         source: draftData?.questionClarification?.source,
       });
+      updateData();
     },
-    { immediate: true },
+    { immediate: true, deep: true },
   );
   const accordionTransition = {
     enterFromClass: 'accordion-enter-from',

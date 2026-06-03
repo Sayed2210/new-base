@@ -33,12 +33,12 @@
   const UpdateData = () => {
     emit(
       'update:data',
-        Answers.value.map((el: AnswerModel) => {
-          return new AnswersParams({
-            title: el.answer,
-            matchAnswer: el.match,
-          });
-        }),
+      Answers.value.map((el: AnswerModel) => {
+        return new AnswersParams({
+          title: el.answer,
+          matchAnswer: el.match,
+        });
+      }),
     );
   };
 
@@ -76,6 +76,10 @@
           match: item.matchAnswer ?? '',
         }));
       }
+    },
+    {
+      deep: true,
+      immediate: true,
     },
   );
 </script>

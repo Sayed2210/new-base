@@ -60,8 +60,9 @@
       isSolutionSteps.value = !!draftData?.isSolutionSteps;
       description.value = draftData?.solutionSteps?.explanation ?? '';
       file.value = draftData?.solutionSteps?.image?.map((f) => f.file as string) ?? [];
+      updateData();
     },
-    { immediate: true },
+    { immediate: true, deep: true },
   );
   const accordionTransition = {
     enterFromClass: 'accordion-enter-from',

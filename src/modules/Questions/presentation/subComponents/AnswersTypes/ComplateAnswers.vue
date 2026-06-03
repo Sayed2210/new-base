@@ -13,6 +13,7 @@
     questionData: AnswerModel[];
     draftData: AnswersParams[];
   }>();
+  const similarPrecentge = ref<number>(0);
 
   const selectedTab = ref<number | null>(
     questionData?.[0]?.EvaluationType || AnswerEvaluationTypeEnum.typical,
@@ -21,7 +22,7 @@
   const Answers = ref<AnswerModel[]>([
     {
       answer: '',
-      similar: '',
+      similar: similarPrecentge.value.toString(),
       EvaluationType: selectedTab.value as AnswerEvaluationTypeEnum,
     },
   ]);
@@ -29,7 +30,7 @@
   const addNewAnswer = () => {
     Answers.value.push({
       answer: '',
-      similar: '',
+      similar: similarPrecentge.value.toString(),
       EvaluationType: selectedTab.value as AnswerEvaluationTypeEnum,
     });
 
@@ -115,6 +116,10 @@
     },
     { deep: true, immediate: true },
   );
+  const UpdateSImilar = (evenet: Event) => {
+    similarPrecentge.value = Number((evenet.target as HTMLInputElement).value);
+    UpdateData();
+  };
 </script>
 
 <template>
@@ -126,6 +131,20 @@
       @update:model-value="selectTab"
     />
     <div
+      v-if="selectedTab == AnswerEvaluationTypeEnum.similar"
+      class="matching-section field-group col-span-2"
+    >
+      <label class="field-label" :for="`similar-precentge`">{{ $t(`similar_percentage`) }}</label>
+      <input
+        class="field-input"
+        :id="`similar-precentge`"
+        v-model="similarPrecentge"
+        type="number"
+        :placeholder="$t('similar_percentage')"
+        @input="UpdateSImilar"
+      />
+    </div>
+    <div
       v-for="(item, index) in Answers"
       :key="index"
       class="timeline-item"
@@ -136,17 +155,6 @@
           class="timeline-form-content"
           :class="{ similar: selectedTab == AnswerEvaluationTypeEnum.similar }"
         >
-          <div v-if="selectedTab == AnswerEvaluationTypeEnum.similar" class="matching-section">
-            <label :for="`similar-${index}`">{{ $t(`similar_percentage`) }}</label>
-            <input
-              :id="`similar-${index}`"
-              v-model="item.similar"
-              type="number"
-              :placeholder="$t('similar_percentage')"
-              @input="UpdateData"
-            />
-          </div>
-
           <div v-if="selectedTab != AnswerEvaluationTypeEnum.need_correct" class="matching-section">
             <label :for="`answer-${index}`"> {{ $t(`answer`) }}</label>
             <input

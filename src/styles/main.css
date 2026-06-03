@@ -12225,6 +12225,15 @@ body::-webkit-scrollbar-thumb:hover {
 .complate-answers-time-line-container {
   font-family: var(--font-family);
 }
+.complate-answers-time-line-container .matching-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 10px;
+}
 .complate-answers-time-line-container .timeline-content {
   display: flex;
   flex-direction: row;
@@ -12244,7 +12253,7 @@ body::-webkit-scrollbar-thumb:hover {
   margin-block: 10px;
 }
 .complate-answers-time-line-container .timeline-content .timeline-form-content.similar {
-  grid-template-columns: 75% 20% 5%;
+  grid-template-columns: 95% 5%;
 }
 .complate-answers-time-line-container .timeline-content .timeline-form-content .matching-section {
   width: 100%;

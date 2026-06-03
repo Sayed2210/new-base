@@ -166,12 +166,14 @@
   watch(
     () => questionData,
     (newValue) => {
-      ClarificationData.value = newValue.questionClarification!;
-      isClarification.value = newValue.isClarification!;
-      SolutionStepsData.value = newValue.solutionSteps!;
-      isSolutionStepsData.value = newValue.isQusetionSteps!;
-      SolutionHintsData.value = newValue.solutionHint!;
-      isSolutionHintsData.value = newValue.isQusetionHints!;
+      ClarificationData.value = newValue?.questionClarification
+        ? newValue.questionClarification!
+        : undefined;
+      isClarification.value = newValue?.isClarification ? newValue.isClarification! : false;
+      SolutionStepsData.value = newValue?.solutionSteps ? newValue.solutionSteps : undefined;
+      isSolutionStepsData.value = newValue?.isQusetionSteps ? newValue.isQusetionSteps! : false;
+      SolutionHintsData.value = newValue?.solutionHint ? newValue.solutionHint! : undefined;
+      isSolutionHintsData.value = newValue?.isQusetionHints ? newValue.isQusetionHints! : false;
     },
   );
   const safeAnswers = computed(() => questionData ?? []);
