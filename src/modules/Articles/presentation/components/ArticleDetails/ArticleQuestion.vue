@@ -13,8 +13,8 @@ import type ArticalDetailsModel from "@/modules/Articles/core/models/artical.det
 const { t } = useI18n();
 const route = useRoute();
 
-const { article } = defineProps<{
-  article?: ArticalDetailsModel;
+const { artical } = defineProps<{
+  artical?: ArticalDetailsModel;
 }>()
 
 // Reactive State
@@ -143,7 +143,7 @@ const updateData = () => {
     </div>
     <div class="question_list">
       <!-- v-for="question in article?.articlecard" :key="question.id" -->
-      <QuestionCard v-if="article?.articlecard" :question="article?.articlecard" />
+      <QuestionCard v-if="artical?.questions" :allquestion="artical.questions" />
     </div>
   </div>
 </template>

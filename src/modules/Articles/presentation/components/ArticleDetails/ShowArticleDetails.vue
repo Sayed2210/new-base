@@ -5,8 +5,8 @@ import ArticleController from '../../controllers/Article.controller';
 import { onMounted } from 'vue';
 import ShowArticlesParams from '../../../core/params/show.Articles.params';
 import OverViewArticle from './OverViewArticle.vue';
-// import AnalysisReport from './AnalysisReport.vue';
 import ArticleQuestion from './ArticleQuestion.vue';
+// import AnalysisReport from './AnalysisReport.vue';
 
 
 const controller = ArticleController.getInstance();

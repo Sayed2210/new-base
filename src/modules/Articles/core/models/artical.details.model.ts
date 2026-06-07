@@ -4,6 +4,9 @@ import DocumentModel from './document.model';
 import ArticleSubjectModel from './Subject.model';
 import AnalysisReportModel from './analysis.report.model';
 import ArticleCardModel from './article.card';
+import { ArticleDifficultyEnum } from '../constant/Article.difficulty.enum';
+import { ArticleTypeEnum } from '../constant/Article.type.enum';
+import ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
 export default class ArticalDetailsModel {
   public readonly id: number;
   public readonly question_description: string;
@@ -12,12 +15,15 @@ export default class ArticalDetailsModel {
   public readonly explanation: ExplanationModel;
   public readonly e_c_subject: TitleInterface<number>;
   public readonly created_at: string;
+  public readonly articledifficulty: ArticleDifficultyEnum;
+  public readonly question_type: ArticleTypeEnum;
   public readonly created_by: TitleInterface<string>; 
   public readonly number_of_questions: number;
   public readonly Description: string;
   public readonly subject: ArticleSubjectModel;
   public readonly analysisReport: AnalysisReportModel[];
   public readonly articlecard: ArticleCardModel[];
+  public readonly questions: ShowQuestionsModel[];
 
 
   constructor(data: {
@@ -34,6 +40,9 @@ export default class ArticalDetailsModel {
     subject: ArticleSubjectModel;
     analysisReport: AnalysisReportModel[];
     articlecard: ArticleCardModel[];
+    questions: ArticalDetailsModel[];
+    articledifficulty: ArticleDifficultyEnum;
+    question_type: ArticleTypeEnum;
   }) {
     this.id = data.id;
     this.question = data.question;
@@ -48,6 +57,9 @@ export default class ArticalDetailsModel {
     this.subject = data.subject;
     this.analysisReport = data.analysisReport;
     this.articlecard = data.articlecard;
+    this.questions = data.questions 
+    this.articledifficulty = data.articledifficulty;
+    this.question_type = data.question_type;
   }
 
   static fromJson(json: any): ArticalDetailsModel {
@@ -58,7 +70,8 @@ export default class ArticalDetailsModel {
       id: json.question_id ?? 0,
       question: json.question ?? '',
       question_description: json.question_description ?? '',
-      document:  json.documents.map((doc: any) => DocumentModel.fromJson(doc)),
+      // document:  json.documents.map((doc: any) => DocumentModel.fromJson(doc)),
+      document: json.documents?.map((doc: any) => DocumentModel.fromJson(doc)) ?? [],
       explanation: ExplanationModel.fromJson(json.explanation),
       e_c_subject: new TitleInterface({
         id: json.e_c_subject?.e_c_subject_id,
@@ -77,9 +90,14 @@ export default class ArticalDetailsModel {
     analysisReport: json.analysis_report != null
     ? json.analysis_report.map((report: any) => AnalysisReportModel.fromJson(report))
     : [],
-      articlecard: json.article_card != null
-      ? json.article_card.map((card: any) => ArticleCardModel.fromJson(card))
-      : [],
+    articlecard: json.article_card != null
+    ? json.article_card.map((card: any) => ArticleCardModel.fromJson(card))
+    : [],
+    questions: json.questions != null
+    ? json.questions.map((question: any) => ShowQuestionsModel.fromJson(question))
+    : [],
+    articledifficulty: json.difficulty_level,
+    question_type: json.question_type,
     });
   }
 
@@ -117,6 +135,87 @@ export default class ArticalDetailsModel {
         count: 12,
         percentage: 1,
         imageUrl: 'https://example.com/image.jpg',
+      },
+    ],
+    questions: [
+      {
+        id: 3,
+        title: 'Question 3',
+        description: 'Question 3 Description',
+        document: [DocumentModel.example],
+        explanation: ExplanationModel.example,
+        e_c_subject: new TitleInterface({
+          id: 3,
+          title: 'Subject 3',
+        }),
+        created_at: '2022-01-03',
+        created_by: new TitleInterface({
+          id: 3,
+          title: 'User 3',
+        }),
+        number_of_questions: 333,
+        Description: 'Description 3',
+        subject: ArticleSubjectModel.example,
+        analysisReport: [
+          {
+            id: 3,
+            title: 'Analysis Report 3',
+            count: 3,
+            percentage: 3,
+            imageUrl: 'https://example.com/image.jpg',
+          },
+        ],
+        articlecard: [
+          {
+            id: 4,
+            title: 'Analysis Report 4',
+            count: 444,
+            percentage: 4,
+            imageUrl: 'https://example.com/image.jpg',
+          },
+        ],
+        questions: [
+          {
+            id: 5,
+            title: 'Question 5',
+            description: 'Question 5 Description',
+            document: [DocumentModel.example],
+            explanation: ExplanationModel.example,
+            e_c_subject: new TitleInterface({
+              id: 5,
+              title: 'Subject 5',
+            }),
+            created_at: '2022-01-05',
+            created_by: new TitleInterface({
+              id: 5,
+              title: 'User 5',
+            }),
+            number_of_questions: 555,
+            Description: 'Description 5',
+            subject: ArticleSubjectModel.example,
+            analysisReport: [
+              {
+                id: 5,
+                title: 'Analysis Report 5',
+                count: 5,
+                percentage: 5,
+                imageUrl: 'https://example.com/image.jpg',
+              },
+            ],
+            articlecard: [
+              {
+                id: 6,
+                title: 'Analysis Report 6',
+                count: 666,
+                percentage: 6,
+                imageUrl: 'https://example.com/image.jpg',
+              },
+            ],
+            questions: [],
+          },
+        ],
+        articledifficulty: ArticleDifficultyEnum.easy,
+        question_type: ArticleTypeEnum.mcq,
       },
     ],
   });
