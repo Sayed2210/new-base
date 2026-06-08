@@ -143,13 +143,11 @@ const updateData = () => {
     </div>
     <div class="question_list">
       <!-- v-for="question in article?.articlecard" :key="question.id" -->
-      <QuestionCard v-if="artical?.questions" :allquestion="artical.questions" />
+      <QuestionCard v-if="artical?.questions" :allquestion="artical.questions" @refetch="$emit('refetch')" />
     </div>
   </div>
 </template>
 <style scoped lang="scss">
 @use '../../../../../styles/variables' as *;
 @use '../../../../../styles/mixins/flex' as *;
-
-
 </style>

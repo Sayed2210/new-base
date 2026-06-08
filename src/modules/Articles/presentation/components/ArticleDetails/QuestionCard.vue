@@ -1,13 +1,10 @@
 <script lang="ts" setup>
-import { ArticleTypeEnum } from '@/modules/Articles/core/constant/Article.type.enum';
 import DropList from '@/shared/HelpersComponents/DropList.vue';
 import EditIcon from '@/shared/icons/DropListIcons/EditIcon.vue';
 import DeletIcon from '@/shared/icons/DropListIcons/DeletIcon.vue';
 import { useI18n } from 'vue-i18n';
 import ArticleController from '../../../presentation/controllers/Article.controller';
 import DeleteArticlesParams from '../../../core/params/delet.Articles.params';
-import { ref } from 'vue';
-// import type ArticalDetailsModel from '@/modules/Articles/core/models/artical.details.model';
 import type ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
 import { QuestionTypeEnum } from '@/modules/Questions/core/constant/question.type.enum';
 import McqIcon from '@/shared/icons/McqIcon.vue';
@@ -15,11 +12,11 @@ import TrueFalse from '@/shared/icons/TrueFalse.vue';
 import MatcingingIcon from '@/shared/icons/MatcingingIcon.vue';
 import { QuestionDifficultyEnum } from '@/modules/Questions/core/constant/question.difficulty.enum';
 import router from '@/router';
-import { useRoute } from 'vue-router';
+
+
 const { allquestion } = defineProps<{
     allquestion: ShowQuestionsModel[];
 }>()
-const route = useRoute();
 const controller = ArticleController.getInstance();
 const { t } = useI18n();
 const getDifficultyClass = (difficulty: QuestionDifficultyEnum) => {
@@ -52,25 +49,28 @@ const getStatusClass = (status: QuestionTypeEnum) => {
     }
 };
 
-const deleteArticleQuestion = async (id: number) => {
-    await controller.delete(new DeleteArticlesParams(id));
-};
+
 // droplist
-const actionList = (id: number, deleteArticleQuestion: (id: number) => void) => [
+const actionList = (question_id: number, deleteArticleQuestion: (question_id: number) => void) => [
     {
         text: t('Edit'),
         icon: EditIcon,
         action: () => {
-            router.push(`/articles/${route.params.articleId}/questions/edit/${id}`);
+            router.push(`/questions/edit/${question_id}`);
         },
     },
     {
         text: t('delete'),
         icon: DeletIcon,
-        action: () => deleteArticleQuestion(id),
+
+        action: () => deleteArticleQuestion(question_id),
     },
 ];
-
+const emit = defineEmits(['refetch'])
+const deleteArticleQuestion = async (question_id: number) => {
+    await controller.delete(new DeleteArticlesParams(question_id));
+    emit('refetch');
+};
 </script>
 <template>
     <div class="question_card">
@@ -81,8 +81,9 @@ const actionList = (id: number, deleteArticleQuestion: (id: number) => void) => 
                         <h6>questions <span>{{ index + 1 }}</span></h6>
                     </div>
                     <div class="actions">
-                        <DropList :action-list="actionList(value.id, deleteArticleQuestion)" :delete-dialog-title="$t('are_you_sure_you_want_to_remove_this_education_classification')
-                            " :delete-dialog-message="$t(
+                        <DropList :action-list="actionList(value.question_id, deleteArticleQuestion)"
+                            :delete-dialog-title="$t('are_you_sure_you_want_to_remove_this_education_classification')
+                                " :delete-dialog-message="$t(
                                 'Deleting_this_classification_will_remove_all_related_data_including_any_configurations_and_tree_structures_This_action_is_irreversible_and_the_classification_must_be_created_again_if_needed',
                             )
                                 " />
@@ -100,7 +101,7 @@ const actionList = (id: number, deleteArticleQuestion: (id: number) => void) => 
                             <McqIcon v-if="value.questionType! === QuestionTypeEnum.mcq" />
                             <TrueFalse v-if="value.questionType! === QuestionTypeEnum.true_false" />
                             <MatcingingIcon v-if="value.questionType! === QuestionTypeEnum.matching" />
-                            {{getStatusClass(value?.questionType!) }}
+                            {{ getStatusClass(value?.questionType!) }}
                         </span>
                     </div>
                 </div>
@@ -131,9 +132,10 @@ const actionList = (id: number, deleteArticleQuestion: (id: number) => void) => 
 <style scoped lang="scss">
 @use '../../../../../styles/variables' as *;
 @use '../../../../../styles/mixins/flex' as *;
-.header-card{
-span{
-        box-shadow:  0 0 0px 1px rgba(170, 170, 170, 0.15);
+
+.header-card {
+    span {
+        box-shadow: 0 0 0px 1px rgba(170, 170, 170, 0.15);
         border: 1PX solid rgba(230, 230, 230, 1);
         padding: 0 7px;
         border-radius: 5px;
@@ -141,33 +143,38 @@ span{
         font-family: "demi";
         font-weight: $BaseFontSemiBoldWeight;
         font-size: $MdSize2;
+    }
 }
-}
-.type{
+
+.type {
+
     // .value{
     //     padding: $XsSize4 $XlSize3;
     //     border-radius: $XlSize4;
     // }
-    .Easy{
+    .Easy {
         color: rgba(24, 169, 87, 1);
-        border:1px solid rgba(183, 233, 201, 1);
+        border: 1px solid rgba(183, 233, 201, 1);
         background-color: rgba(233, 249, 238, 1);
     }
-    .Hard{
+
+    .Hard {
         color: rgba(214, 69, 69, 1);
-        border:1px solid rgba(245, 194, 192, 1);
+        border: 1px solid rgba(245, 194, 192, 1);
         background-color: rgba(255, 236, 235, 1);
     }
-    .Medium{
+
+    .Medium {
         color: rgba(217, 145, 0, 1);
-        border:1px solid rgba(242, 213, 156, 1);
+        border: 1px solid rgba(242, 213, 156, 1);
         background-color: rgba(255, 247, 230, 1);
     }
 }
-.value-status{
- display: flex;
+
+.value-status {
+    display: flex;
     align-items: center;
-    gap:5px;
-    
+    gap: 5px;
+
 }
 </style>

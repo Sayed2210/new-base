@@ -174,10 +174,10 @@ const GetQuestionStatus = (val: QuestionStatusEnum) => {
 //   const subjects = e_c_branch?.full_title?.split(/\s*->\s*/g);
 //   return subjects?.map((subject) => subject.trim()); 
 // } 
-const getSubjectPath = (item: questionsModel) => {
+const getSubjectPath = (item: questionsModel) => { 
   if (!item?.e_c_branch) return '';
   const parts = item.e_c_branch.full_title?.split(/\s*->\s*/);
-  return parts?.map((subject) => subject.trim()) ?? item.subjects?.title;
+  return parts?.map((subject) => subject.trim()) ?? '';
 };
 </script>
 
@@ -224,10 +224,9 @@ const getSubjectPath = (item: questionsModel) => {
             </template>
             
             <template #cell-subjects="{ item }">
-              
               <div class="subject-cell">
-                <div class="parent-subject-curriculum">
-                  <span v-for="(subject, index) in getSubjectPath(item)" :key="index" class="subject-curriculum">
+                <div class="parent-subject-curriculum" > 
+                  <span  v-for="(subject, index) in getSubjectPath(item)" :key="index" class="subject-curriculum">
                     <p> {{ subject }}</p>
                     <Articlearrow v-if="index < getSubjectPath(item).length - 1" class="arrow-icon" />
                   </span>

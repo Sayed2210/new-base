@@ -33,7 +33,7 @@ const deleteArticle = async (id: number) => {
 const getSubjectPath = (item: ShowQuestionsModel) => {
   if (!item?.subjectTree) return '';
   const parts = item.subjectTree.full_title?.split(/\s*->\s*/);
-  return parts?.map((subject) => subject.trim()) ?? item.subjects?.title;
+  return parts?.map((subject) => subject.trim()) ?? '';
 };
 </script>
 <template>

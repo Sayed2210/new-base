@@ -25,6 +25,6 @@ onMounted(() => {
     <div class="Article_details">
         <OverViewArticle  :artical="state.data!" />
         <!-- <AnalysisReport :artical="state.data!" /> -->
-        <ArticleQuestion :artical="state.data!" /> 
+        <ArticleQuestion :artical="state.data!"  @refetch="fetchArticle" /> 
     </div>
 </template>
