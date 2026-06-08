@@ -9,10 +9,12 @@ import type ShowQuestionsModel from "@/modules/Questions/core/models/show.questi
 import { QuestionTypeEnum } from "@/modules/Questions/core/constant/question.type.enum.ts";
 import { QuestionStatusEnum } from "@/modules/Questions/core/constant/question.status.enum.ts";
 import { QuestionDifficultyEnum } from "@/modules/Questions/core/constant/question.difficulty.enum.ts";
+import { useRoute } from "vue-router";
 const { t } = useI18n();
 const { artical } = defineProps<{
   artical?: ShowQuestionsModel;
 }>()
+const route = useRoute();
 const emit = defineEmits(['update-data']);
 
 // Reactive State
