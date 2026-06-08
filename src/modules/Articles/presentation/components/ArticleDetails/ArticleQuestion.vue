@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed } from "vue";
-import { useRoute } from "vue-router";
+import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import ArticleQuestion from "../../../../../shared/icons/ArticleQuestion.vue";
 import UpdatedCustomInputSelect from "../../../../../shared/FormInputs/UpdatedCustomInputSelect.vue";
@@ -11,11 +10,10 @@ import { QuestionTypeEnum } from "@/modules/Questions/core/constant/question.typ
 import { QuestionStatusEnum } from "@/modules/Questions/core/constant/question.status.enum.ts";
 import { QuestionDifficultyEnum } from "@/modules/Questions/core/constant/question.difficulty.enum.ts";
 const { t } = useI18n();
-const route = useRoute();
-
 const { artical } = defineProps<{
   artical?: ShowQuestionsModel;
 }>()
+const emit = defineEmits(['update-data']);
 
 // Reactive State
 const word = ref("");
@@ -84,9 +82,18 @@ const typeOptions = computed<TitleInterface<number>[]>((() => [
 const Search = () => {
   console.warn("Searching for:", word.value);
 };
-
+watch(
+  [SelectedDifficulty, SelectedType, SelectedStatus],
+  () => {
+    updateData();
+  }
+);
 const updateData = () => {
-  console.log("Selected Difficulty Level:", SelectedDifficulty.value?.id);
+  emit('update-data', {
+    selectedDifficulty: SelectedDifficulty.value,
+    selectedType: SelectedType.value,
+    selectedStatus: SelectedStatus.value,
+  });
 };
 </script>
 <template>
@@ -127,17 +134,17 @@ const updateData = () => {
         <div class="input-select">
           <UpdatedCustomInputSelect id="doc-difficulty" v-model="SelectedDifficulty" :label="``"
             :static-options="difficultyOptions" :placeholder="$t('select_difficulty')"
-            @update:model-value="updateData" />
+             />
         </div>
         <div class="input-select">
 
           <UpdatedCustomInputSelect id="doc-type" v-model="SelectedType" :label="``" :static-options="typeOptions"
-            :placeholder="$t('select_type')" @update:model-value="updateData" />
+            :placeholder="$t('select_type')" />
         </div>
         <div class="input-select">
 
           <UpdatedCustomInputSelect id="doc-status" v-model="SelectedStatus" :label="``" :static-options="statusOptions"
-            :placeholder="$t('select_status')" @update:model-value="updateData" />
+            :placeholder="$t('select_status')"  />
         </div>
       </div>
     </div>

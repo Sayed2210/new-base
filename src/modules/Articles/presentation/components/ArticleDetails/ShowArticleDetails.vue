@@ -20,11 +20,16 @@ onMounted(() => {
     fetchArticle();
 });
 
+const updateData = (filters: any) => {
+  console.log(filters);
+
+  fetchArticle();
+};
 </script>
 <template>
-    <div class="Article_details">
+    <div class="Article_details"> 
         <OverViewArticle  :artical="state.data!" />
         <!-- <AnalysisReport :artical="state.data!" /> -->
-        <ArticleQuestion :artical="state.data!"  @refetch="fetchArticle" /> 
+        <ArticleQuestion :artical="state.data!"  @update-data="updateData" @refetch="fetchArticle" /> 
     </div>
 </template>
