@@ -54,6 +54,7 @@ export default class ShowQuestionsModel {
   public readonly number_of_questions?: number;
   public readonly question_id?: number;
   public readonly questions: ShowQuestionsModel[];
+   public readonly attachments: string[];
   
   
 
@@ -93,6 +94,7 @@ export default class ShowQuestionsModel {
     number_of_questions?: number;
     question_id?: number;
     questions: ShowQuestionsModel[];
+    attachments: string[];
   }) {
     this.id = data.id;
     this.generatedBy = data.generatedBy;
@@ -127,6 +129,7 @@ export default class ShowQuestionsModel {
     this.number_of_questions = data.number_of_questions;
     this.question_id = data.question_id;
     this.questions = data.questions;
+    this.attachments = data.attachments;
 
     Object.freeze(this);
   }
@@ -194,6 +197,7 @@ export default class ShowQuestionsModel {
       number_of_questions: json.number_of_questions,
       question_id: json.question_id,
       questions: json.questions?.map((question: any) => ShowQuestionsModel.fromJson(question)) ?? [],
+      attachments: json.attachments,
     });
   }
 
@@ -306,5 +310,6 @@ export default class ShowQuestionsModel {
     }),
     number_of_questions: 2,
     questions: [],
+    attachments: [],
   });
 }

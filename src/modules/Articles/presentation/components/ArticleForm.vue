@@ -83,7 +83,7 @@ watch(
       isExplain.value = Boolean(descriptionArticle.value.length > 0);
       explanationAttachments.value =
         newValue?.explanation?.attachments?.map((item: any) => item.file) ?? [];
-      // UploadedImage.value = newValue?.attachments?.map((item: any) => item.file) ?? [];
+      UploadedImage.value = newValue?.attachments?.map((item: any) => item.file) ?? [];
     }
   },
   { immediate: true },
@@ -153,31 +153,6 @@ const draftRef =
     ? CustomToast()
     : null;
 
-//   onMounted(() => {
-//   const draft = localStorage.getItem('article-draft');
-
-//   if (!draft) return;
-
-//   const data = JSON.parse(draft);
-
-//   QuestionDescription.value = data.question_description ?? '';
-//   question.value = data.question ?? '';
-//   articleSource.value = data.documents?.text ?? '';
-
-//   UploadedImage.value =
-//     data.attachments?.map((item: any) => item.file) ?? [];
-
-//   descriptionArticle.value =
-//     data.explanation?.explanation ?? '';
-
-//   explanationAttachments.value =
-//     data.explanation?.attachments?.map(
-//       (item: any) => item.file,
-//     ) ?? [];
-
-//   updateData();
-// });
-
 watch(draftRef!, (newVal) => {
   if (!newVal) return;
 
@@ -216,17 +191,6 @@ watch(draftRef!, (newVal) => {
   updateData();
 });
 
-// const BasicData = ref<AddArticlesParams>();
-// const GetAllBasicData = (data: AddArticlesParams) => {
-//   BasicData.value = data;
-//   updateData();
-// };
-
-// const AnswerData = ref<AddArticlesParams>();
-// const GetAllAnswers = (data: AddArticlesParams) => {
-//   AnswerData.value = data;
-//   updateData();
-// };
 </script>
 
 <template>
@@ -397,21 +361,9 @@ watch(draftRef!, (newVal) => {
 
   svg {
     transition: all 0.3s ease-in-out;
-
-    path {
-      stroke: red !important;
-    }
-
     &.rotate-180 {
       transform: rotate(180deg);
-
-      path {
-        stroke: red !important;
-      }
     }
   }
 }
-
-.p-accordionpanel:not(.p-disabled).p-accordionpanel-active>.p-accordionheader svg path,
-.p-accordionpanel:not(.p-accordionpanel-active, .p-disabled)>.p-accordionheader:hover svg path {}
 </style>
