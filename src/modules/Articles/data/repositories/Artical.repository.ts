@@ -1,18 +1,17 @@
 import BaseRepository, { type RepositoryConfig } from '@/base/Domain/Repositories/baseRepository';
-import ArticleModel from '../../core/models/Article.model';
-import ArticleSubjectModel from '../../core/models/Subject.model';
 import ArticleApiService from '../api/Artical.api-service';
-import { ArticleGeneratedByEnum } from '../../core/constant/Article.generatedby.enum';
-import ArticalDetailsModel from '../../core/models/artical.details.model';
+import ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
+import { questionsModel } from '@/modules/Questions';
+import { QuestionGeneratedByEnum } from '@/modules/Questions/core/constant/generatedby.enum';
 
-export default class ArticleRepository extends BaseRepository<ArticalDetailsModel, ArticleModel[]> {
+export default class ArticleRepository extends BaseRepository<ShowQuestionsModel, questionsModel[]> {
   private static instance: ArticleRepository;
 
   protected get apiService() {
     return ArticleApiService.getInstance();
   }
 
-  protected get config(): RepositoryConfig {
+  protected get config(): RepositoryConfig { 
     return {
       hasPagination: true,
       dataKey: 'data',
@@ -20,33 +19,26 @@ export default class ArticleRepository extends BaseRepository<ArticalDetailsMode
     };
   }
 
-  protected get mockItem(): ArticalDetailsModel {
-    return ArticalDetailsModel.example;
+  protected get mockItem(): ShowQuestionsModel {
+    return ShowQuestionsModel.example;
   }
 
-  protected get mockList(): ArticleModel[] {
+  protected get mockList(): questionsModel[] {
     return [
-      ArticleModel.example,
-      new ArticleModel({
+      questionsModel.example,
+      new questionsModel({
         id: 2,
-        articleTitle: 'What are the benefits of renewable energy?',
-        subject: ArticleSubjectModel.example2,
-        generatedBy: ArticleGeneratedByEnum.manual,
+        title: 'What are the benefits of renewable energy?',
+        subjects: {id: 2, title: 'Science'},
+        generatedBy: QuestionGeneratedByEnum.manual,
         noOfQs: 5,
       }),
-      new ArticleModel({
+      new questionsModel({
         id: 3,
-        articleTitle: 'How does solar power work?',
-        subject: ArticleSubjectModel.example3,
-        generatedBy: ArticleGeneratedByEnum.ai,
+        title: 'How does solar power work?',
+        subjects: {id: 3, title: 'Physics'},
+        generatedBy: QuestionGeneratedByEnum.ai,
         noOfQs: 8,
-      }),
-      new ArticleModel({
-        id: 4,
-        articleTitle: 'What are the challenges of wind energy?',
-        subject: ArticleSubjectModel.example,
-        generatedBy: ArticleGeneratedByEnum.manual,
-        noOfQs: 12,
       }),
     ];
   }
@@ -58,16 +50,16 @@ export default class ArticleRepository extends BaseRepository<ArticalDetailsMode
     return ArticleRepository.instance;
   }
 
-  protected parseItem(data: any): ArticalDetailsModel {
-    return ArticalDetailsModel.fromJson(data);
+  protected parseItem(data: any): ShowQuestionsModel {
+    return ShowQuestionsModel.fromJson(data);
   }
 
-  protected parseList(data: any): ArticleModel[] {
+  protected parseList(data: any): questionsModel[] {
     if (!Array.isArray(data)) return [];
-    return data.reduce((acc: ArticleModel[], item) => {
+    return data.reduce((acc: questionsModel[], item) => {
       try {
         if (item != null) {
-          acc.push(ArticleModel.fromJson(item));
+          acc.push(questionsModel.fromJson(item));
         }
       } catch {}
       return acc;

@@ -49,7 +49,7 @@ export default class ArticleModel {
   noOfQs: json.number_of_questions,
   status: json.status,
   articleType: json.question_type,
-  e_c_subject: json.e_c_subject,
+  e_c_subject: json.e_c_subject, 
 });
   }
 

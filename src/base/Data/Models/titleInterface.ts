@@ -6,6 +6,7 @@ export default class TitleInterface<T extends string | number> {
   decodedData?: string = "";
   text?: string;
   children?: TitleInterface<T>[];
+  full_title?: string;
 
   constructor({
     id,
@@ -15,6 +16,7 @@ export default class TitleInterface<T extends string | number> {
     decodedData = "",
     text = "",
     children,
+    full_title,
   }: {
     id: number;
     title?: string;
@@ -23,6 +25,7 @@ export default class TitleInterface<T extends string | number> {
     decodedData?: string;
     text?: string;
     children?: TitleInterface<T>[];
+    full_title?: string;
   }) {
     this.id = id;
     this.title = title;
@@ -31,5 +34,6 @@ export default class TitleInterface<T extends string | number> {
     this.decodedData = decodedData;
     this.text = text;
     this.children = children;
+    this.full_title = full_title;
   }
 }

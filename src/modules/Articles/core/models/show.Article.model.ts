@@ -37,7 +37,7 @@ export default class ShowArticleModel {
   constructor(data: {
     id?: number;
     generatedBy?: ArticleGeneratedByEnum;
-    articleType?: ArticleTypeEnum;
+    articleType?: ArticleTypeEnum; 
     difficulty?: ArticleDifficultyEnum;
     status?: ArticleStatusEnum;
     createdAt?: string;

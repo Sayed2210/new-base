@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type ArticalDetailsModel from '@/modules/Articles/core/models/artical.details.model';
 import FolderCrudIcon from '@/shared/icons/FolderCrudIcon.vue';
 import { useRoute } from 'vue-router';
 import CopyIcon from '@/shared/icons/CopyIcon.vue';
@@ -12,11 +11,11 @@ import DeleteArticlesParams from '@/modules/Articles/core/params/delet.Articles.
 import ArticleController from '../../controllers/Article.controller';
 import { useRouter } from 'vue-router';
 import Articlesubject from '@/shared/icons/articlesubject.vue';
-import type ArticleSubjectModel from '@/modules/Articles/core/models/Subject.model';
+import type ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
 
 const router = useRouter();
 const { artical } = defineProps<{
-    artical: ArticalDetailsModel;
+    artical: ShowQuestionsModel;
 }>();
 
 const route = useRoute();
@@ -27,10 +26,15 @@ const deleteArticle = async (id: number) => {
     router.push(`/${route.params.country_code}/articles`);
 };
 // delet arrow from article subject and show only title 
-const deleteArrow = (subject: ArticleSubjectModel) => {
-  const subjects = subject?.full_title?.split(/\s*->\s*/g);
-  return subjects?.map((subject) => subject.trim());
-}
+// const deleteArrow = (subject: ArticleSubjectModel) => {
+//   const subjects = subject?.full_title?.split(/\s*->\s*/g);
+//   return subjects?.map((subject) => subject.trim());
+// }
+const getSubjectPath = (item: ShowQuestionsModel) => {
+  if (!item?.subjectTree) return '';
+  const parts = item.subjectTree.full_title?.split(/\s*->\s*/);
+  return parts?.map((subject) => subject.trim()) ?? item.subjects?.title;
+};
 </script>
 <template>
     <div class="All_over_view">
@@ -64,13 +68,12 @@ const deleteArrow = (subject: ArticleSubjectModel) => {
                 </router-link> -->
             </div>
         </header>
-
         <div class="cards_details">
             <div class="card_one">
                 <div class="details">
                     <div class="head">
                         <h6>{{ $t('id') }} :</h6>
-                        <p>{{ artical?.id }}</p>
+                        <p>{{ artical?.question_id }}</p>
                     </div>
                     <div class="head">
                         <h6>{{ $t('created_at') }} : </h6>
@@ -78,7 +81,7 @@ const deleteArrow = (subject: ArticleSubjectModel) => {
                     </div>
                     <div class="head">
                         <h6>{{ $t('Created by') }} : </h6>
-                        <p>{{ artical?.created_by?.title }}</p>
+                        <p>{{ artical?.created_by?.name }}</p>
                     </div>
                 </div>
                 <div class="head">
@@ -102,9 +105,9 @@ const deleteArrow = (subject: ArticleSubjectModel) => {
                     <div class="contant">
                         <!-- {{ deleteArrow(artical?.subject)}} -->
                         <!-- {{ deleteArrow(artical?.subject)}} -->
-                        <div v-for="(subject, index) in deleteArrow(artical?.subject)" :key="index" class="govermental" >
+                        <div v-for="(subject, index) in getSubjectPath(artical)" :key="index" class="govermental" >
                             <p>{{ subject }}</p> 
-                            <Articlearrow  v-if="index < deleteArrow(artical?.subject).length - 1" class="arrow-icon" />
+                            <Articlearrow  v-if="index < getSubjectPath(artical).length - 1" class="arrow-icon" />
                         </div>
                         <!-- <div class="govermental">
                             <p>{{ artical?.subject.title }}</p>

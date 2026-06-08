@@ -15,12 +15,12 @@
   import AccordionToggleIcon from '@/shared/icons/questions/AccordionToggleIcon.vue';
   import { DocumentController, IndexDocumentParams } from '@/modules/document';
   import AttachmentsParams from '@/modules/Questions/core/params/subParams/attachments.params';
-  import type ArticalDetailsModel from '../../core/models/artical.details.model';
   import type TitleInterface from '@/base/Data/Models/titleInterface';
   import type StageModel from '@/modules/Stages/core/models/stage.model';
   import flattenSubjectBranchTree from '@/modules/Questions/core/SubjectTreeSelectHelper';
   import FullSubjectTreeController from '@/modules/Questions/presentation/controllers/FullSubjectTree/full.subject.tree.controller';
-import { CustomToast } from './CustomToast';
+  import { CustomToast } from './CustomToast';
+  import type ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
 
   const SelectedQuestionSequence = ref<TitleInterface<number> | null>(null);
 
@@ -28,7 +28,7 @@ import { CustomToast } from './CustomToast';
   const emit = defineEmits(['updateData']);
   const props = defineProps<{
     loading?: boolean;
-    article?: ArticalDetailsModel;
+    article?: ShowQuestionsModel;
     draftData?: AddArticlesParams;
   }>();
   const isSolutionSteps = ref(true);

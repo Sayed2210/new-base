@@ -13,8 +13,10 @@ import AttachmentModel from './subModels/attachment.model';
 import QuestionSkillsModel from './subModels/question.skills.model';
 import TitleInterface from '@/base/Data/Models/titleInterface';
 import { AnswerEvaluationTypeEnum } from '../constant/answer.evaluation.type.enum';
-
-export default class ShowQuestionsModel {
+import ExplanationModel from './subModels/explanation.model';
+import DocumentArticleModel from './subModels/document.model';
+//  انت انسان زبال يا محمود يا زبال 
+export default class ShowQuestionsModel { 
   public readonly id?: number;
   public readonly questionType?: QuestionTypeEnum;
   public readonly difficulty?: QuestionDifficultyEnum;
@@ -41,6 +43,20 @@ export default class ShowQuestionsModel {
   public readonly isQusetionSteps?: boolean;
   public readonly isQusetionHints?: boolean;
   public readonly subjects?: TitleInterface<number>;
+
+  public readonly question_description?: string;
+  public readonly question?: string;
+  public readonly e_c_subject: TitleInterface<number>;
+  public readonly document: DocumentArticleModel[];
+  public readonly explanation: ExplanationModel;
+  public readonly created_at?:  string;
+  public readonly created_by?: TitleInterface<string>;
+  public readonly number_of_questions?: number;
+  public readonly question_id?: number;
+  public readonly questions: ShowQuestionsModel[];
+  
+  
+
   
 
   constructor(data: {
@@ -67,6 +83,16 @@ export default class ShowQuestionsModel {
     isQusetionSteps?: boolean;
     isQusetionHints?: boolean;
     subjects?: TitleInterface<number>;
+    question_description?: string;
+    question?: string;
+    e_c_subject: TitleInterface<number>;
+    document: DocumentArticleModel[];
+    explanation: ExplanationModel;
+    created_at?:  string;
+    created_by?: TitleInterface<string>;
+    number_of_questions?: number;
+    question_id?: number;
+    questions: ShowQuestionsModel[];
   }) {
     this.id = data.id;
     this.generatedBy = data.generatedBy;
@@ -91,6 +117,16 @@ export default class ShowQuestionsModel {
     this.isQusetionSteps = data.isQusetionSteps;
     this.isQusetionHints = data.isQusetionHints;
     this.subjects = data.subjects;
+    this.question_description = data.question_description;
+    this.question = data.question;
+    this.e_c_subject = data.e_c_subject;
+    this.document = data.document;
+    this.explanation = data.explanation;
+    this.created_at = data.created_at;
+    this.created_by = data.created_by;
+    this.number_of_questions = data.number_of_questions;
+    this.question_id = data.question_id;
+    this.questions = data.questions;
 
     Object.freeze(this);
   }
@@ -128,6 +164,7 @@ export default class ShowQuestionsModel {
       subjectTree: new TitleInterface<number>({
         id: json.e_c_branch?.e_c_branch_id,
         title: json.e_c_branch?.title,
+        full_title: json.e_c_branch?.full_title,
       }),
       sequenceTree: new TitleInterface<number>({
         id: json.e_c_subject?.e_c_subject_id,
@@ -144,6 +181,19 @@ export default class ShowQuestionsModel {
       isQusetionSteps: json.is_question_steps,
       isQusetionHints: json.is_question_hint,
       subjects: json.e_c_subjects,
+      question: json.question,
+      question_description: json.question_description,
+      e_c_subject: new TitleInterface({
+        id: json.e_c_subject?.e_c_subject_id,
+        title: json.e_c_subject?.title,
+      }),
+      document: json.documents?.map((doc: any) => DocumentArticleModel.fromJson(doc)) ?? [],
+      explanation: ExplanationModel.fromJson(json.explanation),
+      created_at: json.created_at,
+      created_by: json.created_by,
+      number_of_questions: json.number_of_questions,
+      question_id: json.question_id,
+      questions: json.questions?.map((question: any) => ShowQuestionsModel.fromJson(question)) ?? [],
     });
   }
 
@@ -237,5 +287,24 @@ export default class ShowQuestionsModel {
     isClarification: true,
     isQusetionSteps: true,
     isQusetionHints: true,
+    subjects: new TitleInterface({
+      id: 2,
+      title: 'Document 2',
+    }),
+    question_description: 'question description',
+    question: 'question',
+    e_c_subject: new TitleInterface({
+      id: 2,
+      title: 'Document 2',
+    }),
+    document: [DocumentArticleModel.example],
+    explanation: ExplanationModel.example,
+    created_at: '2022-01-01',
+    created_by: new TitleInterface({
+      id: 2,
+      title: 'Document 2',
+    }),
+    number_of_questions: 2,
+    questions: [],
   });
 }

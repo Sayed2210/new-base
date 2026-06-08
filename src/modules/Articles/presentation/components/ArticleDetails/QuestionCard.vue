@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { ArticleDifficultyEnum } from '@/modules/Articles/core/constant/Article.difficulty.enum';
 import { ArticleTypeEnum } from '@/modules/Articles/core/constant/Article.type.enum';
 import DropList from '@/shared/HelpersComponents/DropList.vue';
 import EditIcon from '@/shared/icons/DropListIcons/EditIcon.vue';
@@ -10,43 +9,49 @@ import DeleteArticlesParams from '../../../core/params/delet.Articles.params';
 import { ref } from 'vue';
 // import type ArticalDetailsModel from '@/modules/Articles/core/models/artical.details.model';
 import type ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
-import type { QuestionTypeEnum } from '@/modules/Questions/core/constant/question.type.enum';
+import { QuestionTypeEnum } from '@/modules/Questions/core/constant/question.type.enum';
+import McqIcon from '@/shared/icons/McqIcon.vue';
+import TrueFalse from '@/shared/icons/TrueFalse.vue';
+import MatcingingIcon from '@/shared/icons/MatcingingIcon.vue';
+import { QuestionDifficultyEnum } from '@/modules/Questions/core/constant/question.difficulty.enum';
+import router from '@/router';
+import { useRoute } from 'vue-router';
 const { allquestion } = defineProps<{
     allquestion: ShowQuestionsModel[];
 }>()
+const route = useRoute();
 const controller = ArticleController.getInstance();
 const { t } = useI18n();
-const getDifficultyClass = (difficulty: ArticleDifficultyEnum) => {
+const getDifficultyClass = (difficulty: QuestionDifficultyEnum) => {
     switch (difficulty) {
-        case ArticleDifficultyEnum.easy:
+        case QuestionDifficultyEnum.easy:
             return t("easy");
-        case ArticleDifficultyEnum.medium:
+        case QuestionDifficultyEnum.medium:
             return t("medium");
-        case ArticleDifficultyEnum.hard:
+        case QuestionDifficultyEnum.hard:
             return t("hard");
         default:
             return "N/A";
     }
 };
 
-const getStatusClass = (status: ArticleTypeEnum | QuestionTypeEnum) => {
+const getStatusClass = (status: QuestionTypeEnum) => {
     switch (status) {
-        case ArticleTypeEnum.mcq:
+        case QuestionTypeEnum.mcq:
             return t("MCQ");
-        case ArticleTypeEnum.ranking:
+        case QuestionTypeEnum.ranking:
             return t("Ranking");
-        case ArticleTypeEnum.true_false:
+        case QuestionTypeEnum.true_false:
             return t("True/False");
-        case ArticleTypeEnum.complate:
+        case QuestionTypeEnum.complate:
             return t("Complate");
-        case ArticleTypeEnum.matching:
+        case QuestionTypeEnum.matching:
             return t("Matching");
         default:
             return "N/A";
     }
 };
-const ShoweEditDialog = ref<boolean>(false);
-const selectedItemId = ref<number>(0);
+
 const deleteArticleQuestion = async (id: number) => {
     await controller.delete(new DeleteArticlesParams(id));
 };
@@ -56,8 +61,7 @@ const actionList = (id: number, deleteArticleQuestion: (id: number) => void) => 
         text: t('Edit'),
         icon: EditIcon,
         action: () => {
-            selectedItemId.value = id;
-            ShoweEditDialog.value = true;
+            router.push(`/articles/${route.params.articleId}/questions/edit/${id}`);
         },
     },
     {
@@ -74,7 +78,7 @@ const actionList = (id: number, deleteArticleQuestion: (id: number) => void) => 
             <div class="contant-card">
                 <div class="header-card">
                     <div class="title">
-                        <h6>questions {{ index + 1 }}</h6>
+                        <h6>questions <span>{{ index + 1 }}</span></h6>
                     </div>
                     <div class="actions">
                         <DropList :action-list="actionList(value.id, deleteArticleQuestion)" :delete-dialog-title="$t('are_you_sure_you_want_to_remove_this_education_classification')
@@ -86,14 +90,18 @@ const actionList = (id: number, deleteArticleQuestion: (id: number) => void) => 
                 </div>
                 <div class="types-date">
                     <div class="date">
-                        <span class="label">{{ $t('created_at') }}:</span>
+                        <span class="label">{{ $t('created_at') }} : </span>
                         <span class="value">{{ value?.createdAt }}</span>
                     </div>
                     <div class="type">
                         <span class="value" :class="getDifficultyClass(value.difficulty!)">{{
                             getDifficultyClass(value?.difficulty!) }}</span>
-                        <span class="value-status" :class="getStatusClass(value.questionType!)">{{
-                            getStatusClass(value?.questionType!) }}</span>
+                        <span class="value-status" :class="getStatusClass(value.questionType!)">
+                            <McqIcon v-if="value.questionType! === QuestionTypeEnum.mcq" />
+                            <TrueFalse v-if="value.questionType! === QuestionTypeEnum.true_false" />
+                            <MatcingingIcon v-if="value.questionType! === QuestionTypeEnum.matching" />
+                            {{getStatusClass(value?.questionType!) }}
+                        </span>
                     </div>
                 </div>
                 <div class="question_text">
@@ -123,4 +131,43 @@ const actionList = (id: number, deleteArticleQuestion: (id: number) => void) => 
 <style scoped lang="scss">
 @use '../../../../../styles/variables' as *;
 @use '../../../../../styles/mixins/flex' as *;
+.header-card{
+span{
+        box-shadow:  0 0 0px 1px rgba(170, 170, 170, 0.15);
+        border: 1PX solid rgba(230, 230, 230, 1);
+        padding: 0 7px;
+        border-radius: 5px;
+        color: rgba(48, 48, 48, 1);
+        font-family: "demi";
+        font-weight: $BaseFontSemiBoldWeight;
+        font-size: $MdSize2;
+}
+}
+.type{
+    // .value{
+    //     padding: $XsSize4 $XlSize3;
+    //     border-radius: $XlSize4;
+    // }
+    .Easy{
+        color: rgba(24, 169, 87, 1);
+        border:1px solid rgba(183, 233, 201, 1);
+        background-color: rgba(233, 249, 238, 1);
+    }
+    .Hard{
+        color: rgba(214, 69, 69, 1);
+        border:1px solid rgba(245, 194, 192, 1);
+        background-color: rgba(255, 236, 235, 1);
+    }
+    .Medium{
+        color: rgba(217, 145, 0, 1);
+        border:1px solid rgba(242, 213, 156, 1);
+        background-color: rgba(255, 247, 230, 1);
+    }
+}
+.value-status{
+ display: flex;
+    align-items: center;
+    gap:5px;
+    
+}
 </style>

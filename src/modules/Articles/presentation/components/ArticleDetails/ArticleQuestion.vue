@@ -4,17 +4,17 @@ import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import ArticleQuestion from "../../../../../shared/icons/ArticleQuestion.vue";
 import UpdatedCustomInputSelect from "../../../../../shared/FormInputs/UpdatedCustomInputSelect.vue";
-import { ArticleDifficultyEnum } from "../../../core/constant/Article.difficulty.enum";
 import TitleInterface from "@/base/Data/Models/titleInterface";
-import { ArticleTypeEnum } from "@/modules/Articles/core/constant/Article.type.enum";
-import { ArticleStatusEnum } from "@/modules/Articles/core/constant/Article.status.enum";
 import QuestionCard from "./QuestionCard.vue";
-import type ArticalDetailsModel from "@/modules/Articles/core/models/artical.details.model";
+import type ShowQuestionsModel from "@/modules/Questions/core/models/show.questions.model.ts";
+import { QuestionTypeEnum } from "@/modules/Questions/core/constant/question.type.enum.ts";
+import { QuestionStatusEnum } from "@/modules/Questions/core/constant/question.status.enum.ts";
+import { QuestionDifficultyEnum } from "@/modules/Questions/core/constant/question.difficulty.enum.ts";
 const { t } = useI18n();
 const route = useRoute();
 
 const { artical } = defineProps<{
-  artical?: ArticalDetailsModel;
+  artical?: ShowQuestionsModel;
 }>()
 
 // Reactive State
@@ -23,60 +23,60 @@ const SelectedDifficulty = ref<TitleInterface<number> | null>(null);
 const SelectedType = ref<TitleInterface<number> | null>(null);
 const SelectedStatus = ref<TitleInterface<number> | null>(null);
 
-// Static options mapped from ArticleDifficultyEnum
+// Static options mapped from QuestionDifficultyEnum
 const difficultyOptions = computed<TitleInterface<number>[]>((() => [
   new TitleInterface({
-    id: ArticleDifficultyEnum.easy,
+    id: QuestionDifficultyEnum.easy,
     title: t("easy"),
   }),
   new TitleInterface({
-    id: ArticleDifficultyEnum.medium,
+    id: QuestionDifficultyEnum.medium,
     title: t("medium"),
   }),
   new TitleInterface({
-    id: ArticleDifficultyEnum.hard,
+    id: QuestionDifficultyEnum.hard,
     title: t("hard"),
   }),
 ]));
 // Static options mapped from ArticleStatusEnum
-const statusOptions = computed<TitleInterface<number>[]>((() => [
+const statusOptions = computed<TitleInterface<QuestionStatusEnum>[]>((() => [
   new TitleInterface({
-    id: ArticleStatusEnum.approved,
+    id: QuestionStatusEnum.approved,
     title: t("approved"),
   }),
   new TitleInterface({
-    id: ArticleStatusEnum.under_review,
+    id: QuestionStatusEnum.under_review,
     title: t("under_review"),
   }),
   new TitleInterface({
-    id: ArticleStatusEnum.rejected,
+    id: QuestionStatusEnum.rejected,
     title: t("rejected"),
   }),
   new TitleInterface({
-    id: ArticleStatusEnum.not_Reviewd,
+    id: QuestionStatusEnum.not_Reviewd,
     title: t("not_reviewd"),
   }),
 ]));
 // Static options mapped from ArticleTypeEnum
 const typeOptions = computed<TitleInterface<number>[]>((() => [
   new TitleInterface({
-    id: ArticleTypeEnum.mcq,
+    id: QuestionTypeEnum.mcq,
     title: t("mcq"),
   }),
   new TitleInterface({
-    id: ArticleTypeEnum.ranking,
+    id: QuestionTypeEnum.ranking,
     title: t("ranking"),
   }),
   new TitleInterface({
-    id: ArticleTypeEnum.true_false,
+    id: QuestionTypeEnum.true_false,
     title: t("true_false"),
   }),
   new TitleInterface({
-    id: ArticleTypeEnum.complate,
+    id: QuestionTypeEnum.complate,
     title: t("complate"),
   }),
   new TitleInterface({
-    id: ArticleTypeEnum.matching,
+    id: QuestionTypeEnum.matching,
     title: t("matching"),
   }),
 ]));
@@ -150,4 +150,6 @@ const updateData = () => {
 <style scoped lang="scss">
 @use '../../../../../styles/variables' as *;
 @use '../../../../../styles/mixins/flex' as *;
+
+
 </style>

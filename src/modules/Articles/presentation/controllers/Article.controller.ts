@@ -5,11 +5,11 @@ import type Params from '@/base/Core/Params/params';
 import { DataSuccess } from '@/base/Core/NetworkStructure/Resources/dataState/dataState';
 import router from '@/router';
 import { useFormsStore } from '@/stores/formsStore';
-import type ArticleModel from '../../core/models/Article.model';
 import ArticleRepository from '../../data/repositories/Artical.repository';
-import type ArticalDetailsModel from '../../core/models/artical.details.model';
+import type { questionsModel } from '@/modules/Questions';
+import type ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
 
-export default class ArticleController extends BaseController<ArticalDetailsModel, ArticleModel[]> {
+export default class ArticleController extends BaseController<ShowQuestionsModel, questionsModel[]> {
   private static instance: ArticleController;
 
   protected get repository() {
