@@ -215,6 +215,7 @@
           :question-type="questionType"
           @update:data="GetAnswers"
         />
+        {{ ClarificationData }}
         <QuestionClarification
           :ClarificationData="ClarificationData!"
           :isclarification="isClarification"
