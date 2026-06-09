@@ -82,7 +82,8 @@ const typeOptions = computed<TitleInterface<number>[]>((() => [
 ]));
 
 const Search = () => {
-  console.warn("Searching for:", word.value);
+  // console.warn("Searching for:", word.value);
+   updateData();
 };
 watch(
   [SelectedDifficulty, SelectedType, SelectedStatus],
@@ -90,11 +91,19 @@ watch(
     updateData();
   }
 );
+// const updateData = () => {
+//   emit('update-data', {
+//     selectedDifficulty: SelectedDifficulty.value,
+//     selectedType: SelectedType.value,
+//     selectedStatus: SelectedStatus.value,
+//   });
+// };
 const updateData = () => {
   emit('update-data', {
-    selectedDifficulty: SelectedDifficulty.value,
-    selectedType: SelectedType.value,
-    selectedStatus: SelectedStatus.value,
+    difficulty: SelectedDifficulty.value?.id ?? undefined,
+    question_type: SelectedType.value?.id ?? undefined,
+    status: SelectedStatus.value?.id ?? undefined,
+    word: word.value,
   });
 };
 </script>

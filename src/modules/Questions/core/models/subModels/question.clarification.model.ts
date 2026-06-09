@@ -26,7 +26,10 @@ export default class QuestionClarificationModel {
     }
 
     return new QuestionClarificationModel({
-      documents: json.documents,
+      documents: new TitleInterface<number>({
+        id: json.document_id,
+        title: '',
+      }),
       source: json.source_text,
       clarification: json.explanation,
       attachments: json.attachments,

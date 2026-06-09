@@ -33,8 +33,8 @@
         file: file.value?.map(
           (f: any) =>
             new AttachmentsParams({
-              file: f,
               alt: 'clarification image',
+              file: f,
             }),
         ),
         clarification: description.value,
@@ -52,10 +52,17 @@
   const description = ref('');
   const file = ref();
 
+  // const handleFile = (f: any) => {
+  //   file.value = f[0]?.base64 ? [f[0].base64] : [];
+  //   updateData();
+  // };
   const handleFile = (f: any) => {
-    file.value = f[0]?.base64 ? [f[0].base64] : [];
-    updateData();
-  };
+  // ✅ map على كل الصور مش أول واحدة بس
+  file.value = f
+    .filter((item: any) => item?.base64)
+    .map((item: any) => item.base64);
+  updateData();
+};
 
   const removeFilePreview = (idx: number) => {
     file.value = (file.value as string[]).filter((_: string, i: number) => i !== idx);
@@ -72,7 +79,9 @@
         source: newValue?.source,
       });
       description.value = newValue?.clarification ? newValue.clarification! : '';
-      file.value = newValue?.attachments?.map((a) => a.file).filter(Boolean) as string[];
+      // file.value = newValue?.attachments?.map((a) => a.file).filter(Boolean) as string[];
+      file.value = newValue?.attachments?.map((a: any) => a.file).filter(Boolean) ?? [];
+
       isClarification.value = neIsClarification || !!newValue;
       updateData();
     },

@@ -29,6 +29,7 @@
           ? file.value?.map(
               (f: any) =>
                 new AttachmentsParams({
+                  alt: 'solution hints image',
                   file: f,
                 }),
             )
@@ -41,17 +42,26 @@
   const isSolutionSteps = ref(isSolutionHintsData);
   const description = ref('');
   const file = ref();
+  // const handleFile = (f: any) => {
+  //   file.value = f[0]?.base64 ? [f[0].base64] : [];
+  //   updateData();
+  // };
   const handleFile = (f: any) => {
-    file.value = f[0]?.base64 ? [f[0].base64] : [];
-    updateData();
-  };
+  // ✅ map على كل الصور مش أول واحدة بس
+  file.value = f
+    .filter((item: any) => item?.base64)
+    .map((item: any) => item.base64);
+  updateData();
+};
 
   watch(
     [() => SolutionHintsData, () => isSolutionHintsData],
     ([newSolutionHinrdata, newIsSolution]) => {
       isSolutionSteps.value = newIsSolution || !!newSolutionHinrdata;
       description.value = newSolutionHinrdata?.hint;
-      file.value = newSolutionHinrdata?.attachments[0]?.file;
+      // file.value = newSolutionHinrdata?.attachments[0]?.file;
+      file.value = newSolutionHinrdata?.attachments?.map((a: any) => a.file).filter(Boolean) ?? [];
+
       updateData();
     },
     { immediate: true, deep: true },

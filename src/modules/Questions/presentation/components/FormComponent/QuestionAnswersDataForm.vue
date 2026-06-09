@@ -146,7 +146,7 @@
       image: data.data.image?.map(
         (file) =>
           new AttachmentsParams({
-            alt: '',
+            alt: 'solution hint image',
             file: file.file,
           }),
       ),
@@ -215,7 +215,6 @@
           :question-type="questionType"
           @update:data="GetAnswers"
         />
-        {{ ClarificationData }}
         <QuestionClarification
           :ClarificationData="ClarificationData!"
           :isclarification="isClarification"

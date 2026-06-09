@@ -28,6 +28,7 @@
           ? file.value?.map(
               (f: any) =>
                 new AttachmentsParams({
+                  alt: 'solution steps image',
                   file: f,
                 }),
             )
@@ -41,20 +42,29 @@
 
   const description = ref('');
   const file = ref();
+  // const handleFile = (f: any) => {
+  //   file.value = f[0]?.base64 ? [f[0].base64] : [];
+  //   updateData();
+  // };
   const handleFile = (f: any) => {
-    file.value = f[0]?.base64 ? [f[0].base64] : [];
-    updateData();
-  };
+  // ✅ map على كل الصور مش أول واحدة بس
+  file.value = f
+    .filter((item: any) => item?.base64)
+    .map((item: any) => item.base64);
+  updateData();
+};
 
   watch(
     [() => SolutionStepsData, () => isSolutionStepsData],
     ([newSolutionStepsdata, newIsSolution]) => {
       isSolutionSteps.value = newIsSolution || !!newSolutionStepsdata;
       description.value = newSolutionStepsdata?.step;
-      file.value = newSolutionStepsdata?.attachments?.[0]?.file;
+      // file.value = newSolutionStepsdata?.attachments?.[0]?.file;
+      file.value = newSolutionStepsdata?.attachments?.map((a: any) => a.file).filter(Boolean) ?? [];
+
       updateData();
     },
-    // { immediate: true, deep: true },
+    { immediate: true, deep: true },
   );
 
   watch(
