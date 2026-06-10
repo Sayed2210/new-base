@@ -12,11 +12,15 @@ import TrueFalse from '@/shared/icons/TrueFalse.vue';
 import MatcingingIcon from '@/shared/icons/MatcingingIcon.vue';
 import { QuestionDifficultyEnum } from '@/modules/Questions/core/constant/question.difficulty.enum';
 import router from '@/router';
+import ShowArticlesParams from '@/modules/Articles/core/params/show.Articles.params';
+import { useRoute } from 'vue-router';
 
 
 const { allquestion } = defineProps<{
     allquestion: ShowQuestionsModel[];
 }>()
+const route = useRoute();
+const articleId = Number(route.params.id);
 const controller = ArticleController.getInstance();
 const { t } = useI18n();
 const getDifficultyClass = (difficulty: QuestionDifficultyEnum) => {
@@ -62,14 +66,27 @@ const actionList = (question_id: number, deleteArticleQuestion: (question_id: nu
     {
         text: t('delete'),
         icon: DeletIcon,
-
-        action: () => deleteArticleQuestion(question_id),
-    },
+        action: () => {
+            console.log('delete action called');
+            deleteArticleQuestion(question_id);
+        },
+    }
 ];
-const emit = defineEmits(['refetch'])
+
+// const deleteArticleQuestion = async (question_id: number) => {
+//     await controller.delete(new DeleteArticlesParams(question_id));
+//     emit('refetch');
+// };
+// QuestionCard.vue
+
+
 const deleteArticleQuestion = async (question_id: number) => {
-    await controller.delete(new DeleteArticlesParams(question_id));
-    emit('refetch');
+    try {
+        await controller.delete(new DeleteArticlesParams(question_id));
+        controller.fetchOne(new ShowArticlesParams(articleId))
+    } catch (error) {
+        console.error('Delete failed:', error);
+    }
 };
 </script>
 <template>
@@ -84,9 +101,9 @@ const deleteArticleQuestion = async (question_id: number) => {
                         <DropList :action-list="actionList(value?.question_id!, deleteArticleQuestion)"
                             :delete-dialog-title="$t('are_you_sure_you_want_to_remove_this_education_classification')
                                 " :delete-dialog-message="$t(
-                                'Deleting_this_classification_will_remove_all_related_data_including_any_configurations_and_tree_structures_This_action_is_irreversible_and_the_classification_must_be_created_again_if_needed',
-                            )
-                                " />
+                                    'Deleting_this_classification_will_remove_all_related_data_including_any_configurations_and_tree_structures_This_action_is_irreversible_and_the_classification_must_be_created_again_if_needed',
+                                )
+                                    " />
                     </div>
                 </div>
                 <div class="types-date">

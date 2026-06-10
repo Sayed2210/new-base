@@ -15,7 +15,7 @@ const { artical } = defineProps<{
   artical?: ShowQuestionsModel;
 }>()
 const route = useRoute();
-const emit = defineEmits(['update-data', 'refetch']);
+const emit = defineEmits(['update-data']);
 
 // Reactive State
 const word = ref("");
@@ -83,7 +83,7 @@ const typeOptions = computed<TitleInterface<number>[]>((() => [
 
 const Search = () => {
   // console.warn("Searching for:", word.value);
-   updateData();
+  updateData();
 };
 watch(
   [SelectedDifficulty, SelectedType, SelectedStatus],
@@ -105,8 +105,8 @@ const updateData = () => {
     status: SelectedStatus.value?.id ?? undefined,
     word: word.value,
   });
-  emit('refetch');
 };
+
 </script>
 <template>
   <div class="article_question">
@@ -145,8 +145,7 @@ const updateData = () => {
       <div class="fillters">
         <div class="input-select">
           <UpdatedCustomInputSelect id="doc-difficulty" v-model="SelectedDifficulty" :label="``"
-            :static-options="difficultyOptions" :placeholder="$t('select_difficulty')"
-             />
+            :static-options="difficultyOptions" :placeholder="$t('select_difficulty')" />
         </div>
         <div class="input-select">
 
@@ -156,13 +155,13 @@ const updateData = () => {
         <div class="input-select">
 
           <UpdatedCustomInputSelect id="doc-status" v-model="SelectedStatus" :label="``" :static-options="statusOptions"
-            :placeholder="$t('select_status')"  />
+            :placeholder="$t('select_status')" />
         </div>
       </div>
     </div>
     <div class="question_list">
       <!-- v-for="question in article?.articlecard" :key="question.id" -->
-      <QuestionCard v-if="artical?.questions" :allquestion="artical.questions" @refetch="emit('refetch')" />
+      <QuestionCard v-if="artical?.questions" :allquestion="artical.questions" />
     </div>
   </div>
 </template>

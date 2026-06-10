@@ -30,8 +30,8 @@ export default class ShowArticlesParams implements Params {
     return {
       question_id: this.id,
       question_type: this.question_type,
-      difficulty: this.difficulty,
-      status: this.status,
+      difficulty_level: this.difficulty,
+      review_status: this.status,
       word: this.word,
     };
   }

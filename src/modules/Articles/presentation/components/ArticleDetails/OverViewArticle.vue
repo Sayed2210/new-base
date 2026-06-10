@@ -149,4 +149,22 @@ const getSubjectPath = (item: ShowQuestionsModel) => {
 <style scoped lang="scss">
 @use '../../../../../styles/variables' as *;
 @use '../../../../../styles/mixins/flex' as *;
+.btn-edit {
+      background: white;
+      border: 1px solid var(--primary-green);
+      color: var(--primary-green);
+      border-radius: $XlSize4;
+      &:hover {
+        background-color: var(--primary-green) !important;
+        color: white !important;
+
+        :deep(svg) {
+          color: white;
+        }
+
+        :deep(path) {
+          stroke: white;
+        }
+      }
+    }
 </style>

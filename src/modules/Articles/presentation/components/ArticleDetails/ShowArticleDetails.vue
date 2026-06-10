@@ -29,30 +29,31 @@ onMounted(() => {
 //   fetchArticle();
 // };
 const fetchArticle = async (filters?: {
-  question_type?: QuestionTypeEnum;
-  difficulty?: QuestionDifficultyEnum;
-  status?: QuestionStatusEnum;
-   word?: string;
+    question_type?: QuestionTypeEnum;
+    difficulty?: QuestionDifficultyEnum;
+    status?: QuestionStatusEnum;
+    word?: string;
 }) => {
-  await controller.fetchOne(
-    new ShowArticlesParams(
-      Number(route.params.id),
-      filters?.question_type,
-      filters?.difficulty,
-      filters?.status,
-      filters?.word
-    )
-  );
+    await controller.fetchOne(
+        new ShowArticlesParams(
+            Number(route.params.id),
+            filters?.question_type,
+            filters?.difficulty,
+            filters?.status,
+            filters?.word
+        )
+    );
 };
 
 const updateData = (filters: any) => {
-  fetchArticle(filters); 
+    fetchArticle(filters);
 };
+
 </script>
 <template>
-    <div class="Article_details"> 
-        <OverViewArticle  :artical="state.data!" />
+    <div class="Article_details">
+        <OverViewArticle :artical="state.data!" />
         <!-- <AnalysisReport :artical="state.data!" /> -->
-        <ArticleQuestion :artical="state.data!"  @update-data="updateData" @refetch="fetchArticle" /> 
+        <ArticleQuestion :artical="state.data!" @update-data="updateData" />
     </div>
 </template>
