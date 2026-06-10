@@ -81,7 +81,7 @@ const deleteArticleQuestion = async (question_id: number) => {
                         <h6>questions <span>{{ index + 1 }}</span></h6>
                     </div>
                     <div class="actions">
-                        <DropList :action-list="actionList(value.question_id, deleteArticleQuestion)"
+                        <DropList :action-list="actionList(value?.question_id!, deleteArticleQuestion)"
                             :delete-dialog-title="$t('are_you_sure_you_want_to_remove_this_education_classification')
                                 " :delete-dialog-message="$t(
                                 'Deleting_this_classification_will_remove_all_related_data_including_any_configurations_and_tree_structures_This_action_is_irreversible_and_the_classification_must_be_created_again_if_needed',

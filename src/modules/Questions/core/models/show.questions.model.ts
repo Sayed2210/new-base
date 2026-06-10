@@ -46,15 +46,15 @@ export default class ShowQuestionsModel {
 
   public readonly question_description?: string;
   public readonly question?: string;
-  public readonly e_c_subject: TitleInterface<number>;
-  public readonly document: DocumentArticleModel[];
-  public readonly explanation: ExplanationModel;
+  public readonly e_c_subject?: TitleInterface<number>;
+  public readonly document?: DocumentArticleModel[];
+  public readonly explanation?: ExplanationModel;
   public readonly created_at?:  string;
   public readonly created_by?: TitleInterface<string>;
   public readonly number_of_questions?: number;
   public readonly question_id?: number;
-  public readonly questions: ShowQuestionsModel[];
-   public readonly attachments: string[];
+  public readonly questions?: ShowQuestionsModel[];
+   public readonly attachments?: string[];
   
   
 
@@ -86,15 +86,15 @@ export default class ShowQuestionsModel {
     subjects?: TitleInterface<number>;
     question_description?: string;
     question?: string;
-    e_c_subject: TitleInterface<number>;
-    document: DocumentArticleModel[];
-    explanation: ExplanationModel;
+    e_c_subject?: TitleInterface<number>;
+    document?: DocumentArticleModel[];
+    explanation?: ExplanationModel;
     created_at?:  string;
     created_by?: TitleInterface<string>;
     number_of_questions?: number;
     question_id?: number;
-    questions: ShowQuestionsModel[];
-    attachments: string[];
+    questions?: ShowQuestionsModel[];
+    attachments?: string[];
   }) {
     this.id = data.id;
     this.generatedBy = data.generatedBy;
@@ -193,7 +193,10 @@ export default class ShowQuestionsModel {
       document: json.documents?.map((doc: any) => DocumentArticleModel.fromJson(doc)) ?? [],
       explanation: ExplanationModel.fromJson(json.explanation),
       created_at: json.created_at,
-      created_by: json.created_by,
+      created_by: new TitleInterface<string>({
+        id: json.created_by?.id,
+        title: json.created_by?.name,
+      }),
       number_of_questions: json.number_of_questions,
       question_id: json.question_id,
       questions: json.questions?.map((question: any) => ShowQuestionsModel.fromJson(question)) ?? [],

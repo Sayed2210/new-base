@@ -15,7 +15,7 @@ const { artical } = defineProps<{
   artical?: ShowQuestionsModel;
 }>()
 const route = useRoute();
-const emit = defineEmits(['update-data']);
+const emit = defineEmits(['update-data', 'refetch']);
 
 // Reactive State
 const word = ref("");
@@ -105,6 +105,7 @@ const updateData = () => {
     status: SelectedStatus.value?.id ?? undefined,
     word: word.value,
   });
+  emit('refetch');
 };
 </script>
 <template>
@@ -161,7 +162,7 @@ const updateData = () => {
     </div>
     <div class="question_list">
       <!-- v-for="question in article?.articlecard" :key="question.id" -->
-      <QuestionCard v-if="artical?.questions" :allquestion="artical.questions" @refetch="$emit('refetch')" />
+      <QuestionCard v-if="artical?.questions" :allquestion="artical.questions" @refetch="emit('refetch')" />
     </div>
   </div>
 </template>

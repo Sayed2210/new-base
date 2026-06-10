@@ -68,10 +68,10 @@ watch(
   () => props.article,
   (newValue) => {
     if (newValue) {
-      QuestionDescription.value = newValue.question_description;
-      question.value = newValue.question;
-      SelectedQuestionSequence.value = newValue.e_c_subject;
-      const selectedDoc = newValue.document.find((doc: any) => doc.document_id);
+      QuestionDescription.value = newValue.question_description ?? "";
+      question.value = newValue.question ?? "";
+      SelectedQuestionSequence.value = newValue.e_c_subject ?? null;
+      const selectedDoc = newValue.document?.find((doc: any) => doc.document_id);
       if (selectedDoc) {
         SelectedDocument.value = {
           id: selectedDoc.document_id,
@@ -79,8 +79,8 @@ watch(
         };
         articleSource.value = selectedDoc?.text;
       }
-      descriptionArticle.value = newValue.explanation?.explanation;
-      isExplain.value = Boolean(descriptionArticle.value.length > 0);
+      descriptionArticle.value = newValue.explanation?.explanation ?? "";
+      isExplain.value = Boolean(descriptionArticle.value?.length > 0);
       explanationAttachments.value =
         newValue?.explanation?.attachments?.map((item: any) => item.file) ?? [];
       UploadedImage.value = newValue?.attachments?.map((item: any) => item.file) ?? [];
@@ -170,10 +170,10 @@ watch(draftRef!, (newVal) => {
     };
   }
 
-  if (newVal.documents?.document_id) {
+  if (newVal.documents?.id) {
     SelectedDocument.value = {
-      id: newVal.documents.document_id,
-      title: newVal.documents.document_title,
+      id: newVal.documents.id,
+      title: newVal.documents.title,
     };
   }
   console.log('draft', newVal.documents);

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { onMounted, ref, computed } from 'vue';
+  import { onMounted, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import SupportContactsController from '../controllers/support.controller';
   import type AddSupportContactsParams from '../../core/params/add.support.params';

@@ -1,10 +1,10 @@
 import ArticleImage from '@/assets/images/image 22.png';
 export default class ArticleAnswerModel {
   public readonly id?: number;
-  public readonly answer: string;
-  public readonly image: string;
-  public readonly countCorrect: number;
-  public readonly countStudent: number;
+  public readonly answer?: string;
+  public readonly image?: string;
+  public readonly countCorrect?: number;
+  public readonly countStudent?: number;
 
 
   constructor(data: { id?: number; answer?: string; image?: string, countCorrect: number, countStudent: number }) {

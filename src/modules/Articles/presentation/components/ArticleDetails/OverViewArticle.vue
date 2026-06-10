@@ -81,7 +81,7 @@ const getSubjectPath = (item: ShowQuestionsModel) => {
                     </div>
                     <div class="head">
                         <h6>{{ $t('Created by') }} : </h6>
-                        <p>{{ artical?.created_by?.name }}</p>
+                        <p>{{ artical?.created_by?.title }}</p>
                     </div>
                 </div>
                 <div class="head">
@@ -126,14 +126,19 @@ const getSubjectPath = (item: ShowQuestionsModel) => {
                     </div>
                     <div class="artical_document">
                         <h6>{{ $t('Documents') }} :</h6>
-                        <p>
-                            {{artical?.document.map((doc: any) => doc?.document_title).join(', ')}}
-                        </p>
-                        <Articlearrow class="arrow-icon" />
+                        <div v-for="(doc, index) in artical?.document" :key="index">
+                            <p>
+                            {{doc?.document_title}}
+                            </p>
+                            <Articlearrow class="arrow-icon" />
+                        </div>
                     </div>
                     <div class="artical_document">
                         <h6>{{ $t('Source') }} :</h6>
-                        <p>{{artical?.document.map((doc: any) => doc?.text).join(', ')}}</p>
+                        <div v-for="(doc, index) in artical?.document" :key="index">
+                            <p >{{doc?.text}}</p>
+                            <!-- <Articlearrow class="arrow-icon" /> -->
+                        </div>
                     </div>
                 </div>
             </div>

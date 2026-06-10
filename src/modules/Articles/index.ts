@@ -1,5 +1,5 @@
 // Models
-export { default as ArticleModel } from './core/models/Article.model';
+export { default as questionsModel } from '../Questions/core/models/questions.model';
 
 // Params
 export { default as AddArticlesParams } from './core/params/add.Artical.params';
