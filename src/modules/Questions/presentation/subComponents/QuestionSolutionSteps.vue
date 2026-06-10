@@ -47,7 +47,6 @@
   //   updateData();
   // };
   const handleFile = (f: any) => {
-  // ✅ map على كل الصور مش أول واحدة بس
   file.value = f
     .filter((item: any) => item?.base64)
     .map((item: any) => item.base64);

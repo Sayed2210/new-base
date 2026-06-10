@@ -3,6 +3,7 @@ import type { QuestionStatusEnum } from '../constant/question.status.enum';
 import type { QuestionGeneratedByEnum } from '../constant/generatedby.enum';
 import type { QuestionTypeEnum } from '../constant/question.type.enum';
 import type { QuestionDifficultyEnum } from '../constant/question.difficulty.enum';
+import OrderEnum from '@/base/Core/Constants/IndexFetchOrderEnum';
 
 export default class IndexQuestionsParams extends IndexParams {
   public status?: QuestionStatusEnum;
@@ -33,7 +34,7 @@ export default class IndexQuestionsParams extends IndexParams {
       ...(this.generated_by ? { generated_by: this.generated_by } : {}),
       ...(this.question_type ? { question_type: this.question_type } : {}),
       ...(this.difficulty ? { difficulty: this.difficulty } : {}),
+      order_dir: OrderEnum.reverse,
     };
   }
 }
- 

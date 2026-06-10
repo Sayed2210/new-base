@@ -52,6 +52,7 @@
         pageNumber: page,
         perPage: perPage.value,
         withPage: 1,
+        
       }),
     );
   };
