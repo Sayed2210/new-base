@@ -23,7 +23,7 @@ onMounted(() => {
     fetchArticle();
 });
 
-// const updateData = (filters: any) => { 
+// const updateData = (filters: any) => {  
 //   console.log(filters);
 
 //   fetchArticle();
