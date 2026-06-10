@@ -137,6 +137,7 @@
                 :class="`image-input`"
                 @change="(files) => handleFile(files)"
                 :hidepreview="true"
+                :max-files="1"
               >
                 <template #content>
                   <div class="upload-attachment-container">

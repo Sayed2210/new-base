@@ -268,6 +268,7 @@
               :file="UploadedImage"
               :have-content="true"
               :class="`image-input`"
+              :max-files="1"
               @change="handleImageChange"
             >
               <template #content>

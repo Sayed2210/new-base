@@ -14,6 +14,7 @@ import { QuestionDifficultyEnum } from '@/modules/Questions/core/constant/questi
 import router from '@/router';
 import ShowArticlesParams from '@/modules/Articles/core/params/show.Articles.params';
 import { useRoute } from 'vue-router';
+import MatchingIcon from '@/shared/icons/questions/MatchingIcon.vue';
 
 
 const { allquestion } = defineProps<{
@@ -127,19 +128,43 @@ const deleteArticleQuestion = async (question_id: number) => {
                 </div>
                 <div class="all_answers">
                     <div v-for="(answer, index) in value?.answers" :key="index" class="answer">
-                        <div class="imge-text">
-                            <div class="text">
-                                <span class="label">{{ $t('Answers') }} {{ index + 1 }}</span>
-                                <p class="answer_text">{{ answer.answer }}</p>
-                            </div>
-                            <div class="imge">
-                                <img v-if="answer.image" :src="answer.image[0]?.file" :alt="answer?.answer">
+                        <div v-if="value.questionType !== QuestionTypeEnum.matching" >
+                            <div class="imge-text" :class="answer.is_right_answer ? 'is_right_answer' : 'wrong_answer'">
+                                <div class="text">
+                                    <span class="label">{{ $t('Answers') }} {{ index + 1 }}</span>
+                                    <p class="answer_text">{{ answer.answer }}</p>
+                                </div>
+                                <div class="imge">
+                                    <img v-if="answer.image" :src="answer.image[0]?.file" :alt="answer?.answer">
+                                </div>
                             </div>
                         </div>
                         <!-- <div class="count-answer"> -->
                         <!-- <p class="corret">{{ answer. }}%</p>
                             <p class="student">{{ answer.countStudent }} stds</p> -->
                         <!-- </div> -->
+                    </div>
+
+                    <div v-for="(answer, index) in value?.answers" :key="index" class="answer-matching">
+                        <div v-if="value.questionType === QuestionTypeEnum.matching" class="">
+                            <div class="imge-text">
+                                <div class="text">
+                                    <span class="label">{{ $t('Answers') }} {{ index + 1 }}</span>
+                                    <p class="answer_text">{{ answer.answer }}</p>
+                                </div>
+                                <div class="match-icon-container">
+                                    <MatchingIcon />
+                                </div>
+                                  <div class="text">
+                                    <span class="label">{{ $t('matching answer') }} </span>
+                                    <p class="answer_text">{{ answer.match }}</p>
+                                </div>
+                            </div>
+                            <!-- <div class="count-answer"> -->
+                            <!-- <p class="corret">{{ answer. }}%</p>
+                            <p class="student">{{ answer.countStudent }} stds</p> -->
+                            <!-- </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -149,6 +174,48 @@ const deleteArticleQuestion = async (question_id: number) => {
 <style scoped lang="scss">
 @use '../../../../../styles/variables' as *;
 @use '../../../../../styles/mixins/flex' as *;
+
+.answer-matching{
+    .imge-text{
+            display: grid;
+    grid-template-columns: 1fr auto 1fr auto; 
+    align-items: center;
+    gap: $XlSize2;
+    }
+    .match-icon-container{
+        text-align: center;
+    }
+    .text{
+        background-color: var(--background-color-soft-light);
+        padding: $XsSize3;
+        border-radius: $XsSize3;
+        width: 100%;
+        span{ 
+            font-weight: $BaseFontMediumWeight;
+            font-family: 'medium';
+            font-size: $SmSize;
+            color: var(--bread-crumb-color-span);
+        }
+        p{ 
+            font-weight: $BaseFontMediumWeight;
+            font-family: 'medium';
+            font-size: $MdSize;
+            color: var(--table-data-color);
+        }
+    }
+}
+.imge-text {
+    border-radius: $XsSize3;
+    padding: $XsSize3;
+}
+
+.is_right_answer {
+    background-color: rgba(233, 249, 238, 1);
+}
+
+.wrong_answer {
+    background-color: rgba(255, 236, 235, .4);
+}
 
 .header-card {
     span {

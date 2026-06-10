@@ -164,8 +164,8 @@
             </div>
           </div>
 
-          <div class="is-correct-section">
-            <label :for="`is-correct-${index}`">{{ $t('correct answer') }}</label>
+          <!-- <div > -->
+            <label :for="`is-correct-${index}`" class="is-correct-section">{{ $t('correct answer') }}
             <Checkbox
               :binary="true"
               :model-value="item.is_right_answer"
@@ -174,7 +174,8 @@
               :value="item.is_right_answer"
               @change="setCorrect(index)"
             />
-          </div>
+            </label>
+          <!-- </div> -->
           <div v-if="Answers.length > 1" class="delete-icon-container">
             <button type="button" class="delete-btn" @click="DeleteItem(index)">
               <DeletIcon />

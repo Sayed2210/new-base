@@ -154,8 +154,7 @@
             </div>
           </div>
 
-          <div class="is-correct-section">
-            <label :for="`is-correct-${index}`">{{ $t('correct answer') }}</label>
+            <label class="is-correct-section" :for="`is-correct-${index}`">{{ $t('correct answer') }}
             <Checkbox
               :binary="true"
               :model-value="item.is_right_answer"
@@ -164,7 +163,7 @@
               :value="item.is_right_answer"
               @change="setCorrect(index)"
             />
-          </div>
+            </label>
         </div>
       </div>
     </div>

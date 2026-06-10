@@ -43,7 +43,7 @@ export default class AnswerModel {
       answer: json.answer,
       image: json.attachments ? json.attachments.map((el:any)=> AttachmentModel.fromJson(el)) : null,
       is_right_answer: json.is_correct,
-      match: json.match,
+      match: json.match_answer,
       rank: json.rank,
       similar: json.similar,
       EvaluationType: json.evaluation_type,
