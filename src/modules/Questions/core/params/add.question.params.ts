@@ -39,7 +39,7 @@ export default class AddquestionsParams implements Params {
     title: { required: true },
     image: { required: true },
     questionType: { required: true },
-    subjectId: { required: false },
+    subjectId: { required: true },
     topics: { required: true },
     difficultyLevel: { required: false },
     skills: { required: true },
