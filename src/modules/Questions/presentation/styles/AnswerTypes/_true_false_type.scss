@@ -105,11 +105,16 @@
     padding: 10px !important;
     height: 50px;
     margin-top: 23px;
+    cursor: pointer;
+     color: #121212;
+      font-size: 16px;
+      font-weight: 500;
+      font-family: 'Medium';
 
     label {
       color: #121212;
       font-size: 16px;
-      font-weight: 500;
+      font-weight: 500; 
       font-family: 'Medium';
 
       @media (max-width: 767px) {
