@@ -119,7 +119,7 @@
       AllSubjectTree.value = result.data!;
     }
     // handelSubjectUpdate();
-    SelectedTopic.value = [];
+    SelectedTopic.value = []; 
     updateData();
   };
 
