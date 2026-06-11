@@ -1,12 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 
-vi.mock('vue-router', () => ({
-  useRoute: vi.fn(() => ({
-    fullPath: '/employees/1/edit',
-    params: { id: '1' },
-  })),
-}));
+vi.mock('vue-router', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('vue-router')>();
+  return {
+    ...actual,
+    useRoute: vi.fn(() => ({
+      fullPath: '/employees/1/edit',
+      params: { id: '1' },
+    })),
+  };
+});
 
 vi.mock('../controllers/employee.controller', () => ({
   default: {
@@ -47,8 +51,8 @@ describe('EmployeeEdit', () => {
     expect(saveBtn.text()).toContain('update_employee');
   });
 
-  it('renders the EmployeeForm stub', () => {
+  it('renders the employee edit page wrapper', () => {
     const wrapper = mount(EmployeeEdit, { global: globalConfig });
-    expect(wrapper.find('employeeform-stub').exists()).toBe(true);
+    expect(wrapper.find('.employee-edit-page').exists()).toBe(true);
   });
 });

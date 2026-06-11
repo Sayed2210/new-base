@@ -1,15 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 
-vi.mock('vue-router', () => ({
-  useRoute: vi.fn(() => ({
-    fullPath: '/support/add',
-    params: {},
-  })),
-  useRouter: vi.fn(() => ({
-    push: vi.fn(),
-  })),
-}));
+vi.mock('vue-router', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('vue-router')>();
+  return {
+    ...actual,
+    useRoute: vi.fn(() => ({
+      fullPath: '/support/add',
+      params: {},
+    })),
+    useRouter: vi.fn(() => ({ push: vi.fn() })),
+  };
+});
 
 vi.mock('../controllers/support.controller', () => ({
   default: {
@@ -46,8 +48,8 @@ describe('SupportAdd', () => {
     expect(saveBtn.text()).toContain('save');
   });
 
-  it('renders the SupportForm stub', () => {
+  it('renders the support add page wrapper', () => {
     const wrapper = mount(SupportAdd, { global: globalConfig });
-    expect(wrapper.find('supportform-stub').exists()).toBe(true);
+    expect(wrapper.find('.support-add-page').exists()).toBe(true);
   });
 });

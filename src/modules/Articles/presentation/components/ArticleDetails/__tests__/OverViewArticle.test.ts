@@ -2,14 +2,16 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
 
-vi.mock('vue-router', () => ({
-  useRoute: vi.fn(() => ({
-    params: { id: '42', country_code: 'eg' },
-  })),
-  useRouter: vi.fn(() => ({
-    push: vi.fn(),
-  })),
-}));
+vi.mock('vue-router', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('vue-router')>();
+  return {
+    ...actual,
+    useRoute: vi.fn(() => ({
+      params: { id: '42', country_code: 'eg' },
+    })),
+    useRouter: vi.fn(() => ({ push: vi.fn() })),
+  };
+});
 
 vi.mock('../../controllers/Article.controller', () => ({
   default: {

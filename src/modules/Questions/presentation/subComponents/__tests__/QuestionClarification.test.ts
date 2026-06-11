@@ -3,11 +3,13 @@ import { mount } from '@vue/test-utils';
 import QuestionClarification from '../QuestionClarification.vue';
 import type QuestionClarificationModel from '../../../core/models/subModels/question.clarification.model';
 
-vi.mock('vue-router', () => ({
-  useRoute: vi.fn(() => ({
-    params: {},
-  })),
-}));
+vi.mock('vue-router', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('vue-router')>();
+  return {
+    ...actual,
+    useRoute: vi.fn(() => ({ params: {} })),
+  };
+});
 
 const stubAccordion = {
   template: '<div class="accordion-stub"><slot /></div>',
