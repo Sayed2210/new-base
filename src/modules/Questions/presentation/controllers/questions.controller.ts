@@ -10,6 +10,7 @@ import questionsRepository from '../../data/repositories/question.repository';
 import type ShowQuestionsModel from '../../core/models/show.questions.model';
 import type AddquestionsParams from '../../core/params/add.question.params';
 import { dialogManager } from '@/base/Presentation/Dialogs/dialog.manager';
+import { QuestionTypeEnum } from '../../core/constant/question.type.enum';
 
 export default class questionsController extends BaseController<
   ShowQuestionsModel,
@@ -47,7 +48,8 @@ export default class questionsController extends BaseController<
   async create(params: AddquestionsParams, options?: ApiCallOptions, formKey?: string) {
     const FormStore = useFormsStore();
     
-    if(params.answers?.filter((answer) => answer.isCorrect).length === 0){
+    if( (params.questionType === QuestionTypeEnum.mcq && params.answers?.filter((answer) => answer.isCorrect).length === 0) || 
+  (params.questionType === QuestionTypeEnum.true_false && params.answers?.filter((answer) => answer.isCorrect).length === 0)){
       dialogManager.toastWarning("one or more answers should be correct");
       return;
     }
