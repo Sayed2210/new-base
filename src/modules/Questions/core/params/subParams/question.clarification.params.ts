@@ -28,11 +28,15 @@ export default class QuestionClarificationParams implements Params {
   }
 
   toMap(): { [p: string]: any } {
+    const attachments =
+      this.file?.map((f) => f.toMap()).filter((f) => f.file && f.file.length > 0) ?? [];
     return {
       document_id: this.documentId,
       source_text: this.source,
       explanation: this.clarification,
-      attachments: this.file?.map((f) => f.toMap()),
+      ...(attachments.length > 0 && {
+        attachments,
+      }),
       // ...(this.file ? { attachments: this.file.map((f) => f.toMap()) } : []),
     };
   }

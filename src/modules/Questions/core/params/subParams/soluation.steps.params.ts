@@ -17,9 +17,13 @@ export default class SolutionStepsParams implements Params {
   }
 
   toMap(): { [p: string]: any } {
+    const attachments =
+      this.image?.map((f) => f.toMap()).filter((f) => f.file && f.file.length > 0) ?? [];
     return {
       text: this.explanation,
-      attachments: this.image,
+      ...(attachments.length > 0 && {
+        attachments,
+      }),
     };
   }
 

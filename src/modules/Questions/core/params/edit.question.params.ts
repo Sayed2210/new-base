@@ -93,10 +93,14 @@ export default class EditquestionsParams implements Params {
   }
 
   toMap(): { [p: string]: any } {
+    const attachments =
+      this.image?.map((f) => f.toMap()).filter((f) => f.file && f.file.length > 0) ?? [];
     return {
       question_id: this.id,
       question: this.title,
-      attachments: this.image?.map((f) => f.toMap()),
+      ...(attachments.length > 0 && {
+        attachments,
+      }),
       question_type: this.questionType,
       e_c_subject_id: this.questionSequenceId,
       e_c_branch_id: this.subjectId,

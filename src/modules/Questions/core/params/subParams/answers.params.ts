@@ -39,10 +39,14 @@ export default class AnswersParams implements Params {
   }
 
   toMap(): { [p: string]: any } {
+    const attachments =
+      this.file?.map((f) => f.toMap()).filter((f) => f.file && f.file.length > 0) ?? [];
     return {
       answer: this.title,
-      attachments: this.file?.map((item) => item.toMap()),
-      is_correct: this.isCorrect ,
+      ...(attachments.length > 0 && {
+        attachments,
+      }),
+      is_correct: this.isCorrect,
       correct_order: this.correctOrder,
       match_answer: this.matchAnswer,
       answer_evaluation: this.answerEvaluation,
