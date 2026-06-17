@@ -95,7 +95,7 @@
       if (newvalue && newvalue.length > 0) {
         Answers.value = newvalue.map((item) => ({
           ...item,
-          image: item.image?.[0]?.file ,
+          image: item.image?.[0]?.file,
         }));
       }
       UpdateData();
@@ -111,17 +111,17 @@
       if (newvalue && newvalue.length > 0) {
         Answers.value = newvalue.map((item) => ({
           answer: item.title,
-          file: item.file,
+          image: item.file?.[0]?.file,
           is_right_answer: item.isCorrect,
         }));
       }
-      UpdateData();;
+      UpdateData();
     },
     {
       deep: true,
       immediate: true,
     },
-  ); 
+  );
 </script>
 
 <template>
@@ -165,7 +165,8 @@
           </div>
 
           <!-- <div > -->
-            <label :for="`is-correct-${index}`" class="is-correct-section">{{ $t('correct answer') }}
+          <label :for="`is-correct-${index}`" class="is-correct-section"
+            >{{ $t('correct answer') }}
             <Checkbox
               :binary="true"
               :model-value="item.is_right_answer"
@@ -174,7 +175,7 @@
               :value="item.is_right_answer"
               @change="setCorrect(index)"
             />
-            </label>
+          </label>
           <!-- </div> -->
           <div v-if="Answers.length > 1" class="delete-icon-container">
             <button type="button" class="delete-btn" @click="DeleteItem(index)">

@@ -39,7 +39,6 @@
         console.error('No question parameters to save');
         return;
       }
-
       localStorage.setItem(`question-draft`, JSON.stringify(params.value));
       router.push({ name: 'Questions' });
     } catch (error) {

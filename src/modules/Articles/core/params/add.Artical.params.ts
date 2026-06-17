@@ -8,44 +8,42 @@ import type AttachmentsParams from '@/modules/Questions/core/params/subParams/at
  * Parameters for adding a new employee
  */
 export default class AddArticlesParams implements Params {
-  public  question_description?: string;
-  public  attachments?: AttachmentsParams[];
-  public  question?:string;
-  public  question_type?: ArticleQuestionTypeEnum;
+  public question_description?: string;
+  public attachments?: AttachmentsParams[];
+  public question?: string;
+  public question_type?: ArticleQuestionTypeEnum;
   public e_c_subject_id?: number;
-  public documents?: TitleInterface<string>;    
-  public explanation?:{
-    explanation?:string;
-    attachments?:AttachmentsParams[];
+  public documents?: TitleInterface<string>;
+  public explanation?: {
+    explanation?: string;
+    attachments?: AttachmentsParams[];
   };
-  
-  
 
   public static readonly validation = new ClassValidation().setRules({
     question_type: { required: true },
-    question: { required: true ,  minLength: 5 },
+    question: { required: true, minLength: 5 },
     documents: { required: true },
   });
 
   constructor(data: {
     question_description?: string;
     attachments?: AttachmentsParams[];
-    question?:string;
+    question?: string;
     question_type?: ArticleQuestionTypeEnum;
     e_c_subject_id?: number;
-    documents?: TitleInterface<string>;    
-    explanation?:{
-      explanation?:string;
+    documents?: TitleInterface<string>;
+    explanation?: {
+      explanation?: string;
       attachments?: AttachmentsParams[];
     };
   }) {
-    this.question_description=data.question_description;
-    this.attachments=data.attachments;
-    this.question=data.question;
-    this.question_type=data.question_type;
-    this.e_c_subject_id=data.e_c_subject_id;
-    this.documents=data.documents;
-    this.explanation=data.explanation;
+    this.question_description = data.question_description;
+    this.attachments = data.attachments;
+    this.question = data.question;
+    this.question_type = data.question_type;
+    this.e_c_subject_id = data.e_c_subject_id;
+    this.documents = data.documents;
+    this.explanation = data.explanation;
   }
 
   toMap(): { [p: string]: any } {
@@ -56,8 +54,10 @@ export default class AddArticlesParams implements Params {
       question_type: this.question_type,
       e_c_subject_id: this.e_c_subject_id,
       documents: [this.documents],
-      explanation: this.explanation,
-      difficulty_level:1,
+      ...(this.explanation?.explanation && {
+        explanation: this.explanation,
+      }),
+      difficulty_level: 1,
     };
   }
 

@@ -8,7 +8,7 @@ import type SolutionStepsParams from './subParams/soluation.steps.params';
 import type QuestionClarificationParams from './subParams/question.clarification.params';
 import type TopicsParams from './subParams/topics.params';
 import { ClassValidation } from '@/base/Presentation/Utils/classValidation';
-import type { AnswerEvaluationTypeEnum } from '../constant/answer.evaluation.type.enum';
+import { AnswerEvaluationTypeEnum } from '../constant/answer.evaluation.type.enum';
 import type AttachmentsParams from './subParams/attachments.params';
 
 /**
@@ -44,7 +44,6 @@ export default class AddquestionsParams implements Params {
     difficultyLevel: { required: false },
     skills: { required: true },
     questionSource: { required: true },
-    
   });
 
   constructor(data: {
@@ -104,7 +103,9 @@ export default class AddquestionsParams implements Params {
       question_sequence_id: this.questionSequenceId,
       difficulty_level: this.difficultyLevel,
       skills: this.skills?.map((item) => item.toMap()),
-      answers: this.answers?.map((item) => item.toMap()),
+      ...(this.answerEvaluation !== AnswerEvaluationTypeEnum.need_correct && {
+        answers: this.answers?.map((item) => item.toMap()),
+      }),
       documents: [this.questionSource?.toMap()],
       is_question_clarification: this.isQuestionClarification,
       explanation: this.isQuestionClarification ? this.questionClarification?.toMap() : null,

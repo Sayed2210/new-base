@@ -9,7 +9,7 @@
     questionData?: AnswerModel[];
     draftData?: AnswersParams[];
     similarPrecintage?: number;
-    correctStatus?:number;
+    correctStatus?: number;
   }>();
 
   const emit = defineEmits(['update:data']);
@@ -22,7 +22,7 @@
     :question-data="questionData!"
     :SimilarPrecintage="similarPrecintage"
     :correctStatus="correctStatus"
-   @update:data="emit('update:data', $event)"
+    @update:data="emit('update:data', $event)"
   />
-  <!-- @update:data="emit('update:data', $event)" -->
+  <!--  -->
 </template>

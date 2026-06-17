@@ -130,6 +130,8 @@
         return 'Ranking';
       case QuestionTypeEnum.matching:
         return 'Matching';
+      case QuestionTypeEnum.paragraph:
+        return 'Artical';
     }
   };
 

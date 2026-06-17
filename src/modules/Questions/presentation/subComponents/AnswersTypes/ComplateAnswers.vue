@@ -64,7 +64,7 @@
         return new AnswersParams({
           title: el.answer,
           similarPrecentage: similarPrecentge.value.toString(),
-          answerEvaluation: el.EvaluationType,
+          answerEvaluation: selectedTab.value as AnswerEvaluationTypeEnum,
         });
       }),
     );
@@ -124,6 +124,14 @@
   const UpdateSImilar = () => {
     UpdateData();
   };
+  watch(
+    () => correctStatus,
+    (newvalue) => {
+      if (newvalue) {
+        selectedTab.value = newvalue as AnswerEvaluationTypeEnum;
+      }
+    },
+  );
 </script>
 
 <template>

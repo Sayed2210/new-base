@@ -52,12 +52,8 @@
   const description = ref('');
   const file = ref();
 
-  // const handleFile = (f: any) => {
-  //   file.value = f[0]?.base64 ? [f[0].base64] : [];
-  //   updateData();
-  // };
+
   const handleFile = (f: any) => {
-    // ✅ map على كل الصور مش أول واحدة بس
     file.value = f.filter((item: any) => item?.base64).map((item: any) => item.base64);
     updateData();
   };
@@ -97,6 +93,8 @@
         id: draftData?.questionClarification?.documentId,
         source: draftData?.questionClarification?.source,
       });
+      SelectedDocumet.value = draftData?.questionClarification?.documentId || null;
+      questionSource.value = draftData?.questionClarification?.source || '';
       updateData();
     },
     { immediate: true, deep: true },

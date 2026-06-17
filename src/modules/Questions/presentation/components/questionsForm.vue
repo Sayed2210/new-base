@@ -95,6 +95,7 @@
       isSolutionHint: data.isSolutionHint,
       solutionHint: data.solutionHint,
     });
+    console.log(AnswerData.value, 'AnswerData.value');
     updateData();
   };
 
@@ -109,9 +110,8 @@
   const QuestionDraftData = ref<AddquestionsParams>();
 
   // const draftRef = localStorage.getItem('question-draft') ? CustomToast() : null;
-  const draftRef = !route.params.id && localStorage.getItem('question-draft')
-    ? CustomToast()
-    : null;
+  const draftRef =
+    !route.params.id && localStorage.getItem('question-draft') ? CustomToast() : null;
 
   watch(draftRef!, (newVal) => {
     if (newVal) {
@@ -120,7 +120,6 @@
       AnswerData.value = newVal;
     }
   });
-
 </script>
 
 <template>
