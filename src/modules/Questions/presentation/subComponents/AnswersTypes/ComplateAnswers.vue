@@ -9,9 +9,11 @@
   import AnswersParams from '@/modules/Questions/core/params/subParams/answers.params';
   import { useRoute } from 'vue-router';
   const emit = defineEmits(['update:data']);
-  const { questionData, draftData } = defineProps<{
+  const { questionData, draftData, SimilarPrecintage, correctStatus } = defineProps<{
     questionData: AnswerModel[];
     draftData: AnswersParams[];
+    SimilarPrecintage?: number;
+    correctStatus?: number;
   }>();
   const similarPrecentge = ref<number>(0);
 
@@ -49,7 +51,7 @@
         return new AnswersParams({
           title: el.answer,
           similarPrecentage: similarPrecentge.value.toString(),
-          answerEvaluation: el.EvaluationType,
+          answerEvaluation: selectedTab.value as AnswerEvaluationTypeEnum,
         });
       }),
     );
@@ -93,6 +95,8 @@
     (newvalue) => {
       if (newvalue) {
         Answers.value = newvalue;
+        similarPrecentge.value = SimilarPrecintage || 0;
+        selectedTab.value = correctStatus as AnswerEvaluationTypeEnum;
       }
       UpdateData();
     },

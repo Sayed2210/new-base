@@ -4,10 +4,12 @@
   import type AnswerModel from '../../core/models/subModels/answer.model';
   import type AnswersParams from '../../core/params/subParams/answers.params';
 
-  const { questionType, questionData, draftData } = defineProps<{
+  const { questionType, questionData, draftData, similarPrecintage } = defineProps<{
     questionType: QuestionTypeEnum;
     questionData?: AnswerModel[];
     draftData?: AnswersParams[];
+    similarPrecintage?: number;
+    correctStatus?:number;
   }>();
 
   const emit = defineEmits(['update:data']);
@@ -18,7 +20,9 @@
     :draftData="draftData"
     :is="AnswerTypeHelper(questionType)"
     :question-data="questionData!"
-    @update:data="emit('update:data', $event);"
+    :SimilarPrecintage="similarPrecintage"
+    :correctStatus="correctStatus"
+   @update:data="emit('update:data', $event)"
   />
-  <!--  -->
+  <!-- @update:data="emit('update:data', $event)" -->
 </template>

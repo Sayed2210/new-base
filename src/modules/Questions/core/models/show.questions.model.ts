@@ -15,8 +15,9 @@ import TitleInterface from '@/base/Data/Models/titleInterface';
 import { AnswerEvaluationTypeEnum } from '../constant/answer.evaluation.type.enum';
 import ExplanationModel from './subModels/explanation.model';
 import DocumentArticleModel from './subModels/document.model';
-//  انت انسان زبال يا محمود يا زبال 
-export default class ShowQuestionsModel { 
+//  انت انسان زبال يا محمود يا زبال
+
+export default class ShowQuestionsModel {
   public readonly id?: number;
   public readonly questionType?: QuestionTypeEnum;
   public readonly difficulty?: QuestionDifficultyEnum;
@@ -51,17 +52,14 @@ export default class ShowQuestionsModel {
   public readonly e_c_subject?: TitleInterface<number>;
   public readonly document?: DocumentArticleModel[];
   public readonly explanation?: ExplanationModel;
-  public readonly created_at?:  string;
+  public readonly created_at?: string;
   public readonly created_by?: TitleInterface<string>;
   public readonly number_of_questions?: number;
   public readonly question_id?: number;
   public readonly questions?: ShowQuestionsModel[];
-   public readonly attachments?: string[];
-
-  
-  
-
-  
+  public readonly attachments?: string[];
+  public readonly similarPrecentage?: number;
+  public readonly correctStatus?: number;
 
   constructor(data: {
     id?: number;
@@ -94,12 +92,14 @@ export default class ShowQuestionsModel {
     e_c_subject?: TitleInterface<number>;
     document?: DocumentArticleModel[];
     explanation?: ExplanationModel;
-    created_at?:  string;
+    created_at?: string;
     created_by?: TitleInterface<string>;
     number_of_questions?: number;
     question_id?: number;
     questions?: ShowQuestionsModel[];
     attachments?: string[];
+    similarPrecentage?: number;
+    correctStatus?: number;
   }) {
     this.id = data.id;
     this.generatedBy = data.generatedBy;
@@ -137,10 +137,11 @@ export default class ShowQuestionsModel {
     this.question_id = data.question_id;
     this.questions = data.questions;
     this.attachments = data.attachments;
+    this.similarPrecentage = data.similarPrecentage;
+    this.correctStatus = data.correctStatus;
 
     Object.freeze(this);
   }
-
   static fromJson(json: any): ShowQuestionsModel {
     if (!json) {
       throw new Error('Cannot create questionsModel from null or undefined');
@@ -169,9 +170,7 @@ export default class ShowQuestionsModel {
       questionClarification: json.explanation
         ? QuestionClarificationModel.fromJson(json.explanation)
         : {},
-      solutionSteps: json.answer_step
-        ? SolutionStepsModel.fromJson(json.answer_step)
-        : undefined,
+      solutionSteps: json.answer_step ? SolutionStepsModel.fromJson(json.answer_step) : undefined,
       solutionHint: json.answer_hint ? SolutionHintModel.fromJson(json.answer_hint) : undefined,
       subjectTree: new TitleInterface<number>({
         id: json.e_c_branch?.e_c_branch_id,
@@ -208,8 +207,11 @@ export default class ShowQuestionsModel {
       }),
       number_of_questions: json.number_of_questions,
       question_id: json.question_id,
-      questions: json.questions?.map((question: any) => ShowQuestionsModel.fromJson(question)) ?? [],
+      questions:
+        json.questions?.map((question: any) => ShowQuestionsModel.fromJson(question)) ?? [],
       attachments: json.attachments,
+      similarPrecentage: json.identicality_percentage,
+      correctStatus: json.correct_status,
     });
   }
 
@@ -260,7 +262,7 @@ export default class ShowQuestionsModel {
       id: 3,
       title: 'Document 3',
     },
-    questionDocuments: [QuestionDocumentModel.example,QuestionDocumentModel.example],
+    questionDocuments: [QuestionDocumentModel.example, QuestionDocumentModel.example],
     skills: [
       new QuestionSkillsModel({
         id: 2,
