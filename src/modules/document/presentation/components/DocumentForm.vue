@@ -67,6 +67,7 @@
       if (newDoc) {
         title.value = newDoc.translations.title;
         selectedDocumentType.value = newDoc.documentType;
+        description.value = newDoc.translations.description;
 
         // ← فقط اضبط لو القيمة اتغيرت فعلاً
         if (UploadedImage.value !== newDoc.images) {

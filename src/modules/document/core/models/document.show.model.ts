@@ -3,6 +3,7 @@ export default class DocumentShowModel {
   public readonly id?: number;
   public readonly translations: {
     title: Record<string, string>;
+    description: Record<string, string>;
   };
   public readonly title: Record<string, string>;
   public readonly RefNumber: string;
@@ -17,6 +18,7 @@ export default class DocumentShowModel {
     id?: number;
     translations: {
       title: Record<string, string>;
+      description: Record<string, string>;
     };
     title: Record<string, string>;
     RefNumber: string;
@@ -65,10 +67,10 @@ export default class DocumentShowModel {
 
       translations: {
         title: this.mapTranslations(json.title, 'title'),
+        description: this.mapTranslations(json.description, 'description'),
       },
 
       title: this.mapTranslations(json.title ?? [], 'title'),
-
       RefNumber: json.RefNumber ?? json.reference_number ?? '',
 
       // documentType: new TitleInterface({
@@ -94,14 +96,12 @@ export default class DocumentShowModel {
         title: json.subject?.titles?.[0]?.title ?? '',
       }),
 
-      tags: Array.isArray(json.tags)
-        ? json.tags.map((t: any) => t.tag)
-        : [],
+      tags: Array.isArray(json.tags) ? json.tags.map((t: any) => t.tag) : [],
       // tags: json.tags ?? [],
       // images: json.images ?? [],
       // files: json.files ?? [],
-      images: json.image  ?? '',
-      files: json.document_file  ?? '',
+      images: json.image ?? '',
+      files: json.document_file ?? '',
     });
   }
 
