@@ -41,7 +41,15 @@
   const word = ref('');
 
   const fetchEducationClassifications = async (page: number = 1, word: string = '') => {
-    await controller.fetchList(new IndexEducationClassificationParams(word, page, perPage.value));
+    await controller.fetchList(
+      new IndexEducationClassificationParams({
+        word: word,
+        pageNumber: page,
+        perPage: perPage.value,
+        withPage: 1,
+        date: '',
+      }),
+    );
   };
 
   const onPageChange = (page: number) => {
@@ -86,12 +94,6 @@
     SelectedRow.value = items;
   };
 
-  /*
-const ToggleStatus = async (id: number) => {
-  await controller.toggleStatus(new ToggleStatusEducationClassificationParams({ id: id }));
-  await fetchEducationClassifications();
-};
-*/
   const ShoweEditDialog = ref<boolean>(false);
   const selectedItemId = ref<number>(0);
   const actionList = (id: number, deleteEducationClassification: (id: number) => void) => [
@@ -108,7 +110,13 @@ const ToggleStatus = async (id: number) => {
       icon: DeletIcon,
       action: () => deleteEducationClassification(id),
     },
-  ]; 
+  ];
+  const DeleteItems = async () => {
+    console.log(SelectedRow.value);
+    SelectedRow.value.forEach((item) => {
+      deleteEducationClassification(item.id);
+    });
+  };
 </script>
 
 <template>
@@ -187,7 +195,7 @@ const ToggleStatus = async (id: number) => {
           <div class="num-type">
             <h6>{{ SelectedRow.length }} education type</h6>
           </div>
-          <div class="num-deleted">
+          <div class="num-deleted" @click="DeleteItems">
             <h6>delete {{ SelectedRow.length }} item</h6>
           </div>
         </div>

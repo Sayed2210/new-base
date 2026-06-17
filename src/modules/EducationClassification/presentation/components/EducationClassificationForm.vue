@@ -11,6 +11,9 @@
   import DatePicker from 'primevue/datepicker';
   import { dialogManager } from '@/base/Presentation/Dialogs/dialog.manager';
   import LoadingIcon from '@/assets/images/loading.webp';
+  import EducationClassificationController from '../controllers/educationClassification.controller';
+  import IndexEducationClassificationParams from '../../core/params/index.educationClassification.params';
+  import { formatJoinDate } from '@/base/Presentation/Utils/date_format';
 
   const emit = defineEmits(['updateData', 'save-education-classification']);
 
@@ -50,8 +53,14 @@
   };
   // fillter
   const FilterDialogShow = ref<boolean>(false);
-  const ApplayFilter = () => {
+  const ApplayFilter = async () => {
     FilterDialogShow.value = false;
+    const controller = EducationClassificationController.getInstance();
+    await controller.fetchList(
+      new IndexEducationClassificationParams({
+        date: date.value ? formatJoinDate(date.value) : '',
+      }),
+    );
   };
   const CloseFiletrDialog = () => {
     FilterDialogShow.value = false;
@@ -84,7 +93,7 @@
       <FilterDialog v-model="FilterDialogShow">
         <template #content>
           <div class="date-remove">
-            <h6>{{ $t('date of remove') }}</h6>
+            <h6>{{ $t('date') }}</h6>
             <DatePicker v-model="date" class="date-model" :placeholder="$t('Date Remove')" />
           </div>
           <div class="filter-action">
@@ -123,6 +132,15 @@
 </template>
 
 <style scoped lang="scss">
+  .date-remove {
+    h6 {
+      color: black;
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 10px;
+      font-family: 'Demi';
+    }
+  }
   .field-group {
     &.disabled {
       cursor: not-allowed;

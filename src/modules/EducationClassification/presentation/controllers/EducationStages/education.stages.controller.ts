@@ -1,8 +1,9 @@
-import type Params from '@/base/Core/Params/params';
 import type { ApiCallOptions } from '@/base/Data/ApiService/baseApiService';
 import BaseController from '@/base/Presentation/Controller/baseController';
 import type { ControllerConfig } from '@/base/Presentation/Controller/baseController';
+import { dialogManager } from '@/base/Presentation/Dialogs/dialog.manager';
 import type EducationStageModel from '@/modules/EducationClassification/core/models/EducationStage/education.stages.model';
+import type EditEducationStageParams from '@/modules/EducationClassification/core/params/EducationStages/edit.education.stage.params';
 import EducationStageRepository from '@/modules/EducationClassification/data/repositories/EducationStage/education.stages.repository';
 
 export default class EducationStageController extends BaseController<
@@ -38,7 +39,29 @@ export default class EducationStageController extends BaseController<
     return EducationStageController.instance;
   }
 
-  async create(params: Params, options?: ApiCallOptions) {
+  async create(params: EditEducationStageParams, options?: ApiCallOptions) {
+    const translations = Object.values(params.translations?.title ?? {});
+
+    const hasNoTranslations =
+      translations.length === 0 || translations.every((value) => !String(value).trim());
+
+    if (hasNoTranslations) {
+      dialogManager.toastWarning('Please add at least one translation');
+      return;
+    }
     return super.create(params, { ...options, useJson: true });
+  }
+
+  async update(params: EditEducationStageParams, options?: ApiCallOptions) {
+    const translations = Object.values(params.translations?.title ?? {});
+
+    const hasNoTranslations =
+      translations.length === 0 || translations.every((value) => !String(value).trim());
+
+    if (hasNoTranslations) {
+      dialogManager.toastWarning('Please add at least one translation');
+      return;
+    }
+    return super.update(params, { ...options, useJson: true });
   }
 }

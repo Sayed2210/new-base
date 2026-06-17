@@ -76,6 +76,7 @@
   };
 
   const handleSave = async () => {
+    console.log(selectedSkill.value, 'selectedSkill');
     if (isEdit.value && editId.value !== null && selectedSkill.value) {
       await educationSkillsController.update(
         new EditEducationSubjectSkillsParams({
@@ -175,7 +176,7 @@
 
       <div class="dialog-inputs">
         <div class="field-group select-group">
-          <span class="error-message-inputs"> {{ selectedSkill }}</span>
+          <!-- <span class="error-message-inputs"> {{ selectedSkill }}</span> -->
 
           <UpdatedCustomInputSelect
             id="skills"

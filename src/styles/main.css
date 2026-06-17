@@ -14860,4 +14860,12 @@ body div {
     transform: translateY(-12px);
     opacity: 1;
   }
+}
+.p-datepicker {
+  width: 100% !important;
+}
+.p-datepicker .p-inputtext {
+  background: white !important;
+  color: black !important;
+  width: 100% !important;
 }/*# sourceMappingURL=main.css.map */

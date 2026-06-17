@@ -4,6 +4,8 @@ import type { ApiCallOptions } from '@/base/Data/ApiService/baseApiService';
 import type Params from '@/base/Core/Params/params';
 import EducationSubjectItemRepository from '@/modules/EducationClassification/data/repositories/educationSubject/education.subject.item.repository';
 import type EducationSubjectModel from '@/modules/EducationClassification/core/models/EducationSubject/education.subject.model';
+import type EditEducationSubjectItemParams from '@/modules/EducationClassification/core/params/EducationSubjects/edit.education.subject.item.params';
+import { dialogManager } from '@/base/Presentation/Dialogs/dialog.manager';
 
 export default class EducationSubjectItemController extends BaseController<
   EducationSubjectModel,
@@ -42,7 +44,16 @@ export default class EducationSubjectItemController extends BaseController<
     return super.create(params, { ...options, useJson: true });
   }
 
-  async update(params: Params, options?: ApiCallOptions) {
+  async update(params: EditEducationSubjectItemParams, options?: ApiCallOptions) {
+    const translations = Object.values(params.translations?.title ?? {});
+
+    const hasNoTranslations =
+      translations.length === 0 || translations.every((value) => !String(value).trim());
+
+    if (hasNoTranslations) {
+      dialogManager.toastWarning('Please add at least one translation');
+      return;
+    }
     return super.update(params, { ...options, useJson: true });
   }
 }

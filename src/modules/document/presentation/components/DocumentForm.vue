@@ -279,12 +279,13 @@
         <HandleFilesUpload
           :label="`upload image`"
           accept="image/*"
-          :multiple="true"
+          :multiple="false"
           :index="1"
           :file="UploadedImage"
           :have-content="true"
           :class="`image-input`"
           @change="handleImageChange"
+          :max-files="1"
         >
           <template #content>
             <div class="add-imaegs-data">
@@ -304,12 +305,13 @@
         <HandleFilesUpload
           :label="`upload document`"
           accept=".pdf"
-          :multiple="true"
+          :multiple="false"
           :index="2"
           :file="UploadedFiles"
           :have-content="true"
           :class="`image-input`"
           @change="handleFilsChange"
+          :max-files="1"
         >
           <template #content>
             <div class="add-imaegs-data">
