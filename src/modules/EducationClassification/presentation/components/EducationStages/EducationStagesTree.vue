@@ -25,6 +25,7 @@
   import Skills from '@/assets/images/Skills.png';
   import TranslationParams from '@/modules/about/core/params/translation.params';
   import EmptyTree from '@/assets/images/EmptyTree.gif';
+  import StageTreeSkeleton from './StageTreeSkeleton.vue';
 
   const route = useRoute();
   const { locale } = useI18n();
@@ -65,7 +66,9 @@
     return null;
   }
 
+  const skeletonLoading = ref(true);
   async function fetchRoot(word?: string) {
+    skeletonLoading.value = true;
     const params = new FetchEducationStageParams({
       classification_id: classificationId,
       search: word,
@@ -74,6 +77,7 @@
     if (result instanceof DataSuccess) {
       rootNodes.value = (result.data ?? []).map((s: EducationStageModel) => makeNode(s, 0));
     }
+    skeletonLoading.value = false;
   }
 
   async function fetchChildren(parentId: number, callback: (children: StageNode[]) => void) {
@@ -224,10 +228,11 @@
 
     // console.log(value);
     await fetchRoot(value);
-  } 
+  };
 </script>
 
 <template>
+  <StageTreeSkeleton v-if="skeletonLoading" />
   <div class="education-tree">
     <!-- Left Panel -->
     <div class="left-panel">

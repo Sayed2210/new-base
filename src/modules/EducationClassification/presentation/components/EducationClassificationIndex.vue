@@ -192,7 +192,7 @@
           <RenameEducatuinClassificationDialog
             v-model:visable="ShoweEditDialog"
             :item-id="selectedItemId"
-            @update:name="fetchEducationClassifications()"
+            @update:name="fetchEducationClassifications(1, word, 1)"
           />
         </div>
 

@@ -14638,19 +14638,6 @@ body::-webkit-scrollbar-thumb:hover {
 }
 .filter-action .btn-cancel {
   width: 30%;
-  padding: 14px;
-  background-color: var(--danger-light-alt);
-  color: var(--Red);
-  border: 1.5px solid var(--danger-border-light);
-  border-radius: 50px;
-  font-size: 15px;
-  font-weight: 600;
-  font-family: "medium";
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-.filter-action .btn-cancel:hover {
-  background-color: var(--danger-light);
 }
 .filter-action .btn-primary {
   width: 65%;
@@ -14868,4 +14855,8 @@ body div {
   background: white !important;
   color: black !important;
   width: 100% !important;
+}
+
+.p-inputtext {
+  font-family: "Demi" !important;
 }/*# sourceMappingURL=main.css.map */

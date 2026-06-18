@@ -7,6 +7,9 @@ import router from '@/router';
 import { useFormsStore } from '@/stores/formsStore';
 import EducationClassificationRepository from '../../data/repositories/educationClassification.repository';
 import type EducationClassificationModel from '../../core/models/education.classification.model';
+import type EditEducationClassificationParams from '../../core/params/edit.educationClassification.params';
+import { dialogManager } from '@/base/Presentation/Dialogs/dialog.manager';
+import { hasEmptyTranslationKey } from '@/base/Presentation/Utils/ChecktranslationEmpty';
 
 /**
  * Education Classification Controller for managing education classifications
@@ -68,18 +71,28 @@ export default class EducationClassificationController extends BaseController<
     return result;
   }
 
-  async fetchList(params: Params, options?: ApiCallOptions) {
-    return super.fetchList(params, { ...options, useJson: true ,headers:{
-      'Accept-Language': (params as any).isLocale ? 'ar' : 'en',
-    } });
+  async fetchList(params?: Params, options?: ApiCallOptions) {
+    return super.fetchList(params, {
+      ...options,
+      useJson: true,
+      headers: {
+        'Accept-Language': (params as any)?.isLocale ? 'ar' : 'en',
+      },
+    });
   }
 
-  async update(params: Params, options?: ApiCallOptions, formKey?: string) {
+  async update(
+    params: EditEducationClassificationParams,
+    options?: ApiCallOptions,
+    formKey?: string,
+  ) {
     const FormStore = useFormsStore();
 
-    // console.log(params, 'params');
+    if (hasEmptyTranslationKey(params.translations, 'title')) {
+      dialogManager.toastWarning('You Must Add Title');
+      return;
+    }
     const result = await super.update(params, options);
-    await super.fetchList();
 
     if (result instanceof DataSuccess) {
       router.push({ name: 'EducationClassifications' });

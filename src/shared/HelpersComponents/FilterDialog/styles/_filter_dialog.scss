@@ -28,20 +28,20 @@
 
   .btn-cancel {
     width: 30%;
-    padding: 14px;
-    background-color: $DangerLightAlt;
-    color: $Red;
-    border: 1.5px solid $DangerBorderLight;
-    border-radius: 50px;
-    font-size: 15px;
-    font-weight: $BaseFontSemiBoldWeight;
-    font-family: 'medium';
-    cursor: pointer;
-    transition: background-color 0.2s;
+    // // padding: 14px;
+    // background-color: $DangerLightAlt;
+    // color: $Red;
+    // border: 1.5px solid $DangerBorderLight;
+    // border-radius: 50px;
+    // font-size: 15px;
+    // font-weight: $BaseFontSemiBoldWeight;
+    // font-family: 'medium';
+    // cursor: pointer;
+    // transition: background-color 0.2s;
 
-    &:hover {
-      background-color: $BgRed;
-    }
+    // &:hover {
+    //   background-color: $BgRed;
+    // }
   }
 
   .btn-primary {

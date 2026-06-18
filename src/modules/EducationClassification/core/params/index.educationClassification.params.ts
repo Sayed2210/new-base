@@ -29,7 +29,7 @@ export default class IndexEducationClassificationParams extends IndexParams {
     const data = super.toMap();
     data['order_dir'] = this.order;
     if (this.date) {
-      data['date'] = this.date;
+      data['created_at'] = this.date;
     }
     return data;
   }
