@@ -30,6 +30,11 @@
     // @media (max-width: 768px) {
     //   flex-direction: column;
     // }
+
+    .subject-cycle {
+      @include flex(row, nowrap, center, center);
+      gap: $XlSize;
+    }
   }
 
   .subject-info,
@@ -81,9 +86,7 @@
   }
 
   .skills {
-    @include flex-column();
-
-    gap: $XsSize3;
+    @include grid(2, $gap: $XsSize3);
     margin: 0;
     padding: 0;
     list-style: none;

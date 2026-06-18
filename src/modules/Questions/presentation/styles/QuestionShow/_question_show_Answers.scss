@@ -20,11 +20,11 @@
       @include flex(row, nowrap, space-between, center);
 
       width: 100%;
-      padding: $XsSize5 $XsSize3;
+      padding: $XsSize $XsSize3;
       border-radius: $XsSize3;
 
       &.correct {
-        background-color: var(--success-light);
+        background-color: var(--bg-approved);
 
         .answer-content {
           .answer {

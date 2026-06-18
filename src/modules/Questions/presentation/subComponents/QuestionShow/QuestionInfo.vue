@@ -8,15 +8,15 @@
   const getQuestionType = (value: QuestionTypeEnum) => {
     switch (value) {
       case QuestionTypeEnum.mcq:
-        return 'Multiple Choice Question';
+        return 'MCQ';
       case QuestionTypeEnum.ranking:
-        return 'Ranking Question';
+        return 'Ranking';
       case QuestionTypeEnum.true_false:
-        return 'True False Question';
+        return 'True / False';
       case QuestionTypeEnum.complate:
-        return 'Complete Question';
+        return 'Complete';
       case QuestionTypeEnum.matching:
-        return 'Matching Question';
+        return 'Matching';
     }
   };
 
