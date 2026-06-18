@@ -161,7 +161,7 @@
   };
 
   const handleSocialImageChange = (index: number, file: Array<{ base64: string }>) => {
-    socialMediaList.value[index].icon = file[0]?.base64 ?? '';
+    socialMediaList.value[index]!.icon = file[0]?.base64 ?? '';
     updateData();
   };
 
@@ -291,9 +291,7 @@
             >
               <template #content>
                 <div class="add-imaegs-data">
-                  <UplaodImageInput />
                   <p class="first-text"><span>Click to upload</span> or drag and drop</p>
-                  <p class="second-text">JPG, JPEG, PNG less than 1MB</p>
                 </div>
               </template>
             </HandleFilesUpload>
@@ -325,6 +323,15 @@
 </template>
 
 <style scoped lang="scss">
+  .image-input {
+    :deep(.upload-area) {
+      padding: 10px !important;
+      border-radius: 20px;
+    }
+    :deep(.upload-label) {
+      display: none;
+    }
+  }
   .social-media-row {
     &:last-child {
       .btns {

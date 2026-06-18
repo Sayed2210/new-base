@@ -98,7 +98,7 @@
     },
     {
       id: QuestionTypeEnum.true_false,
-      title: 'trueAndFalse',
+      title: 'true & false',
     },
     {
       id: QuestionTypeEnum.ranking,

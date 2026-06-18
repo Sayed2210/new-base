@@ -319,6 +319,7 @@
     color: var(--gray-5);
     font-size: 16px;
     font-weight: 600;
+    font-family: 'Demi' !important;
   }
 
   .upload-area {
@@ -335,6 +336,7 @@
       border-color 0.15s,
       background 0.15s;
     background: var(--bg-section);
+    font-family: 'Demi' !important;
   }
 
   .upload-area:hover:not(.disabled) {

@@ -30,11 +30,10 @@
   onMounted(async () => {
     await fetchAbout();
   });
-
 </script>
 
 <template>
-  <DataStatusBuilder :controller="state" >
+  <DataStatusBuilder :controller="state">
     <template #success>
       <div class="about-page">
         <div class="header-container">
@@ -81,7 +80,7 @@
                 :key="index"
                 :to="item.link || ''"
               >
-                <img v-if="item.icon" :src="item.icon" alt="icon" />
+                <img class="social-icon" v-if="item.icon" :src="item.icon" alt="icon" />
               </router-link>
             </div>
           </div>
@@ -94,9 +93,7 @@
           <EmptyData />
           <h5>No about information added</h5>
           <p>Add details about your platform to display them to students</p>
-          <router-link to="/about/add" class="btn btn-primary"
-            >Add about</router-link
-          >
+          <router-link to="/about/add" class="btn btn-primary">Add about</router-link>
         </div>
       </div>
     </template>
@@ -109,11 +106,17 @@
           <EmptyData />
           <h5>No about information added</h5>
           <p>Add details about your platform to display them to students</p>
-          <router-link to="/about/add" class="btn btn-primary"
-            >Add about</router-link
-          >
+          <router-link to="/about/add" class="btn btn-primary">Add about</router-link>
         </div>
       </div>
     </template>
   </DataStatusBuilder>
 </template>
+
+<style scoped>
+  .social-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+  }
+</style>

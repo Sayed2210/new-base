@@ -11,6 +11,10 @@ export default class IndexSkillsParams extends IndexParams {
   }
 
   toMap(): Record<string, string | number | number[] | null> {
-    return super.toMap();
+    const data = super.toMap();
+
+    data['order_dir'] = 1;
+
+    return data;
   }
 }

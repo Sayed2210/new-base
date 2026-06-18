@@ -28,6 +28,7 @@
       console.error('Error saving employee:', error);
     } finally {
       loading.value = false;
+      router.push({ name: 'Skills' });
     }
   };
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { onMounted, ref } from 'vue';
-  import { useRoute } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   // import AppButton from '@/shared/HelpersComponents/AppButton.vue';
   // import IconAccept from '@/shared/icons/IconAccept.vue';
   import EmployeeController from '../controllers/employee.controller';
@@ -10,6 +10,7 @@
 
   const controller = EmployeeController.getInstance();
   const route = useRoute();
+  const router = useRouter();
   const formKey = route.fullPath;
 
   const params = ref<EditEmployeeParams | null>(null);
@@ -26,6 +27,8 @@
 
     loading.value = true;
     await controller.update(params.value, undefined, formKey);
+    router.push({ name: 'Employees' });
+
     loading.value = false;
   };
 

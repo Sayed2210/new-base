@@ -131,7 +131,7 @@
           <h3>
             <FolderIcon />
             <span>
-              {{ route.params.id ? 'Edit Question' : 'Add New Question' }}
+              {{ route.params.id ? 'Edit Question' : 'Add question' }}
             </span>
           </h3>
         </div>
