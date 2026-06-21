@@ -23,7 +23,7 @@
   const controller = ArticleController.getInstance();
   const deleteArticle = async (id: number) => {
     await controller.delete(new DeleteArticlesParams(id));
-    router.push(`/${route.params.country_code}/articles`);
+    router.push(`/articles`);
   };
   // delet arrow from article subject and show only title
   // const deleteArrow = (subject: ArticleSubjectModel) => {
@@ -53,7 +53,7 @@
           {{ $t('Archive ') }}
         </div>
 
-        <DeleteDialog @delete="deleteArticle(artical.id!)">
+        <DeleteDialog @delete="deleteArticle(artical.question_id!)">
           <template #Dialog>
             <button class="btn-delet" title="Delete">
               <DeletIArticle />

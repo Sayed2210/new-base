@@ -6,7 +6,7 @@
   import ArticleController from '../controllers/Article.controller';
   import ArticleForm from './ArticleForm.vue';
   import LoadingIcon from '@/assets/images/loading.webp';
-import router from '@/router/index.ts';
+  import router from '@/router/index.ts';
 
   const controller = ArticleController.getInstance();
   const route = useRoute();
@@ -19,7 +19,7 @@ import router from '@/router/index.ts';
    */
 
   const loading = ref(false);
-  // save as draft 
+  // save as draft
   const saveAsDraft = async () => {
     loading.value = true;
     try {
@@ -55,16 +55,15 @@ import router from '@/router/index.ts';
   const updateData = (updatedParams: AddEmployeeParams) => {
     params.value = updatedParams;
   };
+  const cancel = () => {
+    router.push({ name: 'Articles' });
+  };
 </script>
 
 <template>
   <div class="artical-add-page">
     <!-- <ArticleForm :form-key="formKey" :loading="loading" @update-data="updateData" /> -->
-     <ArticleForm
-  :form-key="formKey"
-  :loading="loading"
-  @update-data="updateData"
-/>
+    <ArticleForm :form-key="formKey" :loading="loading" @update-data="updateData" />
 
     <div class="actions" :class="{ disabled: loading }">
       <!-- <AppButton  title="Save Article" size="sm" icon="right" type="submit" class="save-emp"  :class="{ disabled: loading }" @click="saveArticle">
@@ -94,7 +93,7 @@ import router from '@/router/index.ts';
         <span v-else> {{ $t('Save Article') }} <IconAccept /> </span>
       </button>
       <!-- <button class="btn btn-draft">{{ $t(`Save As draft`) }}</button> -->
-        <button
+      <button
         class="btn btn-draft"
         :disabled="loading"
         :class="loading ? 'disabled' : ''"
@@ -102,7 +101,7 @@ import router from '@/router/index.ts';
       >
         {{ $t(`Save As draft`) }}
       </button>
-      <button class="btn btn-cancel">{{ $t(`cancel`) }}</button>
+      <button class="btn btn-cancel" @click="cancel">{{ $t(`cancel`) }}</button>
     </div>
 
     <!-- Error Display -->

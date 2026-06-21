@@ -14,7 +14,8 @@
     "lint": "eslint . --ext .ts,.vue --fix",
     "format": "prettier --write \"src/**/*.{ts,vue,scss,css}\"",
     "prepare": "husky",
-    "gitPush": "git push origin HEAD --no-verify"
+    "gitPush": "git push origin HEAD --no-verify",
+    "host": "sudo docker compose up --build"
   },
   "lint-staged": {
     "*.{ts,js,mjs}": [

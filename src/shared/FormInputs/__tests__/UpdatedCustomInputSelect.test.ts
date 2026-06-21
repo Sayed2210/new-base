@@ -19,9 +19,11 @@ const IconBackStageStub = {
   name: 'IconBackStage',
   template: '<span class="icon-backstage-stub" />',
 };
-const PlusIconStub = {
-  name: 'PlusIcon',
-  template: '<span class="plus-icon-stub" />',
+const DialogStub = {
+  name: 'Dialog',
+  template: '<div v-if="visible" class="dialog-stub"><slot /></div>',
+  props: ['visible'],
+  emits: ['update:visible', 'hide'],
 };
 
 vi.mock('@/base/Presentation/Utils/validationService', () => ({
@@ -30,19 +32,20 @@ vi.mock('@/base/Presentation/Utils/validationService', () => ({
 
 const makeTitleInterface = (id: number, title: string) => ({ id, title });
 
-const createWrapper = (props: Record<string, any> = {}) =>
+const createWrapper = (props: Record<string, any> = {}, slots: Record<string, string> = {}) =>
   mount(UpdatedCustomInputSelect, {
     props: {
       modelValue: null,
       placeholder: 'Select...',
       ...props,
     },
+    slots,
     global: {
       stubs: {
         MultiSelect: MultiSelectStub,
         Select: SelectStub,
         IconBackStage: IconBackStageStub,
-        PlusIcon: PlusIconStub,
+        Dialog: DialogStub,
       },
       mocks: { $t: (key: string) => key },
     },
@@ -110,6 +113,26 @@ describe('UpdatedCustomInputSelect', () => {
   it('hides reload icon when reload=false', () => {
     const wrapper = createWrapper({ reload: false });
     expect(wrapper.find('.reload-icon').exists()).toBe(false);
+  });
+
+  it('hides reload icon when legacy relaod=false is provided', () => {
+    const wrapper = createWrapper({ relaod: false });
+    expect(wrapper.find('.reload-icon').exists()).toBe(false);
+  });
+
+  it('renders dialog slot and emits dialog visibility updates', () => {
+    const wrapper = createWrapper(
+      { isDialog: true, dialogVisible: true },
+      { Dialog: '<div class="dialog-content">Dialog content</div>' },
+    );
+
+    expect(wrapper.find('.dialog-content').text()).toBe('Dialog content');
+
+    wrapper.findComponent(DialogStub).vm.$emit('update:visible', false);
+    wrapper.findComponent(DialogStub).vm.$emit('hide');
+
+    expect(wrapper.emitted('update:dialogVisible')?.[0]).toEqual([false]);
+    expect(wrapper.emitted('close')?.[0]).toEqual([false]);
   });
 
   it('renders static options when staticOptions is provided', () => {

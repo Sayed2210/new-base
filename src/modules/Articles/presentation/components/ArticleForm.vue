@@ -257,8 +257,8 @@
                   />
                 </div>
               </div>
-              <div class="input">
-                <div class="input">
+              <div class="field-group">
+                <div class="input-wrapp">
                   <UpdatedCustomInputSelect
                     id="question-sequence"
                     v-model="SelectedQuestionSequence"
@@ -268,9 +268,6 @@
                     @update:model-value="handelSubjectUpdate"
                   />
                 </div>
-                <!-- <UpdatedCustomInputSelect id="doc-subject" v-model="SelectedSubject" :label="`subject`"
-                  :params="indexDocumentTypeParams" :controller="documentTypeController" placeholder="select subject"
-                  @update:model-value="updateData" /> -->
               </div>
             </div>
           </div>

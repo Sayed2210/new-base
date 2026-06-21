@@ -18,6 +18,8 @@
   import type StageModel from '@/modules/Stages/core/models/stage.model'; // import type BranchesModel from '@/modules/Stages/core/models/branches.model';
   import type DocumentShowModel from '../../core/models/document.show.model';
   import flattenBranchTree from '@/modules/document/core/TreeSelectHelper';
+  import NewIcon from '@/shared/icons/CustomSelect/NewIcon.vue';
+
   const emit = defineEmits(['updateData']);
 
   const { document, formKey, loading } = defineProps<{
@@ -155,6 +157,7 @@
   const deletetag = (tagId: number) => {
     tags.value.splice(tagId, 1);
   };
+  const DocumentTypeDialog = ref(false);
 </script>
 
 <template>
@@ -217,6 +220,17 @@
             updateData();
           "
         />
+        <!-- @close="DocumentTypeDialog = false"
+          :isDialog="true"
+          v-model:dialogVisible="DocumentTypeDialog"
+        >
+          <template #reloadHeader>
+            <span class="add-dialog" @click="DocumentTypeDialog = true"> <NewIcon /></span>
+          </template>
+          <template #Dialog>
+            <DocumentTypeDialog />
+          </template>
+        </UpdatedCustomInputSelect> -->
       </div>
 
       <div class="field-group col-span-2">
@@ -329,5 +343,8 @@
   .disabled-input {
     pointer-events: none;
     opacity: 0.5;
+  }
+  .add-dialog {
+    cursor: pointer;
   }
 </style>

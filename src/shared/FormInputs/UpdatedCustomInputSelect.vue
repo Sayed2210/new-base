@@ -9,13 +9,13 @@
 
   import ValidationService from '@/base/Presentation/Utils/validationService';
 
-  import IconBackStage from '@/shared/icons/IconBackStage.vue';
-
   import PlusIcon from '@/shared/icons/PlusIcon.vue';
 
   import type TitleInterface from '@/base/Data/Models/titleInterface';
 
   import type BaseController from '@/base/Presentation/Controller/baseController';
+  import Dialog from 'primevue/dialog';
+  import ReloadIcon from '../icons/CustomSelect/ReloadIcon.vue';
 
   export type ComponentType = 'select' | 'multiselect';
 
@@ -53,11 +53,12 @@
     hascontent?: boolean;
 
     hasHeader?: boolean;
-
+    isDialog?: boolean;
+    dialogVisible?: boolean;
     onclick?: () => void;
   }
 
-  const emit = defineEmits(['update:modelValue', 'update:slot']);
+  const emit = defineEmits(['update:modelValue', 'update:slot', 'close', 'update:dialogVisible']);
 
   const props = withDefaults(defineProps<Props>(), {
     type: 1,
@@ -264,6 +265,20 @@
 
     normalizedValue.value = isMultiselect.value ? [] : null;
   }
+  const DialogVisable = computed({
+    get() {
+      return props.dialogVisible;
+    },
+    set(val) {
+      emit('update:dialogVisible', val);
+      if (!val) {
+        reloadData();
+      }
+    },
+  });
+  const closeDailog = () => {
+    emit('close', false);
+  };
 </script>
 
 <template>
@@ -279,7 +294,7 @@
         >
           <span v-if="optional" class="optional-text">({{ $t('optional') }})</span>
 
-          <IconBackStage />
+          <ReloadIcon />
         </span>
       </div>
 
@@ -319,9 +334,30 @@
   </slot>
 
   <slot v-else name="content"> </slot>
+  <div v-if="isDialog">
+    <Dialog
+      :pt="{
+        root: 'custom-select-dialog',
+      }"
+      @hide="closeDailog"
+      v-model:visible="DialogVisable"
+      modal
+      :dismissable-mask="true"
+      :style="{ width: '50rem' }"
+    >
+      <slot name="Dialog"></slot>
+    </Dialog>
+  </div>
 </template>
 
 <style scoped lang="scss">
+  .dialog {
+    background-color: white !important;
+  }
+  .flex {
+    display: flex;
+    gap: 10px;
+  }
   .reload-icon {
     z-index: 9999;
     cursor: pointer;
