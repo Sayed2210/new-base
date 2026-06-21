@@ -20,6 +20,7 @@
   import IndexEducationSubjectTopicParams from '@/modules/EducationClassification/core/params/EducationTopic/index.education.subject.topic.params';
   import RemoveItemIcon from '@/shared/icons/Question/RemoveItem.vue';
   import { useRoute } from 'vue-router';
+  import EducationStagesTree from '@/modules/EducationClassification/presentation/components/EducationStages/EducationStagesTree.vue';
 
   const indexDocumentTypeParams = new IndexDocumentTypeParams();
   const emit = defineEmits(['updateData']);
@@ -267,7 +268,22 @@
           @close="subjectDialog = false"
           :isDialog="true"
           v-model:dialogVisible="subjectDialog"
-        />
+        >
+          <template #reloadHeader>
+            <span class="add-dialog" @click="subjectDialog = true"> <NewIcon /></span>
+          </template>
+          <template #Dialog>
+            <EducationStagesTree />
+          </template>
+        </UpdatedCustomInputSelect>
+        <!-- @close="subjectDialog = false"
+          :isDialog="true"
+          v-model:dialogVisible="subjectDialog"
+        >
+          <template #Dialog>
+            <EducationStagesTree />
+          </template>
+        </UpdatedCustomInputSelect> -->
       </div>
       <div class="input">
         <UpdatedCustomInputSelect
@@ -337,7 +353,7 @@
     align-items: center;
     gap: 10px;
     margin-bottom: 10px;
-    margin-block: 10px; 
+    margin-block: 10px;
 
     & label {
       width: 80%;
