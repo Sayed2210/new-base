@@ -213,8 +213,8 @@
           :draft-data="draftData?.answers"
           :question-data="safeAnswers.answers"
           :question-type="questionType"
-          :similarPrecintage="questionData?.similarPrecentage"
-          :correctStatus="questionData?.correctStatus"
+          :similar-precintage="questionData?.similarPrecentage"
+          :correct-status="questionData?.correctStatus"
           @update:data="GetAnswers"
         />
         <QuestionClarification

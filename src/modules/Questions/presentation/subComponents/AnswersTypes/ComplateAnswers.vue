@@ -148,9 +148,9 @@
     >
       <label class="field-label" :for="`similar-precentge`">{{ $t(`similar_percentage`) }}</label>
       <input
-        class="field-input"
         :id="`similar-precentge`"
         v-model="similarPrecentge"
+        class="field-input"
         type="number"
         :placeholder="$t('similar_percentage')"
         @input="UpdateSImilar"

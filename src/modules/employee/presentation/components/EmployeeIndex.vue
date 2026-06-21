@@ -186,10 +186,10 @@
             <UpdatedCustomInputSelect
               id="doc-type"
               v-model="selectedStatus"
-              @update:model-value="UpdateStatus"
               :label="`Employee Status`"
               :placeholder="`enter status`"
               :static-options="employeeTypeOptions"
+              @update:model-value="UpdateStatus"
             />
             <div class="filter-action">
               <button class="btn btn-cancel" @click="CloseFiletrDialog">Reset</button>

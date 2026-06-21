@@ -36,6 +36,7 @@
   const isExplain = ref(false);
   const UploadedImage = ref<string[]>([]);
   const explanationAttachments = ref<string[]>([]);
+  const explanationAttachmentsChanged = ref(false);
 
   // Document dependencies
   const indexDocumentParams = new IndexDocumentParams();
@@ -83,6 +84,7 @@
         isExplain.value = Boolean(descriptionArticle.value?.length > 0);
         explanationAttachments.value =
           newValue?.explanation?.attachments?.map((item: any) => item.file) ?? [];
+        explanationAttachmentsChanged.value = false;
         UploadedImage.value = newValue?.attachments?.map((item: any) => item.file) ?? [];
       }
     },
@@ -105,10 +107,11 @@
         },
         explanation: {
           explanation: descriptionArticle.value,
-          attachments:
-            explanationAttachments.value.map(
-              (file) => new AttachmentsParams({ alt: 'img', file }),
-            ) || [],
+          attachments: explanationAttachmentsChanged.value
+            ? explanationAttachments.value.map(
+                (file) => new AttachmentsParams({ alt: 'img', file }),
+              )
+            : undefined,
         },
       });
     } else {
@@ -136,12 +139,13 @@
   };
 
   // const handleImageChange = (file: any) => {
-  //   UploadedImage.value = file[0]?.base64 ? [file[0].base64] : [];
+  //   UploadedImage.value = file?.[0]?.base64 ? [file[0].base64] : [];
   //   updateData();
   // };
 
   const handleExplanationAttachments = (file: any) => {
     explanationAttachments.value = file[0]?.base64 ? [file[0].base64] : [];
+    explanationAttachmentsChanged.value = true;
     updateData();
   };
 
@@ -257,7 +261,7 @@
                   />
                 </div>
               </div>
-              <div class="field-group">
+              <div class="field-group control-full-with">
                 <div class="input-wrapp">
                   <UpdatedCustomInputSelect
                     id="question-sequence"
@@ -408,6 +412,10 @@
 <style scoped lang="scss">
   @use '../../../../styles/variables' as *;
   @use '../../../../styles/mixins/flex' as *;
+
+  .control-full-with {
+    width: 100%;
+  }
 
   .image-input {
     :deep(.upload-area) {

@@ -3,7 +3,7 @@
   import UploadFileIcon from '@/shared/icons/UploadFileIcon.vue';
   import { onMounted, ref, watch } from 'vue';
   import Checkbox from 'primevue/checkbox';
-  import AnswerModel from '@/modules/Questions/core/models/subModels/answer.model';
+  import type AnswerModel from '@/modules/Questions/core/models/subModels/answer.model';
   import AnswersParams from '@/modules/Questions/core/params/subParams/answers.params';
   import AttachmentsParams from '@/modules/Questions/core/params/subParams/attachments.params';
   import DeletIcon from '@/shared/icons/DropListIcons/DeletIcon.vue';

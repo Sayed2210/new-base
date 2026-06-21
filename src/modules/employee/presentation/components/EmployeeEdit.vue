@@ -48,7 +48,7 @@
       :employee="controller.itemData.value!"
       :form-key="formKey"
       :loading="loading"
-      @updateData="updateData"
+      @update-data="updateData"
     />
 
     <div class="actions" :class="{ disabled: loading }">

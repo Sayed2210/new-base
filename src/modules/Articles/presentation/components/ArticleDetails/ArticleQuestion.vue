@@ -122,7 +122,8 @@ const updateData = () => {
       </div>
       <div class="btn-add-question">
         <router-link :to="`/questions/add?article_id=${route.params.id}`" title="add new question" class="btn btn-add">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          <svg
+width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
             stroke-linecap="round">
             <path d="M12 5v14M5 12h14" />
           </svg>
@@ -133,28 +134,33 @@ const updateData = () => {
     <div class="fillters-search">
       <div class="search-field">
         <span class="search-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          <svg
+width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round">
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.35-4.35" />
           </svg>
         </span>
-        <input v-model="word" :placeholder="$t('search by id, question title,  type , difficulty')" class="search-input"
+        <input
+v-model="word" :placeholder="$t('search by id, question title,  type , difficulty')" class="search-input"
           type="text" @input="Search" />
       </div>
       <div class="fillters">
         <div class="input-select">
-          <UpdatedCustomInputSelect id="doc-difficulty" v-model="SelectedDifficulty" :label="``"
+          <UpdatedCustomInputSelect
+id="doc-difficulty" v-model="SelectedDifficulty" :label="``"
             :static-options="difficultyOptions" :placeholder="$t('select_difficulty')" />
         </div>
         <div class="input-select">
 
-          <UpdatedCustomInputSelect id="doc-type" v-model="SelectedType" :label="``" :static-options="typeOptions"
+          <UpdatedCustomInputSelect
+id="doc-type" v-model="SelectedType" :label="``" :static-options="typeOptions"
             :placeholder="$t('select_type')" />
         </div>
         <div class="input-select">
 
-          <UpdatedCustomInputSelect id="doc-status" v-model="SelectedStatus" :label="``" :static-options="statusOptions"
+          <UpdatedCustomInputSelect
+id="doc-status" v-model="SelectedStatus" :label="``" :static-options="statusOptions"
             :placeholder="$t('select_status')" />
         </div>
       </div>

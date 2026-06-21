@@ -17,11 +17,11 @@
 
 <template>
   <component
-    :draftData="draftData"
     :is="AnswerTypeHelper(questionType)"
+    :draft-data="draftData"
     :question-data="questionData!"
     :SimilarPrecintage="similarPrecintage"
-    :correctStatus="correctStatus"
+    :correct-status="correctStatus"
     @update:data="emit('update:data', $event)"
   />
 </template>

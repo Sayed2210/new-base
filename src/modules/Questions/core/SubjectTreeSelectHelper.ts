@@ -1,5 +1,5 @@
 import TitleInterface from '@/base/Data/Models/titleInterface';
-import StageModel from '@/modules/Stages/core/models/stage.model';
+import type StageModel from '@/modules/Stages/core/models/stage.model';
 
 function flattenSubjectBranchTree(nodes: StageModel[]): TitleInterface<number>[] {
   return nodes.flatMap((node) => {

@@ -173,7 +173,8 @@ const toggleDropMenu = () => {
             {{ group.group }}
           </p>
 
-          <router-link v-for="(item, i) in group.items" :key="i" :to="item.link" class="menu-item"
+          <router-link
+v-for="(item, i) in group.items" :key="i" :to="item.link" class="menu-item"
             :class="{ active: route.path === item.link }" @click="emit('clickItem')">
             <component :is="item.icon" class="icon" />
 

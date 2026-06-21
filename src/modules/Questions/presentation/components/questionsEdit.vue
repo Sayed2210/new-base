@@ -50,7 +50,7 @@
           <IconAccept />
         </template>
       </AppButton> -->
-      <button type="submit" @click="saveQuestion" class="btn btn-primary w-full">
+      <button type="submit" class="btn btn-primary w-full" @click="saveQuestion">
         {{ $t('update_question') }}
       </button>
     </div>

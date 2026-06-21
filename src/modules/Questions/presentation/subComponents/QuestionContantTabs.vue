@@ -259,15 +259,15 @@
       <div class="input">
         <UpdatedCustomInputSelect
           id="doc-branch"
+          v-model:dialog-visible="subjectDialog"
           :label="`Subject`"
           :static-options="branchOptions"
           :model-value="selectedBranchTitle"
           :placeholder="$t('Select Subject')"
           :reload="true"
+          :is-dialog="true"
           @update:model-value="handleBranchChange($event)"
           @close="subjectDialog = false"
-          :isDialog="true"
-          v-model:dialogVisible="subjectDialog"
         >
           <template #reloadHeader>
             <span class="add-dialog" @click="subjectDialog = true"> <NewIcon /></span>
@@ -331,7 +331,7 @@
       />
 
       <div v-for="(skill, index) in SelectedSkill" :key="index" class="skill-percentage">
-        <RemoveItemIcon @click="handleRemoveSkill(index)" class="remove-skill-item" />
+        <RemoveItemIcon class="remove-skill-item" @click="handleRemoveSkill(index)" />
         <label :for="`skill-percentage-${index}`">
           {{ skill.title }}
         </label>

@@ -269,8 +269,8 @@
               :have-content="true"
               :class="`image-input`"
               :max-files="1"
-              @change="handleImageChange"
               preview-class-name="border-image-preview"
+              @change="handleImageChange"
             >
               <template #content>
                 <div class="add-imaegs-data">

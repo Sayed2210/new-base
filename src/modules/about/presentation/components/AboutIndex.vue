@@ -80,7 +80,7 @@
                 :key="index"
                 :to="item.link || ''"
               >
-                <img class="social-icon" v-if="item.icon" :src="item.icon" alt="icon" />
+                <img v-if="item.icon" class="social-icon" :src="item.icon" alt="icon" />
               </router-link>
             </div>
           </div>
