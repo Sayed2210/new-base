@@ -122,6 +122,24 @@
       immediate: true,
     },
   );
+
+
+const numberToTxt = (index: number) => {
+  const txt = [
+    'First',
+    'Second',
+    'Third',
+    'Fourth',
+    'Fifth',
+    'Sixth',
+    'Seventh',
+    'Eighth',
+    'Ninth',
+    'Tenth',
+  ];
+
+  return txt[index] ?? `${index + 1}th`;
+};
 </script>
 
 <template>
@@ -135,7 +153,9 @@
       <div class="timeline-content">
         <div class="timeline-form-content" :class="{ 'without-delete': Answers.length === 1 }">
           <div class="field-group">
-            <label class="field-label" :for="`answer-${index}`">{{ $t(`answer`) }}</label>
+            <label class="field-label" :for="`answer-${index}`">
+             {{ numberToTxt(index) }} {{ $t('answer') }} 
+            </label>
             <div class="input-wrap">
               <input
                 :id="`answer-${index}`"

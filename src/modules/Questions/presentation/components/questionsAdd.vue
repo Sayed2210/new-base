@@ -6,17 +6,14 @@
   import type AddEmployeeParams from '../../core/params/add.question.params';
   import LoadingIcon from '@/assets/images/loading.webp';
 
-
   const controller = questionsController.getInstance();
   const route = useRoute();
   const formKey = route.fullPath;
   const loading = ref(false);
   const params = ref<AddEmployeeParams | null>(null);
   const router = useRouter();
- 
 
-
-  const saveQuestion = async () => {
+  const saveQuestion = async (isRouting: boolean) => {
     loading.value = true;
     try {
       if (!params.value) {
@@ -29,6 +26,11 @@
       console.error('Error saving employee:', error);
     } finally {
       loading.value = false;
+      if (isRouting) {
+        router.push({ name: 'Questions' });
+      } else {
+        window.location.reload();
+      }
     }
   };
 
@@ -50,9 +52,7 @@
   const updateData = (updatedParams: AddEmployeeParams) => {
     params.value = updatedParams;
   };
-
 </script>
-
 
 <template>
   <div class="questions-add-page">
@@ -66,7 +66,7 @@
         class="btn btn-primary save-emp"
         :disabled="loading"
         :class="loading ? 'disabled' : ''"
-        @click="saveQuestion"
+        @click="saveQuestion(true)"
       >
         <img
           v-if="loading"
@@ -76,7 +76,7 @@
           width="30"
           height="30"
         />
-        <span v-else> {{ $t(`save_question`) }} </span>
+        <span v-else> {{ $t(`Save`) }} </span>
       </button>
       <button
         class="btn btn-draft"
@@ -85,6 +85,14 @@
         @click="saveAsDraft"
       >
         {{ $t(`Save As draft`) }}
+      </button>
+      <button
+        class="btn btn-black"
+        :disabled="loading"
+        :class="loading ? 'disabled' : ''"
+        @click="saveQuestion(false)"
+      >
+        {{ $t(`Save & New`) }}
       </button>
       <button
         class="btn btn-cancel"
@@ -142,6 +150,17 @@
     display: flex;
     gap: 10px;
     justify-content: flex-end;
+    .btn-black {
+      background-color: var(--border-color);
+      color: var(--black-soft);
+      border-radius: 50px;
+      width: 20%;
+      border: none;
+
+      @media (max-width: 768px) {
+        width: 50%;
+      }
+    }
   }
 
   .error-toast {

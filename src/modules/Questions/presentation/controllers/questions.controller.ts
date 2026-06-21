@@ -92,7 +92,6 @@ export default class questionsController extends BaseController<
 
     const result = await super.create(params, { ...options, useJson: true });
     if (result instanceof DataSuccess) {
-      router.push({ name: 'Questions' });
       if (formKey) {
         FormStore.clearFormData(formKey);
       }

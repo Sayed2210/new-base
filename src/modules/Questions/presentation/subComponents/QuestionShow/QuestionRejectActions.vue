@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="actions">
-      <router-link class="approve-btn btn btn-primary" :to="`questions/edit/${route.params.id}`">
+      <router-link class="approve-btn btn btn-primary" :to="`/questions/edit/${route.params.id}`">
         <EditIcon />
         Edit question
       </router-link>

@@ -270,6 +270,7 @@
               :class="`image-input`"
               :max-files="1"
               @change="handleImageChange"
+              preview-class-name="border-image-preview"
             >
               <template #content>
                 <div class="add-imaegs-data">
@@ -332,5 +333,11 @@
   .accordion-content-inner {
     min-height: 0;
     transition: all 0.3s linear;
+  }
+
+  :deep(.border-image-preview) {
+    border: 1px dashed #d0d0d0 !important;
+    padding: 16px !important;
+    border-radius: 8px !important;
   }
 </style>

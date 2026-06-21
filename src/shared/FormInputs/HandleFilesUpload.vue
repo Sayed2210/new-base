@@ -22,6 +22,7 @@
     file?: string | string[];
     base64File?: string | string[];
     hidepreview?: boolean;
+    previewClassName?: string;
   }
 
   const props = withDefaults(defineProps<Props>(), {
@@ -270,7 +271,7 @@
       />
     </label>
 
-    <div v-if="files.length && !hidepreview" class="preview-grid">
+    <div v-if="files.length && !hidepreview" class="preview-grid" :class="previewClassName">
       <div
         v-for="fileItem in files"
         :key="fileItem.id"

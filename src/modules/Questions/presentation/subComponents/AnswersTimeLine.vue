@@ -24,5 +24,4 @@
     :correctStatus="correctStatus"
     @update:data="emit('update:data', $event)"
   />
-  <!--  -->
 </template>
