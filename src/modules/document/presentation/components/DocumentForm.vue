@@ -15,8 +15,7 @@
   import DocumentTranslationParams from '../../core/params/translation.params';
   import DeleteTagIcon from '@/shared/icons/DocaumentType/DeleteTagIcon.vue';
   import StageController from '@/modules/Stages/presentation/controllers/stage.controller';
-  import type StageModel from '@/modules/Stages/core/models/stage.model';
-  // import type BranchesModel from '@/modules/Stages/core/models/branches.model';
+  import type StageModel from '@/modules/Stages/core/models/stage.model'; // import type BranchesModel from '@/modules/Stages/core/models/branches.model';
   import type DocumentShowModel from '../../core/models/document.show.model';
   import flattenBranchTree from '@/modules/document/core/TreeSelectHelper';
   const emit = defineEmits(['updateData']);
@@ -41,8 +40,7 @@
   const title = ref<Record<string, string>>({});
   const description = ref<Record<string, string>>({});
   const RefrenceNumber = ref<string>('');
-  const selectedDocumentType = ref<TitleInterface<number> | null>(null);
-  // const selectedBranch = ref<BranchesModel | null>(null);
+  const selectedDocumentType = ref<TitleInterface<number> | null>(null); // const selectedBranch = ref<BranchesModel | null>(null);
   const selectedSubject = ref<TitleInterface<number> | null>(null);
   const allStages = ref<StageModel[]>([]);
   const indexDocumentTypeParams = new IndexDocumentTypeParams('', 1, 10, 0);
@@ -66,10 +64,8 @@
     (newDoc) => {
       if (newDoc) {
         title.value = newDoc.translations.title;
-        selectedDocumentType.value = newDoc.documentType;
-        description.value = newDoc.translations.description;
+        selectedDocumentType.value = newDoc.documentType; // ← فقط اضبط لو القيمة اتغيرت فعلاً
 
-        // ← فقط اضبط لو القيمة اتغيرت فعلاً
         if (UploadedImage.value !== newDoc.images) {
           UploadedImage.value = newDoc.images;
         }
@@ -92,6 +88,7 @@
           title: newDoc.documentType.title,
         });
         tags.value = newDoc.tags;
+        description.value = newDoc.description;
       }
     },
     { immediate: true },
@@ -119,16 +116,13 @@
     selectedBranchTitle.value = selected;
     console.log(selected, 'selected');
     updateData();
-  };
-
-  // const handleImageChange = (files: UploadedFile[]) => {
-  //   UploadedImage.value = files?.[0]?.base64;
-  //   updateData();
+  }; // const handleImageChange = (files: UploadedFile[]) => {
+  //   UploadedImage.value = files?.[0]?.base64;
+  //   updateData();
   // };
-
   // const handleFilsChange = (files: UploadedFile[]) => {
-  //   UploadedFiles.value = files?.[0]?.base64;
-  //   updateData();
+  //   UploadedFiles.value = files?.[0]?.base64;
+  //   updateData();
   // };
 
   const handleImageChange = (files: UploadedFile[]) => {
@@ -280,20 +274,19 @@
         <HandleFilesUpload
           :label="`upload image`"
           accept="image/*"
-          :multiple="false"
+          :multiple="true"
           :index="1"
           :file="UploadedImage"
           :have-content="true"
           :class="`image-input`"
           @change="handleImageChange"
-          :max-files="1"
         >
           <template #content>
             <div class="add-imaegs-data">
               <UplaodImageInput />
-
               <p class="first-text">
-                {{ $t('Click to upload') }} <span>{{ $t('or drag and drop') }}</span>
+                {{ $t('Click to upload') }}
+                <span>{{ $t('or drag and drop') }}</span>
               </p>
 
               <p class="second-text">{{ $t('JPG, JPEG, PNG less than 1MB') }}</p>
@@ -306,13 +299,12 @@
         <HandleFilesUpload
           :label="`upload document`"
           accept=".pdf"
-          :multiple="false"
+          :multiple="true"
           :index="2"
           :file="UploadedFiles"
           :have-content="true"
           :class="`image-input`"
           @change="handleFilsChange"
-          :max-files="1"
         >
           <template #content>
             <div class="add-imaegs-data">
@@ -333,7 +325,7 @@
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
   .disabled-input {
     pointer-events: none;
     opacity: 0.5;

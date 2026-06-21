@@ -6,6 +6,7 @@ export default class DocumentShowModel {
     description: Record<string, string>;
   };
   public readonly title: Record<string, string>;
+  public readonly description: Record<string, string>;
   public readonly RefNumber: string;
   public readonly documentType: TitleInterface<number>;
   public readonly stage: TitleInterface<number>;
@@ -21,6 +22,7 @@ export default class DocumentShowModel {
       description: Record<string, string>;
     };
     title: Record<string, string>;
+    description: Record<string, string>;
     RefNumber: string;
     documentType: TitleInterface<number>;
     stage: TitleInterface<number>;
@@ -32,6 +34,7 @@ export default class DocumentShowModel {
     this.id = data.id;
     this.translations = data.translations;
     this.title = data.title;
+    this.description = data.description;
     this.RefNumber = data.RefNumber;
 
     this.documentType = data.documentType;
@@ -71,16 +74,16 @@ export default class DocumentShowModel {
       },
 
       title: this.mapTranslations(json.title ?? [], 'title'),
-      RefNumber: json.RefNumber ?? json.reference_number ?? '',
+      description: this.mapTranslations(json.description ?? [], 'description'),
+      RefNumber: json.RefNumber ?? json.reference_number ?? '', // documentType: new TitleInterface({
+      //   id: json.document_type?.id,
+      //   title: json.document_type?.title?.find((item: any) => item.locale === 'en')?.title ?? '',
+      // }),
+      // documentType: new TitleInterface({
+      //   id: json.document_type?.id,
+      //   title: json.document_type?.title ?? '',
+      // }),
 
-      // documentType: new TitleInterface({
-      //   id: json.document_type?.id,
-      //   title: json.document_type?.title?.find((item: any) => item.locale === 'en')?.title ?? '',
-      // }),
-      // documentType: new TitleInterface({
-      //   id: json.document_type?.id,
-      //   title: json.document_type?.title ?? '',
-      // }),
       documentType: new TitleInterface({
         id: json.document_type?.id,
         title: json.document_type?.title?.[0]?.title ?? '',
@@ -96,8 +99,7 @@ export default class DocumentShowModel {
         title: json.subject?.titles?.[0]?.title ?? '',
       }),
 
-      tags: Array.isArray(json.tags) ? json.tags.map((t: any) => t.tag) : [],
-      // tags: json.tags ?? [],
+      tags: Array.isArray(json.tags) ? json.tags.map((t: any) => t.tag) : [], // tags: json.tags ?? [],
       // images: json.images ?? [],
       // files: json.files ?? [],
       images: json.image ?? '',
@@ -112,15 +114,14 @@ export default class DocumentShowModel {
       description: { ar: 'description', en: 'description' },
     },
     title: { ar: 'title', en: 'title' },
+    description: { ar: 'description', en: 'description' },
     RefNumber: '100',
 
     documentType: { id: 1, title: 'type' },
     stage: { id: 1, title: 'stage' },
-    subject: { id: 1, title: 'subject' },
-
-    // translations: new DocumentTranslationParams({
-    //   title: { ar: '', en: '' },
-    //   description: { ar: '', en: '' },
+    subject: { id: 1, title: 'subject' }, // translations: new DocumentTranslationParams({
+    //   title: { ar: '', en: '' },
+    //   description: { ar: '', en: '' },
     // }),
 
     tags: [],

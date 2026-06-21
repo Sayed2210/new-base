@@ -1,10 +1,7 @@
 <script setup lang="ts">
-  // import { computed } from 'vue';
-
   import Arrow from '@/shared/icons/Question/Arrow.vue';
   import NextStepIcon from '@/shared/icons/Question/NextStepIcon.vue';
   import type ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
-  import Articlesubject from '@/shared/icons/articlesubject.vue';
   import Articlearrow from '@/shared/icons/articlearrow.vue';
 
   const { questionData } = defineProps<{ questionData: ShowQuestionsModel }>();

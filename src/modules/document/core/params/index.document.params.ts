@@ -25,6 +25,7 @@ export default class IndexDocumentParams extends IndexParams {
       data['document_type_id'] = this.documentTypeId;
     }
 
+    data['order_dir'] = 1;
     return data;
   }
 }
