@@ -1,7 +1,6 @@
 import BaseRepository, { type RepositoryConfig } from '@/base/Domain/Repositories/baseRepository';
-import TitleInterface from '@/base/Data/Models/titleInterface';
-import SubjectModel from '../../core/models/subject.model';
 import SubjectApiService from '../api/subject.api-service';
+import StageModel from '@/modules/Stages/core/models/stage.model';
 
 /**
  * Country Repository for API data operations
@@ -9,7 +8,7 @@ import SubjectApiService from '../api/subject.api-service';
  * This repository handles all data access for countries,
  * including parsing API responses and error handling.
  */
-export default class SubjectRepository extends BaseRepository<SubjectModel, SubjectModel[]> {
+export default class SubjectRepository extends BaseRepository<StageModel, StageModel[]> {
   private static instance: SubjectRepository;
 
   protected get apiService() {
@@ -24,32 +23,12 @@ export default class SubjectRepository extends BaseRepository<SubjectModel, Subj
     };
   }
 
-  protected get mockItem(): SubjectModel {
-    return SubjectModel.example;
+  protected get mockItem(): StageModel {
+    return StageModel.example;
   }
 
-  protected get mockList(): SubjectModel[] {
-    return [
-      SubjectModel.example,
-      {
-        ...SubjectModel.example,
-        title: 'الفيزياء',
-        id: 2,
-        Stage: new TitleInterface({
-          id: 2,
-          title: 'المرحلة الإعدادية',
-        }),
-      },
-      {
-        ...SubjectModel.example,
-        title: 'الكيمياء',
-        id: 3,
-        Stage: new TitleInterface({
-          id: 3,
-          title: 'المرحلة الابتدائية',
-        }),
-      },
-    ];
+  protected get mockList(): StageModel[] {
+    return [StageModel.example];
   }
 
   /**
@@ -63,13 +42,13 @@ export default class SubjectRepository extends BaseRepository<SubjectModel, Subj
     return SubjectRepository.instance;
   }
 
-  protected parseItem(data: any): SubjectModel {
-    return SubjectModel.fromJson(data);
+  protected parseItem(data: any): StageModel {
+    return StageModel.fromJson(data);
   }
 
-  protected parseList(data: any): SubjectModel[] {
+  protected parseList(data: any): StageModel[] {
     if (!Array.isArray(data)) return [];
-    return data.reduce((acc: SubjectModel[], item) => {
+    return data.reduce((acc: StageModel[], item) => {
       try {
         if (item != null) {
           acc.push(this.parseItem(item));

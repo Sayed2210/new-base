@@ -64,32 +64,6 @@
     AllSubjectTree.value = result.data!;
     // console.log('AllSubjectTree.value', AllSubjectTree.value);
   });
-
-  watch(
-    () => props.article,
-    (newValue) => {
-      if (newValue) {
-        QuestionDescription.value = newValue.question_description ?? '';
-        question.value = newValue.question ?? '';
-        SelectedQuestionSequence.value = newValue.e_c_subject ?? null;
-        const selectedDoc = newValue.document?.find((doc: any) => doc.document_id);
-        if (selectedDoc) {
-          SelectedDocument.value = {
-            id: selectedDoc.document_id,
-            title: selectedDoc.document_title,
-          };
-          articleSource.value = selectedDoc?.text;
-        }
-        descriptionArticle.value = newValue.explanation?.explanation ?? '';
-        isExplain.value = Boolean(descriptionArticle.value?.length > 0);
-        explanationAttachments.value =
-          newValue?.explanation?.attachments?.map((item: any) => item.file) ?? [];
-        explanationAttachmentsChanged.value = false;
-        UploadedImage.value = newValue?.attachments?.map((item: any) => item.file) ?? [];
-      }
-    },
-    { immediate: true },
-  );
   const updateData = () => {
     let params: any;
     if (route?.params?.id) {
@@ -137,6 +111,32 @@
     }
     emit('updateData', params);
   };
+  watch(
+    () => props.article,
+    (newValue) => {
+      if (newValue) {
+        QuestionDescription.value = newValue.question_description ?? '';
+        question.value = newValue.question ?? '';
+        SelectedQuestionSequence.value = newValue.e_c_subject ?? null;
+        const selectedDoc = newValue.document?.find((doc: any) => doc.document_id);
+        if (selectedDoc) {
+          SelectedDocument.value = {
+            id: selectedDoc.document_id,
+            title: selectedDoc.document_title,
+          };
+          articleSource.value = selectedDoc?.text;
+        }
+        descriptionArticle.value = newValue.explanation?.explanation ?? '';
+        isExplain.value = Boolean(descriptionArticle.value?.length > 0);
+        explanationAttachments.value =
+          newValue?.explanation?.attachments?.map((item: any) => item.file) ?? [];
+        explanationAttachmentsChanged.value = false;
+        UploadedImage.value = newValue?.attachments?.map((item: any) => item.file) ?? [];
+      }
+      updateData();
+    },
+    { immediate: true },
+  );
 
   // const handleImageChange = (file: any) => {
   //   UploadedImage.value = file?.[0]?.base64 ? [file[0].base64] : [];

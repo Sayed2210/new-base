@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { onMounted, ref } from 'vue';
-  import { useRoute } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   import IconAccept from '@/shared/icons/IconAccept.vue';
   import ArticleController from '../controllers/Article.controller';
   import EditArticlesParams from '../../core/params/edit.Articles.params';
@@ -11,6 +11,8 @@
 
   const controller = ArticleController.getInstance();
   const route = useRoute();
+  const router = useRouter();
+
   const formKey = route.fullPath;
 
   const params = ref<EditArticlesParams | null>(null);
@@ -21,6 +23,7 @@
   const loading = ref(false);
 
   const saveArticle = async () => {
+    console.log(params.value, 'params');
     if (!params.value) {
       console.error('No article parameters to save');
       return;
@@ -30,6 +33,7 @@
       await controller.update(params.value, undefined, formKey);
     } finally {
       loading.value = false;
+      router.push({ name: 'Articals' });
     }
   };
 
@@ -44,6 +48,7 @@
       documents: updatedParams.documents,
       explanation: updatedParams.explanation,
     });
+    console.log(params.value, 'params.vallu');
   };
 
   onMounted(async () => {

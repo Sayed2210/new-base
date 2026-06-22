@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { onMounted, ref } from 'vue';
-  import { useRoute } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   // import AppButton from '@/shared/HelpersComponents/AppButton.vue';
   // import IconAccept from '@/shared/icons/IconAccept.vue';
   import type EditQuestionParams from '../../core/params/edit.question.params';
@@ -10,6 +10,7 @@
 
   const controller = questionsController.getInstance();
   const route = useRoute();
+  const router = useRouter();
   const formKey = route.fullPath;
 
   const params = ref<EditQuestionParams | null>(null);
@@ -24,6 +25,11 @@
     }
 
     await controller.update(params.value, undefined, formKey);
+    if (params.value?.parentId != null) {
+      router.push({ name: 'Questions' });
+    } else {
+      router.back();
+    }
   };
 
   const updateData = (updatedParams: EditQuestionParams) => {

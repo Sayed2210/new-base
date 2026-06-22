@@ -131,7 +131,6 @@
     if (files.length === 0) {
       UploadedImage.value = '';
     } else {
-      // لو base64 موجود (رفع جديد) بعته، لو لأ بعت الـ URL (صورة من السيرفر)
       UploadedImage.value = files[0]?.base64 || files[0]?.url || '';
     }
     updateData();

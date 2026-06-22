@@ -10,7 +10,9 @@
   import SubjectController from '../controllers/subject.controller';
   import IndexSubjectParams from '../../core/params/index.subject.params';
   import DeleteSubjectParams from '../../core/params/delete.subject.params';
-  import type SubjectModel from '../../core/models/subject.model';
+  import type StageModel from '@/modules/Stages/core/models/stage.model';
+  import type TitleInterface from '@/base/Data/Models/titleInterface';
+  import flattenBranchTree from '@/modules/document/core/TreeSelectHelper';
 
   // Controller instance
   const controller = SubjectController.getInstance();
@@ -36,7 +38,6 @@
         perPage.value,
       ),
     );
-    console.log(state, 'state');
   };
 
   const Search = debounce(() => {
@@ -88,8 +89,8 @@
     const data = FormStore?.formData[formRoute.value] ?? {};
     return Object.keys(data).length === 0 || Object.values(data).every((v) => v == null);
   });
-  const SelectedRow = ref<SubjectModel[]>([]);
-  const setSelectef = (items: SubjectModel[]) => {
+  const SelectedRow = ref<StageModel[]>([]);
+  const setSelectef = (items: StageModel[]) => {
     SelectedRow.value = items;
   };
 
@@ -98,6 +99,10 @@
       deleteCountry(item.id!);
     });
   };
+
+  const branchOptions = computed<TitleInterface<number>[]>(() => {
+    return state.value?.data!.flatMap((stage: StageModel) => flattenBranchTree(stage.branches));
+  });
 </script>
 
 <template>
@@ -155,28 +160,20 @@
         <div class="table-frame">
           <AppTable
             :headers="headers"
-            :items="data as SubjectModel[]"
+            :items="data as StageModel[]"
             selectable
             show-index
             hoverable
             striped
             @selection-change="setSelectef"
           >
-            <template #cell-name="{ item }">
+            <template #cell-title="{ item }">
               {{ item.title }}
-            </template>
-
-            <template #cell-Stage="{ item }">
-              {{ item.Stage.title }}
             </template>
 
             <template #actions="{ item }">
               <div class="row-actions">
-                <router-link
-                  class="action-btn edit"
-                  :to="`/stages/edit/${item.id}`"
-                  title="Edit"
-                >
+                <router-link class="action-btn edit" :to="`/stages/edit/${item.id}`" title="Edit">
                   <svg
                     width="15"
                     height="15"

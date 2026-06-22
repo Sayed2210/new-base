@@ -1,22 +1,19 @@
-import BaseController from "@/base/Presentation/Controller/baseController";
-import type { ControllerConfig } from "@/base/Presentation/Controller/baseController";
-import type { ApiCallOptions } from "@/base/Data/ApiService/baseApiService";
-import type Params from "@/base/Core/Params/params";
-import { DataSuccess } from "@/base/Core/NetworkStructure/Resources/dataState/dataState";
-import router from "@/router";
-import { useFormsStore } from "@/stores/formsStore";
-import SubjectRepository from "../../data/repositories/subject.repository";
-import type SubjectModel from "../../core/models/subject.model";
+import BaseController from '@/base/Presentation/Controller/baseController';
+import type { ControllerConfig } from '@/base/Presentation/Controller/baseController';
+import type { ApiCallOptions } from '@/base/Data/ApiService/baseApiService';
+import type Params from '@/base/Core/Params/params';
+import { DataSuccess } from '@/base/Core/NetworkStructure/Resources/dataState/dataState';
+import router from '@/router';
+import { useFormsStore } from '@/stores/formsStore';
+import SubjectRepository from '../../data/repositories/subject.repository';
+import type StageModel from '@/modules/Stages/core/models/stage.model';
 
 /**
  * Country Controller for managing countries
  *
  * This controller provides methods for CRUD operations on countries.
  */
-export default class SubjectController extends BaseController<
-  SubjectModel,
-  SubjectModel[]
-> {
+export default class SubjectController extends BaseController<StageModel, StageModel[]> {
   private static instance: SubjectController;
 
   protected get repository() {
@@ -29,10 +26,12 @@ export default class SubjectController extends BaseController<
    */
   protected get config(): ControllerConfig {
     return {
-      showLoadingDialog: true,
-      showSuccessDialog: true,
-      showErrorDialog: true,
-      autoRetry: true,
+      showLoadingDialog: false,
+      showSuccessDialog: false,
+      showErrorDialog: false,
+      showErrorTosat: true,
+      showSuccessTosat: true,
+      autoRetry: false,
       maxAutoRetries: 1,
     };
   }
@@ -57,7 +56,7 @@ export default class SubjectController extends BaseController<
 
     const result = await super.create(params, options);
     if (result instanceof DataSuccess) {
-      router.push({ name: "Countries" });
+      router.push({ name: 'Countries' });
       if (formKey) {
         FormStore.clearFormData(formKey);
       }
@@ -70,7 +69,7 @@ export default class SubjectController extends BaseController<
 
     const result = await super.update(params, options);
     if (result instanceof DataSuccess) {
-      router.push({ name: "Countries" });
+      router.push({ name: 'Countries' });
       if (formKey) {
         FormStore.clearFormData(formKey);
       }

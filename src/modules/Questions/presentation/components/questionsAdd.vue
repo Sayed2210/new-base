@@ -27,7 +27,11 @@
     } finally {
       loading.value = false;
       if (isRouting) {
-        router.push({ name: 'Questions' });
+        if (params.value?.parentId != null) {
+          router.push({ name: 'Questions' });
+        } else {
+          router.back();
+        }
       } else {
         window.location.reload();
       }
