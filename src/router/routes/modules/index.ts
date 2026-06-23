@@ -16,6 +16,7 @@ import { SkillsRoutes } from './skills';
 import { questionsRoutes } from './question';
 import { ArticlesRoutes } from './Articles';
 import { PackagesRoutes } from './package';
+import { PlacementTestRoutes } from './placement_test';
 
 export const dashboardRoutes: RouteRecordRaw[] = [
   // ...countryRoutes,
@@ -35,4 +36,5 @@ export const dashboardRoutes: RouteRecordRaw[] = [
   ...questionsRoutes,
   ...ArticlesRoutes,
   ...PackagesRoutes,
+  ...PlacementTestRoutes
 ];

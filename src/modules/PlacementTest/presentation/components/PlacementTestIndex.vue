@@ -5,39 +5,39 @@
   import Pagination from '@/shared/HelpersComponents/Pagination.vue';
   import { useRoute, useRouter } from 'vue-router';
   import { debounce } from '@/base/Presentation/Utils/debouced';
-  import DeleteEmployeeParams from '../../core/params/delete.question.params';
+  import EmployeeController from '../controllers/employee.controller';
+  import IndexEmployeeParams from '../../core/params/index.employee.params';
+  import DeleteEmployeeParams from '../../core/params/delete.employee.params';
+  import type EmployeeModel from '../../core/models/employee.model';
   import DeleteDialog from '@/shared/HelpersComponents/dialog/DeleteDialog.vue';
   import { useFormsStore } from '@/stores/formsStore';
   import IndexPluseIcon from '@/shared/icons/IndexPluseIcon.vue';
-  // import ExportExcelIcon from '@/shared/icons/ExportExcelIcon.vue';
+  import * as XLSX from 'xlsx';
+  import { saveAs } from 'file-saver';
+  import ExportExcelIcon from '@/shared/icons/ExportExcelIcon.vue';
   import IndexSearchIcon from '@/shared/icons/IndexSearchIcon.vue';
+  import { EmployeeStatusEnm } from '../../core/constant/employee.status.enum';
+  import { useI18n } from 'vue-i18n';
   import FilterDialog from '@/shared/HelpersComponents/FilterDialog/FilterDialog.vue';
   import TableSkelaton from '@/shared/HelpersComponents/TableSkelaton.vue';
-  // import MultiSelectionTabs from '../subComponents/MultiSelectionTabs.vue';
-  import questionsController from '../controllers/questions.controller';
-  import { QuestionGeneratedByEnum } from '../../core/constant/generatedby.enum';
-  import { QuestionTypeEnum } from '../../core/constant/question.type.enum';
-  import { QuestionDifficultyEnum } from '../../core/constant/question.difficulty.enum';
-  import { QuestionStatusEnum } from '../../core/constant/question.status.enum';
-  import type questionsModel from '../../core/models/questions.model';
-  import IndexQuestionsParams from '../../core/params/index.question.params';
-  import { QuestionStatusRejectAbroveEnum } from '../../core/constant/question.status.reject.abrove.enum';
+  import UpdatedCustomInputSelect from '@/shared/FormInputs/UpdatedCustomInputSelect.vue';
+  import TitleInterface from '@/base/Data/Models/titleInterface';
+import PlacementTestController from '../controllers/placement.test.controller';
 
   // Controller instance
-  const controller = questionsController.getInstance();
+  const controller = PlacementTestController.getInstance();
   const state = computed(() => controller.listState.value);
   const router = useRouter();
   const route = useRoute();
 
   const FormStore = useFormsStore();
-  const formRoute = computed(() => '/questions/add');
+  const formRoute = computed(() => '/employees/add');
 
   // Table headers
   const headers: TableHeader[] = [
-    { key: 'id', label: 'ID', width: '10%', sortable: true },
-    { key: 'title', label: 'Question', width: '30%' },
-    { key: 'questionType', label: 'Type', width: '15%' },
-    { key: 'difficulty', label: 'Difficulty', width: '15%' },
+    { key: 'firstname', label: 'Employee name', width: '30%', sortable: true },
+    { key: 'email', label: 'Email', width: '30%' },
+    { key: 'phone', label: 'Phone', width: '15%' },
     { key: 'status', label: 'Status', width: '15%' },
   ];
 
@@ -45,14 +45,14 @@
   const perPage = ref(10);
   const word = ref('');
 
-  const fetchQuestions = async (page: number = 1, wordStr: string = '') => {
+  const fetchEmployees = async (page: number = 1, wordStr: string = '') => {
     await controller.fetchList(
-      new IndexQuestionsParams({
+      new IndexEmployeeParams({
         word: wordStr || word.value,
         pageNumber: page,
         perPage: perPage.value,
         withPage: 1,
-        ...(route.query.subjectId ? { subjectId: Number(route.query.subjectId) } : {}),
+        status: selectedStatus.value?.id as EmployeeStatusEnm,
       }),
     );
   };
@@ -65,11 +65,11 @@
         word: word.value || undefined,
       },
     });
-    fetchQuestions(1, word.value);
+    fetchEmployees(1, word.value);
   });
 
   const onPageChange = (page: number) => {
-    fetchQuestions(page);
+    fetchEmployees(page);
     router.push({
       query: {
         ...route.query,
@@ -81,19 +81,19 @@
 
   const onPerPageChange = (count: number) => {
     perPage.value = count;
-    fetchQuestions(1);
+    fetchEmployees(1);
   };
 
   onMounted(async () => {
     if (route.query.word) {
       word.value = String(route.query.word);
     }
-    await fetchQuestions(route.query.page ? Number(route.query.page) : 1, word.value);
+    await fetchEmployees(route.query.page ? Number(route.query.page) : 1, word.value);
   });
 
-  const deleteQuestion = async (id: number) => {
+  const deleteEmployee = async (id: number) => {
     await controller.delete(new DeleteEmployeeParams(id));
-    await fetchQuestions();
+    await fetchEmployees();
   };
 
   const isDraft = computed(() => {
@@ -101,66 +101,65 @@
     return Object.keys(data).length === 0 || Object.values(data).every((v) => v == null);
   });
 
+  const exportExcel = () => {
+    if (!state.value.data || state.value.data.length === 0) {
+      alert('No data available to export');
+      return;
+    }
+    const worksheetData = (state.value.data as any).map((item: Record<string, unknown>) => {
+      return {
+        name: item.name || 'N/A',
+        email: item.email || null,
+        phone: item.phone || null,
+        password: '',
+      };
+    });
+    const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Invoices');
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(data, 'Employees.xlsx');
+  };
+
+  const { t } = useI18n();
+  const GetEmployeeStatus = (status: number) => {
+    switch (Number(status)) {
+      case EmployeeStatusEnm.active:
+        return t('active');
+        break;
+      case EmployeeStatusEnm.disavtive:
+        return t('inactive');
+        break;
+    }
+  };
+
   const FilterDialogShow = ref<boolean>(false);
   const ApplayFilter = () => {
     FilterDialogShow.value = false;
+    fetchEmployees();
   };
   const CloseFiletrDialog = () => {
     FilterDialogShow.value = false;
   };
-
-  const GetGneratedBy = (val: QuestionGeneratedByEnum) => {
-    switch (val) {
-      case QuestionGeneratedByEnum.manual:
-        return 'Manual';
-      case QuestionGeneratedByEnum.ai:
-        return 'AI';
-    }
-  };
-
-  const GetQusetionType = (val: QuestionTypeEnum) => {
-    switch (val) {
-      case QuestionTypeEnum.mcq:
-        return 'MCQ';
-      case QuestionTypeEnum.complate:
-        return 'Complete';
-      case QuestionTypeEnum.true_false:
-        return 'True/False';
-      case QuestionTypeEnum.ranking:
-        return 'Ranking';
-      case QuestionTypeEnum.matching:
-        return 'Matching';
-      case QuestionTypeEnum.paragraph:
-        return 'Artical';
-    }
-  };
-
-  const GetDifficulty = (val: QuestionDifficultyEnum) => {
-    switch (val) {
-      case QuestionDifficultyEnum.easy:
-        return 'Easy';
-      case QuestionDifficultyEnum.medium:
-        return 'Medium';
-      case QuestionDifficultyEnum.hard:
-        return 'Hard';
-    }
-  };
-
-  const GetQuestionStatus = (val: QuestionStatusEnum) => {
-    switch (val) {
-      case QuestionStatusRejectAbroveEnum.APPROVED:
-        return 'Approved';
-      case QuestionStatusRejectAbroveEnum.PENDING:
-        return 'Pending';
-      case QuestionStatusRejectAbroveEnum.REJECTED:
-        return 'Rejected';
-    }
+  const employeeTypeOptions = ref<TitleInterface<number>[]>([
+    new TitleInterface({
+      id: EmployeeStatusEnm.active,
+      title: 'active',
+    }),
+    new TitleInterface({
+      id: EmployeeStatusEnm.disavtive,
+      title: 'inactive',
+    }),
+  ]);
+  const selectedStatus = ref<TitleInterface<number>>();
+  const UpdateStatus = (status: TitleInterface<number>) => {
+    selectedStatus.value = status;
   };
 </script>
 
 <template>
-  <!-- <MultiSelectionTabs /> -->
-  <div class="questions-page">
+  <div class="employee-page">
     <div class="index-header">
       <div class="search-field">
         <span class="search-icon">
@@ -175,16 +174,24 @@
         />
       </div>
       <div class="btns-container">
-        <!-- <button class="btn btn-secondary" @click="exportExcel">
+        <button class="btn btn-secondary" @click="exportExcel">
           <ExportExcelIcon />
           <span>{{ $t('export') }}</span>
-        </button> -->
+        </button>
         <router-link :to="formRoute" class="btn btn-primary btn-add">
           <IndexPluseIcon />
-          <span>{{ isDraft ? 'Add Questions' : 'Continue Adding' }}</span>
+          <span>{{ isDraft ? 'Add Employee' : 'Continue Adding' }}</span>
         </router-link>
         <FilterDialog v-model="FilterDialogShow">
           <template #content>
+            <UpdatedCustomInputSelect
+              id="doc-type"
+              v-model="selectedStatus"
+              :label="`Employee Status`"
+              :placeholder="`enter status`"
+              :static-options="employeeTypeOptions"
+              @update:model-value="UpdateStatus"
+            />
             <div class="filter-action">
               <button class="btn btn-cancel" @click="CloseFiletrDialog">Reset</button>
               <button class="btn btn-primary" @click="ApplayFilter">apply</button>
@@ -194,42 +201,31 @@
       </div>
     </div>
 
-    <DataStatusBuilder :controller="state" :on-retry="async () => await fetchQuestions()">
+    <DataStatusBuilder :controller="state" :on-retry="async () => await fetchEmployees()">
       <template #success="{ data }">
         <div class="table-frame">
           <AppTable
             :headers="headers"
-            :items="data as questionsModel[]"
+            :items="data as EmployeeModel[]"
             :hoverable="true"
             :striped="true"
             show-index
           >
-            <template #cell-questionType="{ item }">
-              <div class="question-type">
-                {{ GetQusetionType(item.questionType) }}
-              </div>
-            </template>
-            <template #cell-difficulty="{ item }">
-              <div class="difficulty">
-                {{ GetDifficulty(item.difficulty) }}
-              </div>
-            </template>
             <template #cell-status="{ item }">
-              <div
-                class="status"
-                :class="{
-                  'status-approved': item.status === QuestionStatusEnum.approved,
-                  'status-not-reviewed': item.status === QuestionStatusEnum.not_Reviewd,
-                  'status-rejected': item.status === QuestionStatusEnum.rejected,
-                  'status-under-review': item.status === QuestionStatusEnum.under_review,
-                }"
+              <p
+                class="employee-status"
+                :class="item.status == EmployeeStatusEnm.disavtive ? `dis-active` : ``"
               >
-                {{ GetQuestionStatus(item.status) }}
-              </div>
+                {{ GetEmployeeStatus(item.status) }}
+              </p>
             </template>
-            <template #cell-generatedBy="{ item }">
-              <div class="generatedBy">
-                {{ GetGneratedBy(item.generatedBy) }}
+            <template #cell-firstname="{ item }">
+              <div class="employee-name">
+                <img
+                  :src="item.image || `https://cyber.comolho.com/static/img/avatar.png`"
+                  alt="image"
+                />
+                <span>{{ item.firstname }}</span>
               </div>
             </template>
 
@@ -237,7 +233,7 @@
               <div class="row-actions">
                 <router-link
                   class="action-btn edit"
-                  :to="`/questions/edit/${item.id}`"
+                  :to="`/employees/edit/${item.id}`"
                   title="Edit"
                 >
                   <svg
@@ -255,27 +251,7 @@
                   </svg>
                 </router-link>
 
-                <router-link
-                  class="action-btn show"
-                  :to="`/questions/show/${item.id}`"
-                  title="Show"
-                >
-                  <svg
-                    width="15"
-                    height="15"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M21 12a9 9 0 1 1-9-9 9 9 0 0 1 9 9z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                </router-link>
-
-                <DeleteDialog @delete="deleteQuestion(item.id!)">
+                <DeleteDialog @delete="deleteEmployee(item.id!)">
                   <template #Dialog>
                     <button class="action-btn delete" title="Delete">
                       <svg
@@ -308,6 +284,40 @@
         />
       </template>
 
+      <template #empty>
+        <div class="empty-state">
+          <svg
+            width="56"
+            height="56"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            stroke-linecap="round"
+          >
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          <h3>No employees found</h3>
+          <p>Start by adding a new employee to your organization</p>
+          <router-link :to="formRoute" class="btn btn-primary empty-cta">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            <span>Add Employee</span>
+          </router-link>
+        </div>
+      </template>
       <template #loader>
         <TableSkelaton
           :rows="5"

@@ -118,7 +118,6 @@ export default abstract class ServicesInterface {
         //   details,
         // });
       }
-      document.querySelector('#app')?.classList.add('loading');
 
       switch (type) {
         case CrudType.POST:
@@ -201,7 +200,6 @@ export default abstract class ServicesInterface {
         default:
           throw new Error(`Unsupported HTTP method: ${type}`);
       }
-      document.querySelector('#app')?.classList.remove('loading');
     } catch (error) {
       // Hide loading dialog
       if (showLoadingDialog) {

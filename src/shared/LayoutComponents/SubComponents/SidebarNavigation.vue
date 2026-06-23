@@ -59,11 +59,16 @@
           name: 'Skills',
           icon: SettingIcon,
         },
-        // {
-        //   link: '/subjects',
-        //   name: 'Subjects',
-        //   icon: SettingIcon,
-        // },
+        {
+          link: '/subjects',
+          name: 'Subjects',
+          icon: SettingIcon,
+         },
+        {
+          link: '/placement-test',
+          name: 'Placement Test',
+          icon: SettingIcon,
+         },
       ],
     },
 

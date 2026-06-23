@@ -32,7 +32,6 @@
       "name":string,
       "image":string
      },
-    //  "full_mark":number,
      "result":number,
      "e_c_subject":{
       "id":number,

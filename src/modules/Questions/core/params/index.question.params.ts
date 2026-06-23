@@ -10,6 +10,8 @@ export default class IndexQuestionsParams extends IndexParams {
   public generated_by?: QuestionGeneratedByEnum;
   public question_type?: QuestionTypeEnum;
   public difficulty?: QuestionDifficultyEnum;
+  public subjectId?: number;
+
   constructor(data: {
     word: string;
     pageNumber: number;
@@ -19,12 +21,14 @@ export default class IndexQuestionsParams extends IndexParams {
     generated_by?: QuestionGeneratedByEnum;
     question_type?: QuestionTypeEnum;
     difficulty?: QuestionDifficultyEnum;
+    subjectId?: number;
   }) {
     super(data.word, data.pageNumber, data.perPage, data.withPage);
     this.status = data.status;
     this.generated_by = data.generated_by;
     this.question_type = data.question_type;
     this.difficulty = data.difficulty;
+    this.subjectId = data.subjectId;
   }
 
   toMap(): Record<string, any> {
@@ -35,6 +39,7 @@ export default class IndexQuestionsParams extends IndexParams {
       ...(this.question_type ? { question_type: this.question_type } : {}),
       ...(this.difficulty ? { difficulty: this.difficulty } : {}),
       order_dir: OrderEnum.reverse,
+      ...(this.subjectId ? { subject_id: this.subjectId } : {}),
     };
   }
 }

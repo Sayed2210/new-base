@@ -36,4 +36,9 @@ export default class TitleInterface<T extends string | number> {
     this.children = children;
     this.full_title = full_title;
   }
+
+  static example: TitleInterface<number> = new TitleInterface<number>({
+    id: 1,
+    title: "Example Title",
+  });
 }
