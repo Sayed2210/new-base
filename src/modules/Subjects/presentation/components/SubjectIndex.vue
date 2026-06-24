@@ -1,136 +1,80 @@
 <script setup lang="ts">
-//   import { onMounted, ref, computed } from 'vue';
-//   import DataStatusBuilder from '@/shared/DataStatues/DataStatusBuilder.vue';
-//   import AppTable, { type TableHeader } from '@/shared/HelpersComponents/AppTable.vue';
-//   import Pagination from '@/shared/HelpersComponents/Pagination.vue';
-//   import { useRoute, useRouter } from 'vue-router';
-//   import { debounce } from '@/base/Presentation/Utils/debouced';
-//   // import { useFormsStore } from '@/stores/formsStore';
-//   // import DeleteDialog from '@/shared/HelpersComponents/dialog/DeleteDialog.vue';
-//   import SubjectController from '../controllers/subject.controller';
-//   import IndexSubjectParams from '../../core/params/index.subject.params';
-//   import DeleteSubjectParams from '../../core/params/delete.subject.params';
-//   // import type StageModel from '@/modules/Stages/core/models/stage.model';
-// // import DropList from '@/shared/HelpersComponents/DropList.vue';
-// import DeletIcon from '@/shared/icons/DropListIcons/DeletIcon.vue';
-// import { useI18n } from 'vue-i18n';
-// import EditIcon from '@/shared/icons/Privacy/EditIcon.vue';
-// import ShowIcon from '@/shared/icons/ShowIcon.vue';
+  import { onMounted, ref, computed } from 'vue';
+  import DataStatusBuilder from '@/shared/DataStatues/DataStatusBuilder.vue';
+  import AppTable, { type TableHeader } from '@/shared/HelpersComponents/AppTable.vue';
+  import Pagination from '@/shared/HelpersComponents/Pagination.vue';
+  import { useRoute, useRouter } from 'vue-router';
+  import SubjectController from '../controllers/subject.controller';
+  import IndexSubjectParams from '../../core/params/index.subject.params';
+  import { getFullTitlesFromEducationResponse } from '@/shared/GeneralMethods/CreateBranchSubjectTree';
+  import type TitleInterface from '@/base/Data/Models/titleInterface';
+  import UpdatedCustomInputSelect from '@/shared/FormInputs/UpdatedCustomInputSelect.vue';
 
-  // Controller instance
-  // const controller = SubjectController.getInstance();
-  // const state = computed(() => controller.listState.value);
-  // const router = useRouter();
-  // const route = useRoute();
+  const subjectcontroller = SubjectController.getInstance();
+  const state = computed(() => subjectcontroller.listState.value);
+  const router = useRouter();
+  const route = useRoute();
 
-  // // Table headers
-  // const headers: TableHeader[] = [
-  //   { key: 'title', label: 'Title', width: '90%', sortable: true },
+  // Table headers
+  const headers: TableHeader[] = [{ key: 'title', label: 'name', width: '90%', sortable: true }];
 
+  // Pagination state
+  const perPage = ref(10);
+  const word = ref('');
+  const TableTitle = ref<TitleInterface<number>[]>([]);
 
-  // ];
+  const fetchSubjects = async (page: number = 1, word: string = '') => {
+    await subjectcontroller.fetchList(
+      new IndexSubjectParams(
+        word,
+        route.query.page ? Number(route.query.page) : page,
+        perPage.value,
+      ),
+    );
+  };
 
-  // // Pagination state
-  // const perPage = ref(10);
-  // const word = ref('');
+  const onPageChange = (page: number) => {
+    fetchSubjects(page);
+    router.push({
+      query: {
+        ...route.query,
+        page: String(page),
+        word: word.value,
+      },
+    });
+  };
 
-  // const fetchSubjects = async (page: number = 1, word: string = '') => {
-  //   await controller.fetchList(
-  //     new IndexSubjectParams(
-  //       word,
-  //       route.query.page ? Number(route.query.page) : page,
-  //       perPage.value,
-  //     ),
-  //   );
-  // };
+  const onPerPageChange = (count: number) => {
+    perPage.value = count;
+    fetchSubjects(1);
+  };
 
-  // const Search = debounce(() => {
-  //   router.push({
-  //     query: {
-  //       ...route.query,
-  //       page: Number(route.query.page ?? 1),
-  //       word: word.value || undefined,
-  //     },
-  //   });
+  // Fetch emails on component mount
+  onMounted(async () => {
+    if (route.query.word) {
+      word.value = String(route.query.word);
+    }
+    await fetchSubjects(route.query.page ? Number(route.query.page) : 1, word.value);
+    TableTitle.value = state.value.data ? getFullTitlesFromEducationResponse(state.value.data) : [];
+  });
 
-  //   fetchSubjects(1, word.value);
-  // });
+  const formRoute = computed(() => '/subjects/add');
 
-  // const onPageChange = (page: number) => {
-  //   fetchSubjects(page);
-  //   router.push({
-  //     query: {
-  //       ...route.query,
-  //       page: String(page),
-  //       word: word.value,
-  //     },
-  //   });
-  // };
+  const SelectedRow = ref<TitleInterface<number>[]>([]);
+  const setSelectef = (items: TitleInterface<number>[]) => {
+    SelectedRow.value = items;
+  };
 
-  // const onPerPageChange = (count: number) => {
-  //   perPage.value = count;
-  //   fetchSubjects(1);
-  // };
+  const SelctedFilter = ref<TitleInterface<number>>();
+  const UpdateSelctFIlter = () => {};
+  const SubjectParams = ref<IndexSubjectParams>(new IndexSubjectParams(''));
+</script>
 
-  // // Fetch emails on component mount
-  // onMounted(async () => {
-  //   if (route.query.word) {
-  //     word.value = String(route.query.word);
-  //   }
-
-  //   await fetchSubjects(route.query.page ? Number(route.query.page) : 1, word.value);
-  // });
-
-  // const deleteSubject = async (id: number) => {
-  //   await controller.delete(new DeleteSubjectParams(id));
-  //   await fetchSubjects();
-  // };
-
-  // const FormStore = useFormsStore();
-  // const formRoute = computed(() => '/subjects/add');
-
-  // const isDraft = computed(() => {
-  //   const data = FormStore?.formData[formRoute.value] ?? {};
-  //   return Object.keys(data).length === 0 || Object.values(data).every((v) => v == null);
-  // });
-  // const SelectedRow = ref<StageModel[]>([]);
-  // const setSelectef = (items: StageModel[]) => {
-  //   SelectedRow.value = items;
-  // };
-
-  // const deleteSelected = () => {
-  //   SelectedRow.value.forEach((item) => {
-  //     deleteSubject(item.id!);
-  //   });
-  // };
-// const {t} = useI18n();
-  // const actionList = (id: number, deleteSubject: (id: number) => void) => [
-  //   {
-  //     text: t('rename'),
-  //     icon: EditIcon ,
-  //     // action: () => {
-  //     //   router.push({ path: `/subjects/edit/${id}` });
-  //     // },
-  //   },
-  //   {
-  //     text: t('delete'),
-  //     icon: DeletIcon,
-  //     action: () => deleteSubject(id),
-  //   },
-  //       {
-  //     text: t('show_questions'),
-  //     icon: ShowIcon,
-  //     action: () => router.push( `/questions?subjectId=${id}`) ,
-  //   },
-  // ];
-</script> 
-
-<!-- <template> -->
-  <!-- {{state -->
-  <!-- <div class="subject-page">
+<template>
+  <div class="subject-page">
     <div class="index-header">
       <div class="toolbar">
-        <div class="search-field">
+        <!-- <div class="search-field">
           <span class="search-icon">
             <svg
               width="18"
@@ -152,17 +96,25 @@
             type="text"
             @input="Search"
           />
-        </div>
+        </div> -->
+        <UpdatedCustomInputSelect
+          id="classification-filter"
+          v-model="SelctedFilter"
+          :label="`classification`"
+          :controller="subjectcontroller"
+          :params="SubjectParams"
+          placeholder="select subject"
+          @update:model-value="UpdateSelctFIlter"
+        />
       </div>
-
     </div>
 
-    <DataStatusBuilder :controller="state" :on-retry="async () => await fetchSubjects()">
-      <template #success="{ data }">
+    <DataStatusBuilder :controller="state">
+      <template #success>
         <div class="table-frame">
           <AppTable
             :headers="headers"
-            :items="data as StageModel[]"
+            :items="TableTitle"
             selectable
             show-index
             hoverable
@@ -170,12 +122,12 @@
             @selection-change="setSelectef"
           >
             <template #cell-title="{ item }">
-              {{ item.title }}
+              <span class="subject-title-cell">{{ item.title }}</span>
             </template>
 
             <template #actions="{ item }">
               <div class="row-actions">
-                <router-link class="action-btn edit" :to="`/stages/edit/${item.id}`" title="Edit">
+                <router-link class="action-btn edit" :to="`/subjects/edit/${item.id}`" title="Edit">
                   <svg
                     width="15"
                     height="15"
@@ -190,29 +142,17 @@
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                   </svg>
                 </router-link>
-                <DropList
-                  :action-list="actionList(item.id, deleteEducationClassification)"
-                  :delete-dialog-title="
-                    $t('are_you_sure_you_want_to_remove_this_education_classification')
-                  "
-                  :delete-dialog-message="
-                    $t(
-                      'Deleting_this_classification_will_remove_all_related_data_including_any_configurations_and_tree_structures_This_action_is_irreversible_and_the_classification_must_be_created_again_if_needed',
-                    )
-                  "
-                />
               </div>
             </template>
           </AppTable>
         </div>
 
         <Pagination
-          :pagination="controller.pagination.value"
+          :pagination="subjectcontroller.pagination.value"
           @change-page="onPageChange"
           @count-per-page="onPerPageChange"
         />
       </template>
-
       <template #empty>
         <div class="empty-state">
           <svg
@@ -247,4 +187,4 @@
       </template>
     </DataStatusBuilder>
   </div>
-</template> -->
+</template>

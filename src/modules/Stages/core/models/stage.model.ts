@@ -10,7 +10,6 @@ export default class StageModel {
   public readonly title: string;
   public readonly full_title: string;
   public readonly e_c_subject_id?: number;
-
   public readonly branches: BranchesModel[];
   public readonly EducationType: TitleInterface<EducationType>;
   public readonly children: StageModel[];
@@ -57,14 +56,14 @@ export default class StageModel {
   }
 
   static example: StageModel = new StageModel({
-  id: 1,
-  title: 'المرحلة الثانوية',
-  full_title: 'المرحلة الثانوية',
-  branches: [BranchesModel.example],
-  EducationType: new TitleInterface({
-    id: EducationType.General,
-    title: 'General',
-  }),
-  children: [],
-});
+    id: 1,
+    title: 'المرحلة الثانوية',
+    full_title: 'المرحلة الثانوية',
+    branches: [BranchesModel.example],
+    EducationType: new TitleInterface({
+      id: EducationType.General,
+      title: 'General',
+    }),
+    children: [],
+  });
 }

@@ -21,7 +21,7 @@
   import FullSubjectTreeController from '@/modules/Questions/presentation/controllers/FullSubjectTree/full.subject.tree.controller';
   import { CustomToast } from './CustomToast';
   import type ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
-  import GetFullNameOfbranch from '@/shared/GeneralMethods/CreateBranchSubjectTree';
+  // import GetFullNameOfbranch from '@/shared/GeneralMethods/CreateBranchSubjectTree';
 
   const SelectedQuestionSequence = ref<TitleInterface<number> | null>(null);
 
@@ -63,8 +63,8 @@
   const FetchBranches = async () => {
     const result = await fullSubjectTreeController.fetchList();
     AllSubjectTree.value = result.data!;
-    const fullname = new GetFullNameOfbranch();
-    console.log(fullname.getLastBranchFullTitles(AllSubjectTree.value));
+    // const fullname = new GetFullNameOfbranch();
+    // console.log(fullname.getLastBranchFullTitles(AllSubjectTree.value));
   };
   onMounted(async () => {
     FetchBranches();

@@ -142,6 +142,7 @@
                 </span>
               </div>
             </th>
+            <slot name="CustomRowHeader"></slot>
 
             <!-- Actions column (if slot provided) -->
             <th v-if="$slots.actions" class="th-actions">
