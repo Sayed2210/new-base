@@ -25,6 +25,8 @@
   type EducationFilterOption = TitleInterface<number> & {
     node: EducationTreeNode;
     nodeType: FilterNodeType;
+    rawTitle: string;
+    pathTitles: string[];
   };
 
   const subjectcontroller = SubjectController.getInstance();
@@ -38,8 +40,9 @@
   const word = ref('');
   const TableTitle = ref<TitleInterface<number>[]>([]);
   const educationTree = ref<EducationTreeNode[]>([]);
-  const filterLevels = ref<EducationFilterOption[][]>([]);
-  const selectedFilters = ref<(EducationFilterOption | null)[]>([]);
+  const currentFilterOptions = ref<EducationFilterOption[]>([]);
+  const selectedFilter = ref<EducationFilterOption | null>(null);
+  const selectedPath = ref<EducationFilterOption[]>([]);
 
   const fetchSubjects = async (page: number = 1, word: string = '') => {
     await subjectcontroller.fetchList(
@@ -69,13 +72,19 @@
   const toFilterOption = (
     node: EducationTreeNode,
     fallbackType: FilterNodeType,
+    parentTitles: string[] = [],
   ): EducationFilterOption => {
+    const rawTitle = node.title ?? node.full_title ?? '';
+    const pathTitles = [...parentTitles, rawTitle].filter(Boolean);
+
     return {
       id: getNodeId(node),
-      title: node.title ?? node.full_title ?? '',
+      title: pathTitles.join(' -> '),
       full_title: node.full_title,
       node,
       nodeType: getNodeType(node, fallbackType),
+      rawTitle,
+      pathTitles,
     };
   };
 
@@ -83,9 +92,9 @@
     return tree.map((node) => toFilterOption(node, 'classification')).filter((item) => item.id);
   };
 
-  const getNextOptions = (node: EducationTreeNode): EducationFilterOption[] => {
-    return getChildNodes(node)
-      .map((child) => toFilterOption(child, getNodeType(child, 'branch')))
+  const getNextOptions = (option: EducationFilterOption): EducationFilterOption[] => {
+    return getChildNodes(option.node)
+      .map((child) => toFilterOption(child, getNodeType(child, 'branch'), option.pathTitles))
       .filter((item) => item.id);
   };
 
@@ -104,8 +113,9 @@
     const data = state.value.data ?? [];
     educationTree.value = data as unknown as EducationTreeNode[];
     sessionStorage.setItem(cacheKey, JSON.stringify(data));
-    filterLevels.value = [getClassificationOptions(educationTree.value)];
-    selectedFilters.value = [null];
+    currentFilterOptions.value = getClassificationOptions(educationTree.value);
+    selectedFilter.value = null;
+    selectedPath.value = [];
     updateTableFromNode();
   };
 
@@ -116,46 +126,56 @@
     try {
       const parsedTree = JSON.parse(cachedTree) as EducationTreeNode[];
       educationTree.value = parsedTree;
-      filterLevels.value = [getClassificationOptions(parsedTree)];
-      selectedFilters.value = [null];
+      currentFilterOptions.value = getClassificationOptions(parsedTree);
+      selectedFilter.value = null;
+      selectedPath.value = [];
       updateTableFromNode();
     } catch {
       sessionStorage.removeItem(cacheKey);
     }
   };
 
-  const updateSelectedFilter = (levelIndex: number, option: EducationFilterOption | null) => {
-    selectedFilters.value = selectedFilters.value.slice(0, levelIndex + 1);
-    selectedFilters.value[levelIndex] = option;
-    filterLevels.value = filterLevels.value.slice(0, levelIndex + 1);
+  const getSelectedPathTitle = () => {
+    return selectedPath.value
+      .map((option) => option.rawTitle)
+      .filter(Boolean)
+      .join(' -> ');
+  };
 
+  const updateSelectedFilter = (option: EducationFilterOption | null) => {
     if (!option) {
-      const previousOption = selectedFilters.value[levelIndex - 1];
-      updateTableFromNode(previousOption?.node);
+      selectedFilter.value = null;
+      selectedPath.value = [];
+      currentFilterOptions.value = getClassificationOptions(educationTree.value);
+      updateTableFromNode();
       return;
     }
 
+    selectedPath.value = [...selectedPath.value, option];
+    selectedFilter.value = {
+      ...option,
+      title: getSelectedPathTitle(),
+    };
     updateTableFromNode(option.node);
+    currentFilterOptions.value = getNextOptions(option);
+  };
 
-    const nextOptions = getNextOptions(option.node);
-    if (nextOptions.length > 0) {
-      filterLevels.value.push(nextOptions);
-      selectedFilters.value.push(null);
+  const getFilterLabel = () => {
+    if (selectedPath.value.length === 0) return 'education_classification';
+    if (currentFilterOptions.value.length === 0) {
+      return selectedPath.value[selectedPath.value.length - 1]?.nodeType ?? 'branch';
     }
+
+    return currentFilterOptions.value.some((option) => option.nodeType === 'subject')
+      ? 'subject'
+      : 'branch';
   };
 
-  const getFilterLabel = (levelIndex: number) => {
-    if (levelIndex === 0) return 'education_classification';
+  const getFilterPlaceholder = () => {
+    if (selectedPath.value.length === 0) return 'select_classification';
+    if (currentFilterOptions.value.length === 0) return 'select_subject';
 
-    const options = filterLevels.value[levelIndex] ?? [];
-    return options.some((option) => option.nodeType === 'subject') ? 'subject' : 'branch';
-  };
-
-  const getFilterPlaceholder = (levelIndex: number) => {
-    if (levelIndex === 0) return 'select_classification';
-
-    const options = filterLevels.value[levelIndex] ?? [];
-    return options.some((option) => option.nodeType === 'subject')
+    return currentFilterOptions.value.some((option) => option.nodeType === 'subject')
       ? 'select_subject'
       : 'select_branch';
   };
@@ -181,17 +201,16 @@
   <div class="subject-page">
     <div class="index-header">
       <div class="toolbar">
+        {{ selectedFilter }}
         <UpdatedCustomInputSelect
-          v-for="(options, index) in filterLevels"
-          :id="`education-filter-${index}`"
-          :key="index"
-          v-model="selectedFilters[index]"
-          :label="getFilterLabel(index)"
-          :static-options="options"
-          :placeholder="$t(getFilterPlaceholder(index))"
+          id="education-filter"
+          v-model="selectedFilter"
+          :label="getFilterLabel()"
+          :static-options="currentFilterOptions"
+          :placeholder="$t(getFilterPlaceholder())"
           :reload="false"
           @update:model-value="
-            (option: EducationFilterOption | null) => updateSelectedFilter(index, option)
+            (option: EducationFilterOption | null) => updateSelectedFilter(option)
           "
         />
       </div>

@@ -120,6 +120,7 @@ describe('SubjectIndex.vue', () => {
     await flushPromises();
 
     const filter = wrapper.find('.education-filter');
+    expect(wrapper.findAll('.education-filter')).toHaveLength(1);
     expect(filter.exists()).toBe(true);
     expect(filter.attributes('data-label')).toBe('education_classification');
   });
