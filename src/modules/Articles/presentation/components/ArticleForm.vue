@@ -21,6 +21,7 @@
   import FullSubjectTreeController from '@/modules/Questions/presentation/controllers/FullSubjectTree/full.subject.tree.controller';
   import { CustomToast } from './CustomToast';
   import type ShowQuestionsModel from '@/modules/Questions/core/models/show.questions.model';
+  import GetFullNameOfbranch from '@/shared/GeneralMethods/CreateBranchSubjectTree';
 
   const SelectedQuestionSequence = ref<TitleInterface<number> | null>(null);
 
@@ -59,9 +60,15 @@
     SelectedQuestionSequence.value = selected!;
     updateData();
   };
-  onMounted(async () => {
+  const FetchBranches = async () => {
     const result = await fullSubjectTreeController.fetchList();
     AllSubjectTree.value = result.data!;
+    const fullname = new GetFullNameOfbranch();
+    console.log(fullname.getLastBranchFullTitles(AllSubjectTree.value));
+  };
+  onMounted(async () => {
+    FetchBranches();
+
     // console.log('AllSubjectTree.value', AllSubjectTree.value);
   });
   const updateData = () => {
@@ -270,6 +277,7 @@
                     :static-options="subjectOptions"
                     placeholder="select subject"
                     @update:model-value="handelSubjectUpdate"
+                    @reload="FetchBranches"
                   />
                 </div>
               </div>

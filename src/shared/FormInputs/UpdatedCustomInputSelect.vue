@@ -58,7 +58,13 @@
     onclick?: () => void;
   }
 
-  const emit = defineEmits(['update:modelValue', 'update:slot', 'close', 'update:dialogVisible']);
+  const emit = defineEmits([
+    'update:modelValue',
+    'update:slot',
+    'close',
+    'update:dialogVisible',
+    'reload',
+  ]);
 
   const props = withDefaults(defineProps<Props>(), {
     type: 1,
@@ -264,6 +270,7 @@
     await fetchOptions();
 
     normalizedValue.value = isMultiselect.value ? [] : null;
+    emit('reload');
   }
   const DialogVisable = computed({
     get() {
@@ -276,9 +283,9 @@
       }
     },
   });
-  const closeDailog = () => {
-    emit('close', false);
-  };
+  // const closeDailog = () => {
+  //   emit('close', false);
+  // };
 </script>
 
 <template>
@@ -349,7 +356,6 @@
     >
       <slot name="Dialog"></slot>
     </Dialog>
-    
   </div>
   <slot v-else name="CreatedDialog"></slot>
 </template>

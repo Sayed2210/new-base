@@ -56,7 +56,7 @@
     params.value = updatedParams;
   };
   const cancel = () => {
-    router.push({ name: 'Articles' });
+    router.push('/Articles')
   };
 </script>
 

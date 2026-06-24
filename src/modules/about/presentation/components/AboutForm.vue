@@ -277,7 +277,7 @@
             @input="updateData"
           />
 
-          <div class="field-group col-span-2" :class="{ disabled: loading }">
+          <div class="field-group" :class="{ disabled: loading }">
             <HandleFilesUpload
               :key="index"
               label="upload image"
@@ -286,7 +286,7 @@
               :index="index + 2"
               :file="entry.icon || undefined"
               :have-content="true"
-              class="image-input"
+              class="image-input image-link-input"
               @change="handleSocialImageChange(index, $event)"
             >
               <template #content>
@@ -312,6 +312,7 @@
               class="sm-remove-btn"
               title="Remove this link"
               @click="deleteSocialLink(index, entry.id)"
+              v-if="index != 0"
             >
               <span>×</span>
             </button>
@@ -323,6 +324,101 @@
 </template>
 
 <style scoped lang="scss">
+  .image-link-input {
+    position: relative;
+    width: 100%;
+    height: 44px;
+    min-height: 44px;
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    background: var(--BgWhite);
+    overflow: hidden;
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      background 0.2s ease;
+
+    &:hover {
+      border-color: var(--PrimaryColor);
+      box-shadow: 0 0 0 3px var(--PrimaryColor-light);
+    }
+
+    .add-imaegs-data {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .first-text {
+        margin: 0;
+        font-size: 12px;
+        color: var(--gray-500);
+        white-space: nowrap;
+
+        span {
+          color: var(--PrimaryColor);
+          font-weight: 600;
+        }
+      }
+    }
+
+    :deep(.preview-grid) {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      max-height: 100%;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: var(--BgWhite);
+      border-radius: inherit;
+    }
+
+    :deep(.preview-item) {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      border-radius: 9px;
+      overflow: hidden;
+      background: var(--gray-100);
+      transform: none !important;
+    }
+
+    :deep(.preview-item:hover) {
+      transform: none !important;
+    }
+
+    :deep(.preview-thumb),
+    :deep(.preview-item img) {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      padding: 3px;
+      background: var(--BgWhite);
+    }
+
+    :deep(.preview-overlay),
+    :deep(.download-badge) {
+      display: none;
+    }
+
+    :deep(.remove-btn) {
+      opacity: 1;
+      top: 50%;
+      right: 6px;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      font-size: 9px;
+      background: var(--black-alpha-45);
+    }
+  }
   .image-input {
     :deep(.upload-area) {
       padding: 10px !important;
@@ -333,6 +429,10 @@
     }
   }
   .social-media-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 40px !important;
+    gap: 12px;
+    align-items: center;
     &:last-child {
       .btns {
         margin-left: 6px;

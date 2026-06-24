@@ -2,11 +2,18 @@ export default class EducationClassificationSubjectModel {
   public readonly id?: number;
   public readonly title?: string;
   public readonly childs?: EducationClassificationSubjectModel[];
+  public readonly subjects?: EducationClassificationSubjectModel[];
 
-  constructor(data: { id?: number; title?: string; childs?: EducationClassificationSubjectModel[] }) {
+  constructor(data: {
+    id?: number;
+    title?: string;
+    childs?: EducationClassificationSubjectModel[];
+    subjects?: EducationClassificationSubjectModel[];
+  }) {
     this.id = data.id;
     this.title = data.title;
     this.childs = data.childs;
+    this.subjects = data.subjects;
     Object.freeze(this);
   }
 
@@ -18,7 +25,12 @@ export default class EducationClassificationSubjectModel {
     return new EducationClassificationSubjectModel({
       id: json.id,
       title: json.title,
-      childs: json.childs?.map((child: any) => EducationClassificationSubjectModel.fromJson(child)),
+      childs: json.children?.map((child: any) =>
+        EducationClassificationSubjectModel.fromJson(child),
+      ),
+      subjects: json.subjects?.map((subject: any) =>
+        EducationClassificationSubjectModel.fromJson(subject),
+      ),
     });
   }
 

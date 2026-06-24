@@ -1,6 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { mount, config } from '@vue/test-utils';
 import HandleFilesUpload from '../HandleFilesUpload.vue';
+
+config.global.stubs = {
+  ...config.global.stubs,
+  Image: {
+    template: '<img class="preview-thumb" />',
+  },
+};
 
 const createWrapper = (props = {}) =>
   mount(HandleFilesUpload, {

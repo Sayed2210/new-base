@@ -10,7 +10,7 @@
   import IndexSearchIcon from '@/shared/icons/IndexSearchIcon.vue';
   import FilterDialog from '@/shared/HelpersComponents/FilterDialog/FilterDialog.vue';
   import TableSkelaton from '@/shared/HelpersComponents/TableSkelaton.vue';
-  import { ArticleStatusEnum } from '../../core/constant/Article.status.enum';
+  // import { ArticleStatusEnum } from '../../core/constant/Article.status.enum';
   import ShowIcon from '@/shared/icons/ShowIcon.vue';
   import ArticleController from '../controllers/Article.controller';
   import IndexArticleParams from '../../core/params/index.Articles.params';
@@ -159,14 +159,12 @@
 
   const GetQuestionStatus = (val: QuestionStatusEnum) => {
     switch (val) {
-      case QuestionStatusEnum.approved:
+      case QuestionStatusEnum.APPROVED:
         return 'Approved';
-      case QuestionStatusEnum.not_Reviewd:
+      case QuestionStatusEnum.PENDING:
         return 'Not Reviewed';
-      case QuestionStatusEnum.rejected:
+      case QuestionStatusEnum.REJECTED:
         return 'Rejected';
-      case QuestionStatusEnum.under_review:
-        return 'Under Review';
     }
   };
 
@@ -265,10 +263,10 @@
               <div
                 class="status"
                 :class="{
-                  'status-approved': item.status === ArticleStatusEnum.approved,
-                  'status-not-reviewed': item.status === ArticleStatusEnum.not_Reviewd,
-                  'status-rejected': item.status === ArticleStatusEnum.rejected,
-                  'status-under-review': item.status === ArticleStatusEnum.under_review,
+                  'status-approved': item.status === QuestionStatusEnum.APPROVED,
+                  'status-not-reviewed': item.status === QuestionStatusEnum.PENDING,
+                  'status-rejected': item.status === QuestionStatusEnum.REJECTED,
+                  'status-under-review': item.status === QuestionStatusEnum.PENDING,
                 }"
               >
                 {{ GetQuestionStatus(item.status!) }}

@@ -28,6 +28,7 @@
       console.error('Error saving employee:', error);
     } finally {
       loading.value = false;
+      router.push({ name: 'Employees' });
     }
   };
 
@@ -49,6 +50,7 @@
       console.error('Error saving employee:', error);
     } finally {
       loading.value = false;
+      router.push({ name: 'Employees' });
     }
   };
 </script>
@@ -63,7 +65,6 @@
     />
 
     <div class="actions">
-    
       <button class="btn btn-primary w-full" type="submit" @click="saveEmployee">
         <span v-if="loading" class="loader"></span>
         <span v-else>

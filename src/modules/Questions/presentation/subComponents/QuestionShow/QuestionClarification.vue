@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import QuestionClarificationModel from '@/modules/Questions/core/models/subModels/question.clarification.model';
-import ClerificationIcon from '@/shared/icons/Question/ClerificationIcon.vue';
-const props = defineProps({
-  clarification: {
-    type: QuestionClarificationModel,
-    required: true,
-  },
-});
+  import QuestionClarificationModel from '@/modules/Questions/core/models/subModels/question.clarification.model';
+  import ClerificationIcon from '@/shared/icons/Question/ClerificationIcon.vue';
+  const { clarification } = defineProps({
+    clarification: {
+      type: QuestionClarificationModel,
+      required: true,
+    },
+  });
 </script>
 
 <template>

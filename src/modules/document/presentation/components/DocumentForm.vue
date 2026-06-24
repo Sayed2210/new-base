@@ -18,7 +18,7 @@
   import type StageModel from '@/modules/Stages/core/models/stage.model'; // import type BranchesModel from '@/modules/Stages/core/models/branches.model';
   import type DocumentShowModel from '../../core/models/document.show.model';
   import flattenBranchTree from '@/modules/document/core/TreeSelectHelper';
-  import NewIcon from '@/shared/icons/CustomSelect/NewIcon.vue';
+  // import NewIcon from '@/shared/icons/CustomSelect/NewIcon.vue';
 
   const emit = defineEmits(['updateData']);
 
@@ -50,10 +50,12 @@
   const stageController = StageController.getInstance();
   const UploadedImage = ref<string>();
   const UploadedFiles = ref<string>();
-
-  onMounted(async () => {
+  const FetchStages = async () => {
     await stageController.fetchList(indexDocumentTypeParams);
     allStages.value = (stageController.listData.value ?? []) as StageModel[];
+  };
+  onMounted(async () => {
+    FetchStages();
   });
 
   const branchOptions = computed<TitleInterface<number>[]>(() => {
@@ -156,7 +158,7 @@
   const deletetag = (tagId: number) => {
     tags.value.splice(tagId, 1);
   };
-  const DocumentTypeDialog = ref(false);
+  // const DocumentTypeDialog = ref(false);
 </script>
 
 <template>
@@ -241,6 +243,7 @@
           :placeholder="$t('Enter subject name')"
           :reload="true"
           @update:model-value="handleBranchChange($event)"
+          @reload="FetchStages"
         />
       </div>
 

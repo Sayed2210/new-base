@@ -54,11 +54,8 @@
         />
       </div>
 
-      <QuestionReviewProcedures
-        v-if="showState?.data?.review_status === QuestionStatusEnum.approved"
-        :question-data="showState?.data"
-      />
-      <QuestionRejectActions v-if="showState.data?.review_status === QuestionStatusEnum.rejected" />
+      <QuestionReviewProcedures :question-data="showState?.data" />
+      <QuestionRejectActions v-if="showState.data?.review_status === QuestionStatusEnum.REJECTED" />
     </div>
 
     <div class="side-content">

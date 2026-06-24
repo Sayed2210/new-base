@@ -71,7 +71,7 @@ export default class EmployeeModel {
       password: json.password,
       image: json.image || '',
       isSuperadmin: Boolean(json.isSuperadmin),
-      employeeId: json.employee_id || '',
+      employeeId: json.employee_ref || '',
       status: Number(json.status || 0),
       subjects: json.subjects || '',
       gender: json.gender,

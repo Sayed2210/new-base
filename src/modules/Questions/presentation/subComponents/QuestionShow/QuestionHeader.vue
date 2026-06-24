@@ -6,21 +6,19 @@
   import { useRoute, useRouter } from 'vue-router';
   import questionsController from '../../controllers/questions.controller';
   import DeletequestionsParams from '@/modules/Questions/core/params/delete.question.params';
-  const props = defineProps<{ questionData: ShowQuestionsModel }>();
+  const { questionData } = defineProps<{ questionData: ShowQuestionsModel }>();
   const router = useRouter();
 
   const id = router.currentRoute.value.params.id;
 
   const getStatusText = (review_status: QuestionStatusEnum) => {
     switch (review_status) {
-      case QuestionStatusEnum.under_review:
+      case QuestionStatusEnum.PENDING:
         return 'Under Review';
-      case QuestionStatusEnum.not_Reviewd:
-        return 'Not Reviewed';
-      case QuestionStatusEnum.rejected:
-        return 'Rejected';
-      case QuestionStatusEnum.approved:
+      case QuestionStatusEnum.APPROVED:
         return 'Approved';
+      case QuestionStatusEnum.REJECTED:
+        return 'Rejected';
       default:
         return 'Unknown';
     }
@@ -28,13 +26,11 @@
 
   const getStatusDescription = (review_status: QuestionStatusEnum) => {
     switch (review_status) {
-      case QuestionStatusEnum.under_review:
+      case QuestionStatusEnum.PENDING:
         return 'complete all details of the question and the available procedures to can publish it';
-      case QuestionStatusEnum.not_Reviewd:
-        return 'View all details of the question and the available procedures according to its status.';
-      case QuestionStatusEnum.rejected:
+      case QuestionStatusEnum.REJECTED:
         return 'View all details of the question and reason of rejected';
-      case QuestionStatusEnum.approved:
+      case QuestionStatusEnum.APPROVED:
         return '';
       default:
         return 'Unknown';
@@ -59,7 +55,7 @@
         <h3>{{ getStatusText(questionData?.review_status!) }} Question</h3>
         <p>{{ getStatusDescription(questionData?.review_status!) }}</p>
         <div
-          v-if="questionData?.review_status === QuestionStatusEnum.approved"
+          v-if="questionData?.review_status === QuestionStatusEnum.APPROVED"
           class="approved-case-info"
         >
           <h4>
@@ -77,10 +73,11 @@
     <div class="question-actions">
       <button
         class="btn btn-primary"
-        @click="router.push({ name: 'QuestionEdit', params: { id } })"
+        @click="router.push({ name: 'Edit question', params: { id } })"
       >
         <EditIcon /> {{ $t('edit') }}
       </button>
+
       <button class="action-btn delete" title="Delete" @click="DeleteQuestion">
         <svg
           width="15"

@@ -267,8 +267,6 @@
           :is-dialog="true"
           @update:model-value="handleBranchChange($event)"
           @close="subjectDialog = false"
-          :isDialog="true"
-          v-model:dialogVisible="subjectDialog"
         />
       </div>
       <div class="input">

@@ -11,22 +11,20 @@
     const status = questionData.review_status;
 
     return {
-      waiting: status == QuestionStatusEnum.under_review,
-      drafting: status == QuestionStatusEnum.not_Reviewd,
-      rejected: status == QuestionStatusEnum.rejected,
-      approved: status == QuestionStatusEnum.approved,
+      waiting: status == QuestionStatusEnum.PENDING,
+      drafting: status == QuestionStatusEnum.PENDING,
+      rejected: status == QuestionStatusEnum.REJECTED,
+      approved: status == QuestionStatusEnum.APPROVED,
     };
   });
 
   const getStatusLabel = (review_status: QuestionStatusEnum) => {
     switch (review_status) {
-      case QuestionStatusEnum.under_review:
+      case QuestionStatusEnum.PENDING:
         return 'Under Review';
-      case QuestionStatusEnum.not_Reviewd:
-        return 'Not Reviewed';
-      case QuestionStatusEnum.rejected:
+      case QuestionStatusEnum.REJECTED:
         return 'Rejected';
-      case QuestionStatusEnum.approved:
+      case QuestionStatusEnum.APPROVED:
         return 'Approved';
       default:
         return review_status;

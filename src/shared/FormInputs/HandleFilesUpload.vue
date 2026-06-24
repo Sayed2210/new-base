@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { ref, onMounted, computed, watch } from 'vue';
 
+  import Image from 'primevue/image';
   export interface UploadedFile {
     id: string;
     name: string;
@@ -212,11 +213,28 @@
     return EXT_ICON_MAP[ext] ?? (ext.toUpperCase() || 'FILE');
   };
 
-  const downloadFile = (file: UploadedFile) => {
+  const downloadFile = async (file: UploadedFile) => {
     const a = document.createElement('a');
-    a.href = file.url;
-    a.download = file.name;
-    a.click();
+    let downloadUrl = file.url;
+
+    try {
+      if (!file.url.startsWith('data:') && !file.url.startsWith('blob:')) {
+        const response = await fetch(file.url);
+        const blob = await response.blob();
+        downloadUrl = URL.createObjectURL(blob);
+      }
+
+      a.href = downloadUrl;
+      a.download = file.name;
+      a.rel = 'noopener';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } finally {
+      if (downloadUrl.startsWith('blob:') && downloadUrl !== file.url) {
+        URL.revokeObjectURL(downloadUrl);
+      }
+    }
   };
 
   const removeFile = (id: string) => {
@@ -276,11 +294,11 @@
         v-for="fileItem in files"
         :key="fileItem.id"
         class="preview-item"
-        title="Click to download"
-        @click="downloadFile(fileItem)"
+        :class="{ 'preview-item--image': isImage(fileItem) }"
+        @click="!isImage(fileItem) && downloadFile(fileItem)"
       >
         <template v-if="isImage(fileItem)">
-          <img :src="fileItem.url" :alt="fileItem.name" class="preview-thumb" />
+          <Image :src="fileItem.url" :alt="fileItem.name" image-class="preview-thumb" preview />
         </template>
 
         <template v-else>
@@ -294,7 +312,7 @@
           <span class="preview-size">{{ fileItem.size }}</span>
         </div>
 
-        <div class="download-badge">↓</div>
+        <div class="download-badge" @click.stop="downloadFile(fileItem)">↓</div>
 
         <button
           type="button"
@@ -386,7 +404,13 @@
     transform: translateY(-2px);
   }
 
-  .preview-thumb {
+  .preview-item :deep(.p-image) {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .preview-item :deep(.preview-thumb) {
     width: 100%;
     height: 100%;
     object-fit: cover;

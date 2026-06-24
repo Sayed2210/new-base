@@ -26,10 +26,7 @@ export default class QuestionClarificationModel {
     }
 
     return new QuestionClarificationModel({
-      documents: new TitleInterface<number>({
-        id: json.document_id,
-        title: '',
-      }),
+      documents: json?.document,
       source: json.source_text,
       clarification: json.explanation,
       attachments: json.attachments,
@@ -43,6 +40,6 @@ export default class QuestionClarificationModel {
     }),
     source: 'Source',
     clarification: 'Clarification',
-    attachments: [{  alt: '', file: 'https://cyber.comolho.com/static/img/avatar.png', }],
+    attachments: [{ alt: '', file: 'https://cyber.comolho.com/static/img/avatar.png' }],
   });
 }

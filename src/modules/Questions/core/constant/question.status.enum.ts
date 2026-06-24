@@ -1,8 +1,7 @@
 export const QuestionStatusEnum = {
-  not_Reviewd: 1,
-  under_review: 2,
-  rejected: 3,
-  approved: 4,
+  PENDING: 1,
+  APPROVED: 2,
+  REJECTED: 3,
 } as const;
 
 export type QuestionStatusEnum = (typeof QuestionStatusEnum)[keyof typeof QuestionStatusEnum];
