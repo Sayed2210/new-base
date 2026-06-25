@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, ref } from 'vue';
+  import { computed, ref, watch } from 'vue';
   import Dialog from 'primevue/dialog';
   import RenameIcon from '@/assets/images/RenameImage.png';
   import MultiLangInput from '@/shared/MultiLangInput.vue';
@@ -10,7 +10,7 @@
   const props = defineProps<{
     visable: boolean;
     itemId: number;
-    stageId: number;
+    stageId: number | null;
   }>();
 
   const controller = EducationSubjectItemController.getInstance();
@@ -30,11 +30,12 @@
 
   const EditData = async () => {
     visible.value = false;
+    console.log(props.itemId, 'itemId');
 
     await controller.update(
       new EditEducationSubjectItemParams({
         subject_id: props.itemId,
-        branch_id: props.stageId,
+        branch_id: props.stageId!,
         translations: new TranslationParams({
           title: title.value,
         }),
@@ -42,6 +43,12 @@
     );
     emit('update:name');
   };
+  watch(
+    () => props.itemId,
+    (val) => {
+      console.log(val, 'itemId');
+    },
+  );
 </script>
 
 <template>
@@ -57,7 +64,6 @@
   >
     <template #header>
       <div class="header-container">
-      
         <img :src="RenameIcon" class="icon-dialog" alt="rename-image" />
         <div class="header-text-content">
           <h4 class="header-title">{{ $t('rename_title_of_education_classifications') }}</h4>

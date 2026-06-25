@@ -5,52 +5,33 @@
   import { useRoute, useRouter } from 'vue-router';
   import SubjectController from '../controllers/subject.controller';
   import IndexSubjectParams from '../../core/params/index.subject.params';
-  import { getFullTitlesFromEducationResponse } from '@/shared/GeneralMethods/CreateBranchSubjectTree';
-  import type TitleInterface from '@/base/Data/Models/titleInterface';
+  import TitleInterface from '@/base/Data/Models/titleInterface';
   import UpdatedCustomInputSelect from '@/shared/FormInputs/UpdatedCustomInputSelect.vue';
   import DropList from '@/shared/HelpersComponents/DropList.vue';
-  import EditIcon from '@/shared/icons/Privacy/EditIcon.vue';
   import { useI18n } from 'vue-i18n';
   import DeleteSubjectParams from '../../core/params/delete.subject.params';
   import ShowIcon from '@/shared/icons/ShowIcon.vue';
-
-  type EducationTreeNode = {
-    id?: number;
-    title?: string;
-    full_title?: string;
-    e_c_branch_id?: number;
-    e_c_subject_id?: number;
-    branches?: EducationTreeNode[];
-    subjects?: EducationTreeNode[];
-    children?: EducationTreeNode[];
-  };
-
-  type FilterNodeType = 'classification' | 'branch' | 'subject';
-
-  type EducationFilterOption = TitleInterface<number> & {
-    node: EducationTreeNode;
-    nodeType: FilterNodeType;
-    rawTitle: string;
-    pathTitles: string[];
-  };
+  import flattenBranchTree from '@/modules/document/core/TreeSelectHelper';
+  import type StageModel from '@/modules/Stages/core/models/stage.model';
+  import PricingIcon from '@/shared/icons/PricingIcon.vue';
+  import SkillsDialog from '@/modules/EducationClassification/subComponent/EducationTree/SkillsDialog.vue';
+  import RenameSubjectDialog from '@/modules/EducationClassification/subComponent/RenameSubjectDialog.vue';
+  import EditIcon from '@/shared/icons/DropListIcons/EditIcon.vue';
 
   const subjectcontroller = SubjectController.getInstance();
   const state = computed(() => subjectcontroller.listState.value);
   const route = useRoute();
-  const cacheKey = 'subjects_full_education_classification_tree';
 
   const headers: TableHeader[] = [{ key: 'title', label: 'name', width: '90%', sortable: true }];
 
   const perPage = ref(10);
   const word = ref('');
   const TableTitle = ref<TitleInterface<number>[]>([]);
-  const educationTree = ref<EducationTreeNode[]>([]);
-  const currentFilterOptions = ref<EducationFilterOption[]>([]);
-  const selectedFilter = ref<EducationFilterOption | null>(null);
-  const selectedPath = ref<EducationFilterOption[]>([]);
 
-  const fetchSubjects = async (page: number = 1, word: string = '') => {
-    await subjectcontroller.fetchList(
+  const AllBranchesOptions = ref<TitleInterface<number>[]>([]);
+
+  const fetchBranches = async (page: number = 1, word: string = '') => {
+    const result = await subjectcontroller.fetchList(
       new IndexSubjectParams(
         word,
         route.query.page ? Number(route.query.page) : page,
@@ -58,137 +39,20 @@
         0,
       ),
     );
-  };
-
-  const getNodeId = (node: EducationTreeNode): number => {
-    return node.e_c_subject_id ?? node.e_c_branch_id ?? node.id ?? 0;
-  };
-
-  const getChildNodes = (node: EducationTreeNode): EducationTreeNode[] => {
-    return [...(node.branches ?? []), ...(node.children ?? []), ...(node.subjects ?? [])];
-  };
-
-  const getNodeType = (node: EducationTreeNode, fallback: FilterNodeType): FilterNodeType => {
-    if (node.e_c_subject_id) return 'subject';
-    if (node.e_c_branch_id) return 'branch';
-    return fallback;
-  };
-
-  const toFilterOption = (
-    node: EducationTreeNode,
-    fallbackType: FilterNodeType,
-    parentTitles: string[] = [],
-  ): EducationFilterOption => {
-    const rawTitle = node.title ?? node.full_title ?? '';
-    const pathTitles = [...parentTitles, rawTitle].filter(Boolean);
-
-    return {
-      id: getNodeId(node),
-      title: pathTitles.join(' -> '),
-      full_title: node.full_title,
-      node,
-      nodeType: getNodeType(node, fallbackType),
-      rawTitle,
-      pathTitles,
-    };
-  };
-
-  const getClassificationOptions = (tree: EducationTreeNode[]): EducationFilterOption[] => {
-    return tree.map((node) => toFilterOption(node, 'classification')).filter((item) => item.id);
-  };
-
-  const getNextOptions = (option: EducationFilterOption): EducationFilterOption[] => {
-    return getChildNodes(option.node)
-      .map((child) => toFilterOption(child, getNodeType(child, 'branch'), option.pathTitles))
-      .filter((item) => item.id);
-  };
-
-  const getTableSource = (node?: EducationTreeNode): EducationTreeNode[] => {
-    if (!node) return educationTree.value;
-    if (node.e_c_subject_id) return [{ branches: [{ subjects: [node] }] }];
-    if (node.e_c_branch_id) return [{ branches: [node] }];
-    return [node];
-  };
-
-  const updateTableFromNode = (node?: EducationTreeNode) => {
-    TableTitle.value = getFullTitlesFromEducationResponse(getTableSource(node));
-  };
-
-  const syncTreeFromState = () => {
-    const data = state.value.data ?? [];
-    educationTree.value = data as unknown as EducationTreeNode[];
-    sessionStorage.setItem(cacheKey, JSON.stringify(data));
-    currentFilterOptions.value = getClassificationOptions(educationTree.value);
-    selectedFilter.value = null;
-    selectedPath.value = [];
-    updateTableFromNode();
-  };
-
-  const loadCachedTree = () => {
-    const cachedTree = sessionStorage.getItem(cacheKey);
-    if (!cachedTree) return;
-
-    try {
-      const parsedTree = JSON.parse(cachedTree) as EducationTreeNode[];
-      educationTree.value = parsedTree;
-      currentFilterOptions.value = getClassificationOptions(parsedTree);
-      selectedFilter.value = null;
-      selectedPath.value = [];
-      updateTableFromNode();
-    } catch {
-      sessionStorage.removeItem(cacheKey);
-    }
-  };
-
-  const selectedPathTitle = computed(() => {
-    return selectedPath.value
-      .map((option) => option.rawTitle)
-      .filter(Boolean)
-      .join(' -> ');
-  });
-
-  const updateSelectedFilter = (option: EducationFilterOption | null) => {
-    if (!option) {
-      selectedFilter.value = null;
-      selectedPath.value = [];
-      currentFilterOptions.value = getClassificationOptions(educationTree.value);
-      updateTableFromNode();
-      return;
-    }
-
-    selectedPath.value = [...selectedPath.value, option];
-    selectedFilter.value = null;
-    updateTableFromNode(option.node);
-    currentFilterOptions.value = getNextOptions(option);
-  };
-
-  const getFilterLabel = () => {
-    if (selectedPath.value.length === 0) return 'education_classification';
-    if (currentFilterOptions.value.length === 0) {
-      return selectedPath.value[selectedPath.value.length - 1]?.nodeType ?? 'branch';
-    }
-
-    return currentFilterOptions.value.some((option) => option.nodeType === 'subject')
-      ? 'subject'
-      : 'branch';
-  };
-
-  const getFilterPlaceholder = () => {
-    if (selectedPath.value.length === 0) return 'select_classification';
-    if (currentFilterOptions.value.length === 0) return 'select_subject';
-
-    return currentFilterOptions.value.some((option) => option.nodeType === 'subject')
-      ? 'select_subject'
-      : 'select_branch';
+    AllBranchesOptions.value = flattenBranchTree(result.data as StageModel[]).map((item) => {
+      return new TitleInterface<number>({
+        id: item.id,
+        title: item.title,
+      });
+    });
   };
 
   onMounted(async () => {
     if (route.query.word) {
       word.value = String(route.query.word);
     }
-    loadCachedTree();
-    await fetchSubjects(route.query.page ? Number(route.query.page) : 1, word.value);
-    syncTreeFromState();
+    await FetchSubjects();
+    await fetchBranches(route.query.page ? Number(route.query.page) : 1, word.value);
   });
 
   const formRoute = computed(() => '/subjects/add');
@@ -198,28 +62,68 @@
     SelectedRow.value = items;
   };
   const deleteSubject = async (id: number) => {
-    await subjectcontroller.delete(new DeleteSubjectParams({ id: id }));
-    await fetchSubjects();
-    syncTreeFromState();
+    await subjectcontroller.delete(new DeleteSubjectParams({ id }));
+
+    await FetchSubjects();
   };
+  const ShoweEditDialog = ref(false);
+  const showSkillsDialog = ref<boolean>(false);
 
   const { t } = useI18n();
   const router = useRouter();
-  const actionList = (id: number, deleteSubject: (id: number) => void) => [
+  const actionList = (item: TitleInterface<number>, deleteSubject: (item: number) => void) => [
     {
       text: t('delete'),
       icon: EditIcon,
       action: () => {
-        deleteSubject(id);
+        deleteSubject(item.id);
       },
     },
     {
       text: t('show_question'),
       icon: ShowIcon,
-      action: () => router.push(`/Questions?subjectId=${id}`),
+      action: () => {
+        router.push(`/Questions?subjectId=${item.id}`);
+      },
+    },
+    {
+      text: t('rename'),
+      icon: EditIcon,
+      action: () => {
+        ShoweEditDialog.value = true;
+        SelctedSubject.value = item.id;
+      },
+    },
+    {
+      text: t('skills'),
+      icon: PricingIcon,
+      action: () => (showSkillsDialog.value = true),
     },
   ];
-  
+  const FetchSubjects = async (id?: number) => {
+    const result = await subjectcontroller.indexSubjects(
+      new IndexSubjectParams(
+        word.value,
+        route.query.page ? Number(route.query.page) : 1,
+        perPage.value,
+        1,
+        id,
+      ),
+    );
+
+    TableTitle.value = flattenBranchTree(result!.data as StageModel[]).map((item) => {
+      return new TitleInterface<number>({
+        id: item.id,
+        title: item.title,
+      });
+    });
+  };
+  const selectedFilter = ref<TitleInterface<number>>();
+  const updateFilter = (filter: TitleInterface<number>) => {
+    selectedFilter.value = filter;
+    FetchSubjects(filter.id);
+  };
+  const SelctedSubject = ref<number>();
 </script>
 
 <template>
@@ -229,13 +133,11 @@
         <UpdatedCustomInputSelect
           id="education-filter"
           v-model="selectedFilter"
-          :label="getFilterLabel()"
-          :static-options="currentFilterOptions"
-          :placeholder="selectedPathTitle || $t(getFilterPlaceholder())"
-          :reload="true"
-          @update:model-value="
-            (option: EducationFilterOption | null) => updateSelectedFilter(option)
-          "
+          :static-options="AllBranchesOptions"
+          :placeholder="`select subject `"
+          :reload="false"
+          @update:model-value="updateFilter"
+          @reload="FetchSubjects"
         />
       </div>
     </div>
@@ -259,13 +161,19 @@
             <template #actions="{ item }">
               <div class="row-actions">
                 <DropList
-                  :action-list="actionList(item.id, deleteSubject)"
+                  :action-list="actionList(item, deleteSubject)"
                   :delete-dialog-title="$t('are_you_sure_you_want_to_remove_this_subject')"
                   :delete-dialog-message="
                     $t(
                       'Deleting_this_subject_will_remove_all_related_data_including_any_configurations_and_tree_structures_This_action_is_irreversible_and_the_subject_must_be_created_again_if_needed',
                     )
                   "
+                />
+                <SkillsDialog
+                  v-model:visible="showSkillsDialog"
+                  :level="1"
+                  :branch-name="item.title!"
+                  :branch-id="item.id"
                 />
               </div>
             </template>
@@ -306,10 +214,15 @@
       </template>
     </DataStatusBuilder>
   </div>
+  <RenameSubjectDialog
+    v-model:visable="ShoweEditDialog"
+    :item-id="SelctedSubject!"
+    :stage-id="selectedFilter?.id! || null"
+    @update:name="FetchSubjects"
+  />
 </template>
-
 <style scoped>
-  .p-select-label.p-placeholder {
-    color: var(--primary-color) !important;
+  .toolbar {
+    width: 50%;
   }
 </style>

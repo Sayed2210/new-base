@@ -15430,6 +15430,30 @@ body div {
   background-color: white !important;
 }
 
-.subject-page .p-select-label.p-placeholder {
-  color: var(--PrimaryColor) !important;
+.list-body .list-item button {
+  justify-content: space-between !important;
+}
+
+.input-label,
+.field-label,
+label {
+  font-family: "Demi" !important;
+  font-size: var(--md-size) !important;
+  font-weight: 600 !important;
+  color: var(--gray-5) !important;
+}
+
+input::-moz-placeholder {
+  font-family: "Demi" !important;
+  font-size: var(--sm-size) !important;
+  font-weight: 600 !important;
+  color: var(--gray-5) !important;
+}
+
+.p-select-label.p-placeholder,
+input::placeholder {
+  font-family: "Demi" !important;
+  font-size: var(--sm-size) !important;
+  font-weight: 600 !important;
+  color: var(--gray-5) !important;
 }/*# sourceMappingURL=main.css.map */

@@ -15,7 +15,7 @@ export default class IndexSubjectParams extends IndexParams {
 
   toMap(): Record<string, string | number | number[] | null> {
     const data = super.toMap();
-    if (this.parentId) data.parent_id = this.parentId;
+    if (this.parentId) data.education_classification_branch_id = this.parentId;
     return data;
   }
 }

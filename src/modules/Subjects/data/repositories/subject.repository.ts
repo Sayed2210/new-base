@@ -1,6 +1,8 @@
 import BaseRepository, { type RepositoryConfig } from '@/base/Domain/Repositories/baseRepository';
 import SubjectApiService from '../api/subject.api-service';
 import StageModel from '@/modules/Stages/core/models/stage.model';
+import type { DataState } from '@/base/Core/NetworkStructure/Resources/dataState/dataState';
+import type Params from '@/base/Core/Params/params';
 
 /**
  * Country Repository for API data operations
@@ -46,15 +48,42 @@ export default class SubjectRepository extends BaseRepository<StageModel, StageM
     return StageModel.fromJson(data);
   }
 
-  protected parseList(data: any): StageModel[] {
-    if (!Array.isArray(data)) return [];
-    return data.reduce((acc: StageModel[], item) => {
-      try {
-        if (item != null) {
-          acc.push(this.parseItem(item));
-        }
-      } catch {}
-      return acc;
-    }, []);
+  protected parseList(data: any, isPaginate: boolean = false): StageModel[] {
+    if (isPaginate) {
+      if (!Array.isArray(data?.data)) return [];
+      return data.data.reduce((acc: StageModel[], item: any) => {
+        try {
+          if (item != null) {
+            acc.push(this.parseItem(item));
+          }
+        } catch {}
+        return acc;
+      }, []);
+    } else {
+      if (!Array.isArray(data)) return [];
+
+      return data.reduce((acc: StageModel[], item: any) => {
+        try {
+          if (item != null) {
+            acc.push(this.parseItem(item));
+          }
+        } catch {}
+        return acc;
+      }, []);
+    }
+  }
+
+  async deleteBranch(params: Params): Promise<DataState<void>> {
+    return this.executeCustom(
+      () => this.apiService.deleteBranch(params),
+      (_data: any) => {},
+    );
+  }
+
+  async indexSubjects(params: Params): Promise<DataState<StageModel[]>> {
+    return this.executeCustom(
+      () => this.apiService.indexSubjects(params),
+      (data: any) => this.parseList(data, true),
+    );
   }
 }

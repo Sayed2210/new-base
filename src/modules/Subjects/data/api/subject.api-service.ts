@@ -1,6 +1,7 @@
-import BaseApiService from "@/base/Data/ApiService/baseApiService";
-import type { ApiEndpoints } from "@/base/Data/ApiService/baseApiService";
-import { SubjectEndpoints } from "./subject.api.endpoints";
+import BaseApiService from '@/base/Data/ApiService/baseApiService';
+import type { ApiEndpoints, ApiResponse } from '@/base/Data/ApiService/baseApiService';
+import { SubjectEndpoints } from './subject.api.endpoints';
+import type Params from '@/base/Core/Params/params';
 
 export default class SubjectApiService extends BaseApiService {
   private static instance: SubjectApiService;
@@ -27,7 +28,11 @@ export default class SubjectApiService extends BaseApiService {
     };
   }
 
-  // executeCountryAction(params: Params): Promise<ApiResponse> {
-  //   return this.customPost(this.endpoints.create || "", params);
-  // }
+  deleteBranch(params: Params): Promise<ApiResponse> {
+    return this.customPost(this.subjectEndpoints.deleteBranch, params);
+  }
+
+  indexSubjects(params: Params): Promise<ApiResponse> {
+    return this.customPost(this.subjectEndpoints.indexSubjects, params);
+  }
 }

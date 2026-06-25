@@ -17,6 +17,10 @@ vi.mock('../../controllers/subject.controller', () => ({
   default: { getInstance: vi.fn() },
 }));
 
+vi.mock('vue-i18n', () => ({
+  useI18n: () => ({ t: (key: string) => key }),
+}));
+
 vi.mock('@/base/Presentation/Utils/debouced', () => ({
   debounce: <T extends (...args: unknown[]) => unknown>(fn: T) => fn,
 }));
@@ -74,20 +78,32 @@ const educationTree = [
         ],
         subjects: [],
       },
+      {
+        id: 300,
+        e_c_branch_id: 300,
+        title: 'branch leaf',
+        children: [],
+        subjects: [],
+      },
     ],
   },
 ];
 
 describe('SubjectIndex.vue', () => {
   let mockFetchList: ReturnType<typeof vi.fn>;
+  let mockDeleteSubject: ReturnType<typeof vi.fn>;
+  let mockDeleteBranch: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     vi.clearAllMocks();
     sessionStorage.clear();
     mockFetchList = vi.fn().mockResolvedValue({});
+    mockDeleteSubject = vi.fn().mockResolvedValue({});
+    mockDeleteBranch = vi.fn().mockResolvedValue({});
     vi.mocked(SubjectController.getInstance).mockReturnValue({
       fetchList: mockFetchList,
-      delete: vi.fn().mockResolvedValue({}),
+      delete: mockDeleteSubject,
+      deleteBranch: mockDeleteBranch,
       pagination: ref(null),
       listState: ref({ status: 'success', data: educationTree }),
     } as unknown as ReturnType<typeof SubjectController.getInstance>);
@@ -98,7 +114,11 @@ describe('SubjectIndex.vue', () => {
       mocks: { $t: (msg: string) => msg },
       stubs: {
         DataStatusBuilder: { template: '<div><slot name="success" /><slot name="empty" /></div>' },
-        AppTable: { template: '<div class="app-table-stub" />', props: ['headers', 'items'] },
+        AppTable: {
+          template:
+            '<div class="app-table-stub"><slot v-for="item in items" name="actions" :item="item" /></div>',
+          props: ['headers', 'items'],
+        },
         UpdatedCustomInputSelect: {
           template: `<button
             class="education-filter"
@@ -109,6 +129,10 @@ describe('SubjectIndex.vue', () => {
           />`,
           props: ['modelValue', 'label', 'staticOptions', 'placeholder', 'reload'],
           emits: ['update:modelValue'],
+        },
+        DropList: {
+          template: '<button class="delete-action" @click="actionList[0].action()" />',
+          props: ['actionList', 'deleteDialogTitle', 'deleteDialogMessage'],
         },
         DeleteDialog: true,
         'router-link': { template: '<a><slot /></a>', props: ['to'] },
@@ -146,6 +170,29 @@ describe('SubjectIndex.vue', () => {
     expect(wrapper.find('.education-filter').attributes('data-placeholder')).toBe(
       'New EducationClassification -> branch 1',
     );
+  });
+
+  it('deletes subjects and branches with their matching endpoints', async () => {
+    const wrapper = mount(SubjectIndex, mountOptions);
+    await flushPromises();
+
+    const deleteButtons = wrapper.findAll('.delete-action');
+    await deleteButtons[0]?.trigger('click');
+    await flushPromises();
+
+    expect(mockDeleteSubject).toHaveBeenCalledTimes(1);
+    expect(mockDeleteSubject.mock.calls[0][0].toMap()).toMatchObject({
+      education_classification_subject_id: 221,
+    });
+    expect(mockDeleteBranch).not.toHaveBeenCalled();
+
+    await deleteButtons[1]?.trigger('click');
+    await flushPromises();
+
+    expect(mockDeleteBranch).toHaveBeenCalledTimes(1);
+    expect(mockDeleteBranch.mock.calls[0][0].toMap()).toMatchObject({
+      education_classification_branch_id: 300,
+    });
   });
 
   it('calls fetchList on mount without pagination and caches the tree', async () => {

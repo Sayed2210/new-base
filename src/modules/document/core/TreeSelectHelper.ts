@@ -1,12 +1,12 @@
 import TitleInterface from '@/base/Data/Models/titleInterface';
 import type BranchesModel from '@/modules/Stages/core/models/branches.model';
+import type StageModel from '@/modules/Stages/core/models/stage.model';
 
 function flattenBranchTree(
-  nodes: BranchesModel[],
+  nodes: BranchesModel[] | StageModel[],
   parentTitle: string = '',
   rootId?: number,
 ): TitleInterface<number>[] {
-    
   return nodes.flatMap((node) => {
     const currentTitle = parentTitle ? `${parentTitle} → ${node.title}` : node.title;
     const currentRootId = rootId ?? node.id;
@@ -16,7 +16,7 @@ function flattenBranchTree(
         new TitleInterface<number>({
           id: node.id!,
           title: currentTitle,
-          subtitle: currentRootId, 
+          subtitle: currentRootId,
         }),
       ];
     }

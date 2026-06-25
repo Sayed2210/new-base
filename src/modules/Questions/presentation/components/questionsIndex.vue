@@ -53,6 +53,7 @@
         perPage: perPage.value,
         withPage: 1,
         ...(route.query.subjectId ? { subjectId: Number(route.query.subjectId) } : {}),
+        ...(route.query.branchId ? { branchId: Number(route.query.branchId) } : {}),
       }),
     );
   };

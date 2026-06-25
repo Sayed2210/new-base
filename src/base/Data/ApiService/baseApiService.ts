@@ -188,7 +188,6 @@ export default abstract class BaseApiService extends ServicesInterface {
       params,
       ...mergedOptions,
     });
-    console.log(data, 'data');
     return data;
   }
   // document.querySelector('#app')?.classList.add('loading');

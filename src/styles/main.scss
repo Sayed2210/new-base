@@ -315,8 +315,28 @@ body {
 .custom-select-dialog {
   background-color: white !important;
 }
-.subject-page {
-  .p-select-label.p-placeholder {
-    color: var(--PrimaryColor) !important;
-  }
+// .subject-page {
+//   .p-select-label.p-placeholder {
+//     color: var(--PrimaryColor) !important;
+//   }
+// }
+.list-body .list-item button {
+  justify-content: space-between !important;
+}
+
+.input-label,
+.field-label,
+label {
+  font-family: 'Demi' !important;
+  font-size: $MdSize !important;
+  font-weight: $BaseFontSemiBoldWeight !important;
+  color: $Gray-5 !important;
+}
+
+.p-select-label.p-placeholder,
+input::placeholder {
+  font-family: 'Demi' !important;
+  font-size: $SmSize !important;
+  font-weight: $BaseFontSemiBoldWeight !important;
+  color: $Gray-5 !important;
 }

@@ -11,6 +11,7 @@ export default class IndexQuestionsParams extends IndexParams {
   public question_type?: QuestionTypeEnum;
   public difficulty?: QuestionDifficultyEnum;
   public subjectId?: number;
+  public branchId?: number;
 
   constructor(data: {
     word: string;
@@ -22,6 +23,7 @@ export default class IndexQuestionsParams extends IndexParams {
     question_type?: QuestionTypeEnum;
     difficulty?: QuestionDifficultyEnum;
     subjectId?: number;
+    branchId?: number;
   }) {
     super(data.word, data.pageNumber, data.perPage, data.withPage);
     this.status = data.status;
@@ -29,6 +31,7 @@ export default class IndexQuestionsParams extends IndexParams {
     this.question_type = data.question_type;
     this.difficulty = data.difficulty;
     this.subjectId = data.subjectId;
+    this.branchId = data.branchId;
   }
 
   toMap(): Record<string, any> {
@@ -39,7 +42,8 @@ export default class IndexQuestionsParams extends IndexParams {
       ...(this.question_type ? { question_type: this.question_type } : {}),
       ...(this.difficulty ? { difficulty: this.difficulty } : {}),
       order_dir: OrderEnum.reverse,
-      ...(this.subjectId ? { subject_id: this.subjectId } : {}),
+      ...(this.subjectId ? { e_c_subject_id: this.subjectId } : {}),
+      ...(this.branchId ? { e_c_branch_id: this.branchId } : {}),
     };
   }
 }
