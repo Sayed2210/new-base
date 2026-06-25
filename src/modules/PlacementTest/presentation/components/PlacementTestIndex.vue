@@ -1,166 +1,123 @@
 <script setup lang="ts">
-  // import { onMounted, ref, computed } from 'vue';
-  // import DataStatusBuilder from '@/shared/DataStatues/DataStatusBuilder.vue';
-  // import AppTable, { type TableHeader } from '@/shared/HelpersComponents/AppTable.vue';
-  // import Pagination from '@/shared/HelpersComponents/Pagination.vue';
-  // import { useRoute, useRouter } from 'vue-router';
-  // import { debounce } from '@/base/Presentation/Utils/debouced';
-  // // import EmployeeController from '../controllers/employee.controller';
-  // // import IndexEmployeeParams from '../../core/params/index.employee.params';
-  // import DeleteEmployeeParams from '../../core/params/delete.employee.params';
-  // // import type EmployeeModel from '../../core/models/employee.model';
-  // import DeleteDialog from '@/shared/HelpersComponents/dialog/DeleteDialog.vue';
-  // import { useFormsStore } from '@/stores/formsStore';
-  // import IndexPluseIcon from '@/shared/icons/IndexPluseIcon.vue';
-  // import * as XLSX from 'xlsx';
-  // import { saveAs } from 'file-saver';
-  // import ExportExcelIcon from '@/shared/icons/ExportExcelIcon.vue';
-  // import IndexSearchIcon from '@/shared/icons/IndexSearchIcon.vue';
-  // // import { EmployeeStatusEnm } from '../../core/constant/employee.status.enum';
-  // import { useI18n } from 'vue-i18n';
+  import { onMounted, ref, computed } from 'vue';
+  import DataStatusBuilder from '@/shared/DataStatues/DataStatusBuilder.vue';
+  import AppTable, { type TableHeader } from '@/shared/HelpersComponents/AppTable.vue';
+  import Pagination from '@/shared/HelpersComponents/Pagination.vue';
+  import { useRoute, useRouter } from 'vue-router';
+  import { debounce } from '@/base/Presentation/Utils/debouced';
+  import IndexSearchIcon from '@/shared/icons/IndexSearchIcon.vue';
   // import FilterDialog from '@/shared/HelpersComponents/FilterDialog/FilterDialog.vue';
-  // import TableSkelaton from '@/shared/HelpersComponents/TableSkelaton.vue';
+  import TableSkelaton from '@/shared/HelpersComponents/TableSkelaton.vue';
   // import UpdatedCustomInputSelect from '@/shared/FormInputs/UpdatedCustomInputSelect.vue';
-  // import TitleInterface from '@/base/Data/Models/titleInterface';
-  // import PlacementTestController from '../controllers/placement.test.controller';
-  // import { IndexEmployeeParams } from '@/modules/employee';
-  // import type { EmployeeStatusEnm } from '@/modules/employee/core/constant/employee.status.enum';
+  import PlacementTestController from '../controllers/placement.test.controller';
+  import { IndexEmployeeParams } from '@/modules/employee';
+  import type PlcaementTestModel from '../../core/models/placement.test.model';
+  import { PlacementTestEnum } from '../../core/constant/palcement.test.enum';
+  import Articlearrow from '@/shared/icons/articlearrow.vue';
+  import type EducationClassificationSubjectModel from '@/shared/GeneralModels/education.classification.subject.model';
+  import Articlesubject from '@/shared/icons/articlesubject.vue';
+  import ShowIcon from '@/shared/icons/ShowIcon.vue';
 
-  // // Controller instance
-  // const controller = PlacementTestController.getInstance();
-  // const state = computed(() => controller.listState.value);
-  // const router = useRouter();
-  // const route = useRoute();
+  // Controller instance
+  const controller = PlacementTestController.getInstance();
+  const state = computed(() => controller.listState.value);
+  const router = useRouter();
+  const route = useRoute();
 
   // const FormStore = useFormsStore();
-  // const formRoute = computed(() => '/employees/add');
+  const formRoute = computed(() => '/employees/add');
 
-  // // Table headers
-  // const headers: TableHeader[] = [
-  //   { key: 'firstname', label: 'Employee name', width: '30%', sortable: true },
-  //   { key: 'email', label: 'Email', width: '30%' },
-  //   { key: 'phone', label: 'Phone', width: '15%' },
-  //   { key: 'status', label: 'Status', width: '15%' },
-  // ];
+  // Table headers
+  const headers: TableHeader[] = [
+    { key: 'student', label: 'student ', width: '20%', sortable: true },
+    { key: 'result', label: 'The result', width: '10%' },
+    { key: 'EducationClassificationSubject', label: 'subject', width: '20%' },
+    { key: 'numberOfQuestions', label: 'num of Q', width: '10%' },
+    { key: 'status', label: 'status', width: '10%' },
+    { key: 'isPlan', label: 'plan', width: '10%' },
+    { key: 'date', label: 'date', width: '15%' },
+  ];
 
-  // // Pagination state
-  // const perPage = ref(10);
-  // const word = ref('');
+  // Pagination state
+  const perPage = ref(10);
+  const word = ref('');
 
-  // const fetchEmployees = async (page: number = 1, wordStr: string = '') => {
-  //   await controller.fetchList(
-  //     new IndexEmployeeParams({
-  //       word: wordStr || word.value,
-  //       pageNumber: page,
-  //       perPage: perPage.value,
-  //       withPage: 1,
-  //       status: selectedStatus.value?.id as EmployeeStatusEnm,
-  //     }),
-  //   );
-  // };
+  const fetchPlacementTest = async (page: number = 1, wordStr: string = '') => {
+    await controller.fetchList(
+      new IndexEmployeeParams({
+        word: wordStr || word.value,
+        pageNumber: page,
+        perPage: perPage.value,
+        withPage: 1,
+        status: null,
+      }),
+    );
+  };
 
-  // const Search = debounce(() => {
-  //   router.push({
-  //     query: {
-  //       ...route.query,
-  //       page: 1,
-  //       word: word.value || undefined,
-  //     },
-  //   });
-  //   fetchEmployees(1, word.value);
-  // });
+  const Search = debounce(() => {
+    router.push({
+      query: {
+        ...route.query,
+        page: 1,
+        word: word.value || undefined,
+      },
+    });
+    fetchPlacementTest(1, word.value);
+  });
 
-  // const onPageChange = (page: number) => {
-  //   fetchEmployees(page);
-  //   router.push({
-  //     query: {
-  //       ...route.query,
-  //       page: String(page),
-  //       word: word.value,
-  //     },
-  //   });
-  // };
+  const onPageChange = (page: number) => {
+    fetchPlacementTest(page);
+    router.push({
+      query: {
+        ...route.query,
+        page: String(page),
+        word: word.value,
+      },
+    });
+  };
 
-  // const onPerPageChange = (count: number) => {
-  //   perPage.value = count;
-  //   fetchEmployees(1);
-  // };
+  const onPerPageChange = (count: number) => {
+    perPage.value = count;
+    fetchPlacementTest(1);
+  };
 
-  // onMounted(async () => {
-  //   if (route.query.word) {
-  //     word.value = String(route.query.word);
-  //   }
-  //   await fetchEmployees(route.query.page ? Number(route.query.page) : 1, word.value);
-  // });
-
-  // const deleteEmployee = async (id: number) => {
-  //   await controller.delete(new DeleteEmployeeParams(id));
-  //   await fetchEmployees();
-  // };
-
-  // const isDraft = computed(() => {
-  //   const data = FormStore?.formData[formRoute.value] ?? {};
-  //   return Object.keys(data).length === 0 || Object.values(data).every((v) => v == null);
-  // });
-
-  // const exportExcel = () => {
-  //   if (!state.value.data || state.value.data.length === 0) {
-  //     alert('No data available to export');
-  //     return;
-  //   }
-  //   const worksheetData = (state.value.data as any).map((item: Record<string, unknown>) => {
-  //     return {
-  //       name: item.name || 'N/A',
-  //       email: item.email || null,
-  //       phone: item.phone || null,
-  //       password: '',
-  //     };
-  //   });
-  //   const worksheet = XLSX.utils.json_to_sheet(worksheetData);
-  //   const workbook = XLSX.utils.book_new();
-  //   XLSX.utils.book_append_sheet(workbook, worksheet, 'Invoices');
-  //   const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  //   const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
-  //   saveAs(data, 'Employees.xlsx');
-  // };
-
-  // const { t } = useI18n();
-  // const GetEmployeeStatus = (status: number) => {
-  //   switch (Number(status)) {
-  //     case EmployeeStatusEnm.active:
-  //       return t('active');
-  //       break;
-  //     case EmployeeStatusEnm.disavtive:
-  //       return t('inactive');
-  //       break;
-  //   }
-  // };
+  onMounted(async () => {
+    if (route.query.word) {
+      word.value = String(route.query.word);
+    }
+    await fetchPlacementTest(route.query.page ? Number(route.query.page) : 1, word.value);
+  });
 
   // const FilterDialogShow = ref<boolean>(false);
   // const ApplayFilter = () => {
   //   FilterDialogShow.value = false;
-  //   fetchEmployees();
+  //   fetchPlacementTest();
   // };
   // const CloseFiletrDialog = () => {
   //   FilterDialogShow.value = false;
   // };
-  // const employeeTypeOptions = ref<TitleInterface<number>[]>([
-  //   new TitleInterface({
-  //     id: EmployeeStatusEnm.active,
-  //     title: 'active',
-  //   }),
-  //   new TitleInterface({
-  //     id: EmployeeStatusEnm.disavtive,
-  //     title: 'inactive',
-  //   }),
-  // ]);
-  // const selectedStatus = ref<TitleInterface<number>>();
-  // const UpdateStatus = (status: TitleInterface<number>) => {
-  //   selectedStatus.value = status;
-  // };
+  const GetPlasmentStatus = (status: number): string => {
+    if (status === PlacementTestEnum.completed) {
+      return 'Completed';
+    }
+    if (status === PlacementTestEnum.inprogress) {
+      return 'In Progress';
+    }
+    if (status === PlacementTestEnum.rejected) {
+      return 'Rejected';
+    }
+    return '';
+  };
+
+  const getSubjectPath = (item: EducationClassificationSubjectModel) => {
+    if (!item?.fullTitle) return '';
+    const parts = item.fullTitle?.split(/\s*->\s*/);
+
+    return parts?.map((subject) => subject.trim()) ?? '';
+  };
 </script>
 
-<!-- <template>
+<template>
   <div class="employee-page">
     <div class="index-header">
       <div class="search-field">
@@ -176,15 +133,7 @@
         />
       </div>
       <div class="btns-container">
-        <button class="btn btn-secondary" @click="exportExcel">
-          <ExportExcelIcon />
-          <span>{{ $t('export') }}</span>
-        </button>
-        <router-link :to="formRoute" class="btn btn-primary btn-add">
-          <IndexPluseIcon />
-          <span>{{ isDraft ? 'Add Employee' : 'Continue Adding' }}</span>
-        </router-link>
-        <FilterDialog v-model="FilterDialogShow">
+        <!-- <FilterDialog v-model="FilterDialogShow">
           <template #content>
             <UpdatedCustomInputSelect
               id="doc-type"
@@ -199,80 +148,64 @@
               <button class="btn btn-primary" @click="ApplayFilter">apply</button>
             </div>
           </template>
-        </FilterDialog>
+        </FilterDialog> -->
       </div>
     </div>
 
-    <DataStatusBuilder :controller="state" :on-retry="async () => await fetchEmployees()">
+    <DataStatusBuilder :controller="state">
       <template #success="{ data }">
         <div class="table-frame">
           <AppTable
             :headers="headers"
-            :items="data as EmployeeModel[]"
+            :items="data as PlcaementTestModel[]"
             :hoverable="true"
             :striped="true"
             show-index
           >
-            <template #cell-status="{ item }">
-              <p
-                class="employee-status"
-                :class="item.status == EmployeeStatusEnm.disavtive ? `dis-active` : ``"
-              >
-                {{ GetEmployeeStatus(item.status) }}
-              </p>
+            <template #cell-status="{ value }">
+              <span class="" :class="GetPlasmentStatus(value)">{{ GetPlasmentStatus(value) }}</span>
             </template>
-            <template #cell-firstname="{ item }">
-              <div class="employee-name">
-                <img
-                  :src="item.image || `https://cyber.comolho.com/static/img/avatar.png`"
-                  alt="image"
-                />
-                <span>{{ item.firstname }}</span>
+            <template #cell-result="{ value }">
+              <span class="">{{ value }} / 100</span>
+            </template>
+            <template #cell-student="{ value }">
+              <div class="student-container">
+                <img :src="value.image" alt="" class="rounded-full" />
+                <span class="">{{ value.name }}</span>
               </div>
             </template>
-
+            <template #cell-EducationClassificationSubject="{ value }">
+              <div class="subject-cell">
+                <div class="parent-subject-curriculum">
+                  <span
+                    v-for="(subject, index) in getSubjectPath(value)"
+                    :key="index"
+                    class="subject-curriculum"
+                  >
+                    <p>{{ subject }}</p>
+                    <Articlearrow
+                      v-if="index < getSubjectPath(value).length - 1"
+                      class="arrow-icon"
+                    />
+                  </span>
+                </div>
+                <div>
+                  <Articlesubject />
+                </div>
+                <span class="subject-cycle">
+                  <span class="subject-lang">{{ value?.title }}</span>
+                </span>
+              </div>
+            </template>
             <template #actions="{ item }">
               <div class="row-actions">
                 <router-link
                   class="action-btn edit"
-                  :to="`/employees/edit/${item.id}`"
+                  :to="`/placement-test/${item.id}`"
                   title="Edit"
                 >
-                  <svg
-                    width="15"
-                    height="15"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                  </svg>
+                  <ShowIcon />
                 </router-link>
-
-                <DeleteDialog @delete="deleteEmployee(item.id!)">
-                  <template #Dialog>
-                    <button class="action-btn delete" title="Delete">
-                      <svg
-                        width="15"
-                        height="15"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <path d="M3 6h18" />
-                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                      </svg>
-                    </button>
-                  </template>
-                </DeleteDialog>
               </div>
             </template>
           </AppTable>
@@ -332,4 +265,14 @@
       </template>
     </DataStatusBuilder>
   </div>
-</template> -->
+</template>
+<style scoped>
+  .student-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    img {
+      width: 50px;
+    }
+  }
+</style>

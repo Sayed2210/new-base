@@ -3,8 +3,14 @@ import type { ControllerConfig } from '@/base/Presentation/Controller/baseContro
 import type PlcaementTestModel from '../../core/models/placement.test.model';
 import type ShowPlcaementTestModel from '../../core/models/show.placement.test.model';
 import PlacementTestRepository from '../../data/repositories/placement.test.repository';
+import type { DataState } from '@/base/Core/NetworkStructure/Resources/dataState/dataState';
+import type Params from '@/base/Core/Params/params';
+import type { ApiCallOptions } from '@/base/Data/ApiService/baseApiService';
 
-export default class PlacementTestController extends BaseController<ShowPlcaementTestModel, PlcaementTestModel[]> {
+export default class PlacementTestController extends BaseController<
+  ShowPlcaementTestModel,
+  PlcaementTestModel[]
+> {
   private static instance: PlacementTestController;
 
   protected get repository() {
@@ -34,5 +40,19 @@ export default class PlacementTestController extends BaseController<ShowPlcaemen
     return PlacementTestController.instance;
   }
 
+  async fetchList(
+    params?: Params,
+    options?: ApiCallOptions,
+  ): Promise<DataState<PlcaementTestModel[]>> {
+    const result = await super.fetchList(params, { ...options, useStaticData: true });
+    return result;
+  }
 
+  async fetchOne(
+    params: Params,
+    options?: ApiCallOptions,
+  ): Promise<DataState<ShowPlcaementTestModel>> {
+    const result = await super.fetchOne(params, { ...options, useStaticData: true });
+    return result;
+  }
 }

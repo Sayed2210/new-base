@@ -74,18 +74,49 @@ export default class ShowPlcaementTestModel {
         ? EducationClassificationBranchModel.fromJson(json.e_c_branch)
         : undefined,
       date: json.date,
-      SkillsAnalysis:json.skills_analysis ? json.skills_analysis.map((item:any)=>PlacementSkillAnalysisModel.fromJson(item)) : undefined,
-      MostImportantSkillsAnalysis:json.most_important_skills_analysis ? json.most_important_skills_analysis.map((item:any)=>PlacementSkillAnalysisModel.fromJson(item)) : undefined,
-      NeedDevelopSkillsAnalysis:json.need_develop_skills_analysis ? json.need_develop_skills_analysis.map((item:any)=>PlacementSkillAnalysisModel.fromJson(item)) : undefined,
-      resultAnalysis:ResultAnalysisModel.fromJson(json.result_analysis),
-      timeAnalysis:TimeAnalysisModel.fromJson(json.time_analysis),
-      questionAnswerAnalysis:json.question_answer_analysis ? json.question_answer_analysis.map((item:any)=>QuestionAnswerAnalysisModel.fromJson(item)):undefined,
-      questionsAnsweredDifficultyLevel:json.questions_answered_difficulty_level ? json.questions_answered_difficulty_level.map((item:any)=>PlacemntDifficultyLevelModel.fromJson(item)) : undefined,
-      quesions:json.quesions ? json.quesions.map((item:any) => ShowQuestionsModel.fromJson(item)) : undefined
+      SkillsAnalysis: json.skills_analysis
+        ? json.skills_analysis.map((item: any) => PlacementSkillAnalysisModel.fromJson(item))
+        : undefined,
+      MostImportantSkillsAnalysis: json.most_important_skills_analysis
+        ? json.most_important_skills_analysis.map((item: any) =>
+            PlacementSkillAnalysisModel.fromJson(item),
+          )
+        : undefined,
+      NeedDevelopSkillsAnalysis: json.need_develop_skills_analysis
+        ? json.need_develop_skills_analysis.map((item: any) =>
+            PlacementSkillAnalysisModel.fromJson(item),
+          )
+        : undefined,
+      resultAnalysis: ResultAnalysisModel.fromJson(json.result_analysis),
+      timeAnalysis: TimeAnalysisModel.fromJson(json.time_analysis),
+      questionAnswerAnalysis: json.question_answer_analysis
+        ? json.question_answer_analysis.map((item: any) =>
+            QuestionAnswerAnalysisModel.fromJson(item),
+          )
+        : undefined,
+      questionsAnsweredDifficultyLevel: json.questions_answered_difficulty_level
+        ? json.questions_answered_difficulty_level.map((item: any) =>
+            PlacemntDifficultyLevelModel.fromJson(item),
+          )
+        : undefined,
+      quesions: json.quesions
+        ? json.quesions.map((item: any) => ShowQuestionsModel.fromJson(item))
+        : undefined,
     });
   }
 
   static example: ShowPlcaementTestModel = new ShowPlcaementTestModel({
     id: 1,
+    student: StudentModel.example,
+    EducationClassificationSubject: EducationClassificationSubjectModel.example,
+    EducationClassificationBranch: EducationClassificationBranchModel.example,
+    resultAnalysis: ResultAnalysisModel.example,
+    timeAnalysis: TimeAnalysisModel.example,
+    questionAnswerAnalysis: [QuestionAnswerAnalysisModel.example],
+    questionsAnsweredDifficultyLevel: [PlacemntDifficultyLevelModel.example],
+    SkillsAnalysis: [PlacementSkillAnalysisModel.example],
+    MostImportantSkillsAnalysis: [PlacementSkillAnalysisModel.example],
+    NeedDevelopSkillsAnalysis: [PlacementSkillAnalysisModel.example],
+    quesions: [ShowQuestionsModel.example],
   });
 }

@@ -25,6 +25,6 @@ export default class StudentModel {
   static example: StudentModel = new StudentModel({
     id: 1,
     name: 'John Doe',
-    image: 'https://example.com/image.jpg',
+    image: 'https://cyber.comolho.com/static/img/avatar.png',
   });
 }

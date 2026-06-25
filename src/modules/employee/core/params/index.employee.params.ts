@@ -2,13 +2,13 @@ import IndexParams from '@/base/Core/Params/indexParams';
 import type { EmployeeStatusEnm } from '../constant/employee.status.enum';
 
 export default class IndexEmployeeParams extends IndexParams {
-  public status?: EmployeeStatusEnm;
+  public status?: EmployeeStatusEnm | null;
   constructor(data: {
     word: string;
     pageNumber: number;
     perPage: number;
     withPage: number;
-    status: EmployeeStatusEnm;
+    status: EmployeeStatusEnm | null;
   }) {
     super(data.word, data.pageNumber, data.perPage, data.withPage);
     this.status = data.status;
