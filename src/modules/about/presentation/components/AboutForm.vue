@@ -38,6 +38,7 @@
     id?: number;
     link: string;
     icon: string;
+    iconChanged?: boolean;
   };
 
   const socialMediaList = ref<SocialMediaEntry[]>([{ link: '', icon: '' }]);
@@ -51,7 +52,7 @@
   // ─── Social Media Handlers ────────────────────────────────────────────────────
 
   const addSocialMediaEntry = () => {
-    socialMediaList.value.push({ link: '', icon: '' });
+    socialMediaList.value.push({ link: '', icon: '', iconChanged: false });
   };
 
   const controller = AboutController.getInstance();
@@ -62,8 +63,9 @@
           id: item.id,
           link: item.link ?? '',
           icon: item.icon ?? '',
+          iconChanged: false,
         }))
-      : [{ link: '', icon: '' }];
+      : [{ link: '', icon: '', iconChanged: false }];
   };
 
   const syncFormFromAbout = (aboutData: AboutModel) => {
@@ -75,7 +77,7 @@
 
   const removeLocalSocialMediaEntry = (index: number) => {
     if (socialMediaList.value.length === 1) {
-      socialMediaList.value = [{ link: '', icon: '' }];
+      socialMediaList.value = [{ link: '', icon: '', iconChanged: false }];
       updateData();
       return;
     }
@@ -110,7 +112,7 @@
   // };
 
   const resetSocialMedia = () => {
-    socialMediaList.value = [{ link: '', icon: '' }];
+    socialMediaList.value = [{ link: '', icon: '', iconChanged: false }];
     updateData();
   };
   const uploadKey = ref(0);
@@ -126,7 +128,19 @@
   const updateData = () => {
     const socialMedia = socialMediaList.value
       .filter((entry) => (entry.link?.trim() || '') !== '' || (entry.icon?.trim() || '') !== '')
-      .map((entry) => new SocialParams({ link: entry.link || '', icon: entry.icon || '' }));
+      .map((entry) => {
+        const params = new SocialParams({
+          social_link_id: entry.id,
+          link: entry.link || '',
+          icon: entry.icon || '',
+        });
+
+        if (entry.id && !entry.iconChanged) {
+          delete (params as Partial<SocialParams>).icon;
+        }
+
+        return params;
+      });
 
     let params: EditAboutParams | AddAboutParams;
     if (route.params.id) {
@@ -161,7 +175,11 @@
   };
 
   const handleSocialImageChange = (index: number, file: Array<{ base64: string }>) => {
-    socialMediaList.value[index]!.icon = file[0]?.base64 ?? '';
+    const entry = socialMediaList.value[index];
+    if (!entry) return;
+
+    entry.icon = file[0]?.base64 ?? '';
+    entry.iconChanged = true;
     updateData();
   };
 
@@ -312,8 +330,8 @@
               class="sm-remove-btn"
               title="Remove this link"
               @click="deleteSocialLink(index, entry.id)"
-              v-if="index != 0"
             >
+              <!--   v-if="index != 0" -->
               <span>×</span>
             </button>
           </div>
@@ -419,23 +437,28 @@
       background: var(--black-alpha-45);
     }
   }
+
   .image-input {
     :deep(.upload-area) {
       padding: 10px !important;
       border-radius: 20px;
     }
+
     :deep(.upload-label) {
       display: none;
     }
   }
+
   .social-media-row {
     display: grid;
     grid-template-columns: 1fr 1fr 40px !important;
     gap: 12px;
     align-items: center;
+
     &:last-child {
       .btns {
         margin-left: 6px;
+
         button {
           width: 20px !important;
           height: 20px !important;
@@ -443,11 +466,13 @@
       }
     }
   }
+
   .btns {
     display: flex;
     gap: 8px;
     flex-direction: row-reverse;
   }
+
   .field-group {
     &.disabled {
       cursor: not-allowed;
