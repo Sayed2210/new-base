@@ -15,12 +15,12 @@
   const loading = ref(false);
   const login = async () => {
     loading.value = true;
-    const params = new LoginParams(email.value, password.value);
+    const params = new LoginParams(email.value, password.value); 
     await controller.login(params);
     loading.value = false;
   };
 
-  const isPasswordVisible = ref(false);
+  const isPasswordVisible = ref(false); 
 </script>
 
 <template>
