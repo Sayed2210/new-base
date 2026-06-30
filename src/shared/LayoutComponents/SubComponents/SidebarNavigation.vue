@@ -63,12 +63,12 @@
           link: '/subjects',
           name: 'Subjects',
           icon: SettingIcon,
-         },
+        },
         {
           link: '/placement-test',
           name: 'Placement Test',
           icon: SettingIcon,
-         },
+        },
       ],
     },
 
@@ -115,11 +115,11 @@
           name: 'terms & conditions',
           icon: SidebarTerms,
         },
-        {
-          link: '/deleted-accounts',
-          name: 'add logout reasons',
-          icon: SidebarTerms,
-        },
+        // {
+        //   link: '/deleted-accounts',
+        //   name: 'add logout reasons',
+        //   icon: SidebarTerms,
+        // },
       ],
     },
   ];

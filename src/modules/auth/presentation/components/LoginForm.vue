@@ -7,6 +7,7 @@
   import OpenEyeIcon from '@/shared/icons/Login/OpenEyeIcon.vue';
   // import ChangeLanguage from '@/shared/LayoutComponents/SubComponents/ChangeLanguage.vue';
   import LoadingIcon from '@/assets/images/loading.webp';
+  import router from '@/router';
 
   const email = ref('');
   const password = ref('');
@@ -17,6 +18,7 @@
     loading.value = true;
     const params = new LoginParams(email.value, password.value); 
     await controller.login(params);
+    router.push({ name: 'About' });
     loading.value = false;
   };
 

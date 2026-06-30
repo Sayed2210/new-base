@@ -146,7 +146,7 @@
                   <p class="answer_text">{{ answer.answer }}</p>
                 </div>
                 <div class="imge">
-                  <img v-if="answer.image" :src="answer.image[0]?.file" :alt="answer?.answer" />
+                  <img v-if="answer.image" :src="answer.image[0]?.file" />
                 </div>
               </div>
             </div>
