@@ -92,6 +92,7 @@
       new DeleteEducationSubjectPricingParams({ pricingId: id }),
     );
     await fetchPricing();
+    resetForm();
   };
 
   const showDetails = async (id: number) => {

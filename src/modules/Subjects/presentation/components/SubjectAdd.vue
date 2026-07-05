@@ -27,7 +27,7 @@
 
       const paramsToSave = params.value;
 
-      await controller.create(paramsToSave, undefined, formKey);
+      await controller.create(paramsToSave, undefined);
     } catch (error) {
       console.error('Error saving email:', error);
     } finally {

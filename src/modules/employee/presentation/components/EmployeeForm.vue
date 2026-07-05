@@ -65,6 +65,7 @@
     () => props.employee,
     (newEmployee) => {
       if (newEmployee) {
+        console.log(newEmployee, 'newEmployee');
         name.value = newEmployee.firstname;
         email.value = newEmployee.email;
         phone.value = newEmployee.phone;
@@ -74,7 +75,7 @@
         gender.value = newEmployee.gender;
         lastName.value = newEmployee.lastname;
         employeeId.value = newEmployee.employeeId;
-        checked.value = Boolean(newEmployee.status);
+        checked.value = newEmployee.status == 1 ? true : false;
         UploadedImage.value = newEmployee.image ? [newEmployee.image] : [];
         updateData();
       }
