@@ -128,6 +128,8 @@
   "enter_your_telegram_link_or_number": "Enter Your Telegram Link Or Number",
   "support_contact_details": "Support Contact Details",
   "support_contact_details_description": "View And Manage Contact Information Available To Users.",
+  "delete_support_contact_title": "Are you sure you want to remove this support contact?",
+  "delete_support_contact_message": "Deleting this support contact will remove all related contact data. This action is irreversible.",
   "chat_on_whatsapp": "Chat On WhatsApp",
   "no_contact_details": "No contact details available",
   "no_contact_details_description": "Add support information so users can reach you",

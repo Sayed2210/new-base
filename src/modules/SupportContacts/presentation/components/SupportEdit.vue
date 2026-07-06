@@ -6,7 +6,7 @@
   import type SupportContactsModel from '../../core/models/support.contatcts.model';
   import { DataSuccess } from '@/base/Core/NetworkStructure/Resources/dataState/dataState';
   import SupportForm from './SupportForm.vue';
-  import IndexSupportContactsParams from '../../core/params/index.about.params';
+  import ShowSupportContactsParams from '../../core/params/show.support.params';
 
   const controller = SupportContactsController.getInstance();
   const route = useRoute();
@@ -23,14 +23,15 @@
     if (!formParams.value) return;
     loading.value = true;
     try {
-      await controller.create(formParams.value, undefined);
+      await controller.update(formParams.value, undefined, formKey);
     } finally {
       loading.value = false;
     }
   };
 
   const cancel = () => {
-    router.push('/support');
+    const countryCode = route.params.country_code as string | undefined;
+    router.push(countryCode ? `/${countryCode}/support` : '/support');
   };
 
   const updateData = (params: AddSupportContactsParams) => {
@@ -38,12 +39,13 @@
   };
 
   onMounted(async () => {
-    const indexSupportParams = new IndexSupportContactsParams('', 1, 10, true);
-
-    await controller.fetchList(indexSupportParams, undefined, true);
-    const state = controller.listState.value;
-    if (state instanceof DataSuccess && Array.isArray(state.data)) {
-      initialSections.value = state.data as SupportContactsModel[];
+    if (route.params.id) {
+      const result = await controller.fetchOne(
+        new ShowSupportContactsParams(Number(route.params.id), true),
+      );
+      if (result instanceof DataSuccess && result.data) {
+        initialSections.value = [result.data as SupportContactsModel];
+      }
     }
     isLoaded.value = true;
   });

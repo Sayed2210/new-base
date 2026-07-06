@@ -5,12 +5,11 @@ import { DataSuccess } from '@/base/Core/NetworkStructure/Resources/dataState/da
 import SupportContactsController from '../../controllers/support.controller';
 import SupportIndex from '../SupportIndex.vue';
 
-// Mock dependencies
 vi.mock('vue-router', () => ({
   useRoute: () => ({
     params: { country_code: 'eg' },
     query: { page: '1', word: '' },
-    fullPath: '/eg/employees',
+    fullPath: '/eg/support',
   }),
   useRouter: () => ({
     push: vi.fn(),
@@ -58,23 +57,15 @@ describe('SupportIndex.vue', () => {
     vi.spyOn(controller, 'fetchList').mockResolvedValue(controller.listState.value);
   });
 
-  it('renders correctly', () => {
-    const wrapper = mount(SupportIndex, { global: globalConfig });
-    expect(wrapper.exists()).toBe(true);
-  });
-
   it('renders the support contact page container', () => {
     const wrapper = mount(SupportIndex, { global: globalConfig });
-    expect(wrapper.find('.support-contact-page').exists()).toBe(true);
-  });
 
-  it('renders the header container', () => {
-    const wrapper = mount(SupportIndex, { global: globalConfig });
-    expect(wrapper.find('.header-container').exists()).toBe(true);
+    expect(wrapper.find('.support-contact-page').exists()).toBe(true);
   });
 
   it('renders the delete dialog trigger', () => {
     const wrapper = mount(SupportIndex, { global: globalConfig });
+
     expect(wrapper.find('.delete-dialog-stub .action-btn.delete').exists()).toBe(true);
   });
 });

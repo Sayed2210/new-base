@@ -2,10 +2,15 @@ import BaseController from '@/base/Presentation/Controller/baseController';
 import type { ControllerConfig } from '@/base/Presentation/Controller/baseController';
 import type { ApiCallOptions } from '@/base/Data/ApiService/baseApiService';
 import type Params from '@/base/Core/Params/params';
-import { type DataState, DataSuccess } from '@/base/Core/NetworkStructure/Resources/dataState/dataState';
+import {
+  type DataState,
+  DataSuccess,
+} from '@/base/Core/NetworkStructure/Resources/dataState/dataState';
 import router from '@/router';
 import SupportContactsRepository from '../../data/repositories/support.repository';
 import type SupportContactsModel from '../../core/models/support.contatcts.model';
+import { useFormsStore } from '@/stores/formsStore';
+import type ShowSupportContactsParams from '../../core/params/show.support.params';
 
 /**
  * Country Controller for managing countries
@@ -63,13 +68,22 @@ export default class SupportContactsController extends BaseController<
     return result;
   }
 
+  // async fetchOne(params: Params, options?: ApiCallOptions) {
+  //   const result = await super.fetchOne(params, {
+  //     ...options,
+  //     useJson: true,
+  //     headers: { 'Accept-Language': (params as any).isLocale ? '*' : 'en' },
+  //   });
+  //   return result;
+  // }
   async fetchOne(params: Params, options?: ApiCallOptions) {
-    const result = await super.fetchOne(params, {
+    return await super.fetchOne(params, {
       ...options,
       useJson: true,
-      headers: { 'Accept-Language': (params as any).isLocale ? '*' : 'en' },
+      headers: {
+        'Accept-Language': (params as ShowSupportContactsParams).allLocales ? '*' : 'en',
+      },
     });
-    return result;
   }
   async fetchList(
     params?: Params,
@@ -84,6 +98,19 @@ export default class SupportContactsController extends BaseController<
     });
     return result;
   }
+  async update(params: Params, options?: ApiCallOptions, formKey?: string) {
+    const FormStore = useFormsStore();
+
+    const result = await super.update(params, options);
+    if (result instanceof DataSuccess) {
+      router.push({ name: 'Support' });
+      if (formKey) {
+        FormStore.clearFormData(formKey);
+      }
+    }
+    return result;
+  }
+
   // async fetchList(
   //   params: IndexSupportContactsParams,
   //   options?: ApiCallOptions,

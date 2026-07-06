@@ -4,8 +4,8 @@ import { ref } from 'vue';
 
 const mockPush = vi.fn();
 const mockRoute = {
-  params: { country_code: 'eg' },
-  fullPath: '/eg/support/edit',
+  params: { country_code: 'eg', id: '2' },
+  fullPath: '/eg/support/edit/2',
 };
 
 vi.mock('vue-router', () => ({
@@ -20,7 +20,11 @@ vi.mock('../../controllers/support.controller', () => ({
 }));
 
 vi.mock('../SupportForm.vue', () => ({
-  default: { template: '<div class="mock-support-form" />' },
+  default: {
+    props: ['initialSections'],
+    template:
+      '<div class="mock-support-form">{{ initialSections.map((section) => section.id).join(",") }}</div>',
+  },
 }));
 
 vi.mock('@/base/Core/NetworkStructure/Resources/dataState/dataState', () => ({
@@ -34,21 +38,24 @@ vi.mock('@/base/Core/NetworkStructure/Resources/dataState/dataState', () => ({
 
 import SupportEdit from '../SupportEdit.vue';
 import SupportContactsController from '../../controllers/support.controller';
+import { DataSuccess } from '@/base/Core/NetworkStructure/Resources/dataState/dataState';
 
 describe('SupportEdit.vue', () => {
-  let mockFetchList: ReturnType<typeof vi.fn>;
-  let mockCreate: ReturnType<typeof vi.fn>;
+  let mockFetchOne: ReturnType<typeof vi.fn>;
+  let mockUpdate: ReturnType<typeof vi.fn>;
   let mockErrorMessage: ReturnType<typeof ref>;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockFetchList = vi.fn().mockResolvedValue(undefined);
-    mockCreate = vi.fn().mockResolvedValue(undefined);
+    mockFetchOne = vi
+      .fn()
+      .mockResolvedValue(new DataSuccess({ id: 2, titles: {}, supportContacts: [] }));
+    mockUpdate = vi.fn().mockResolvedValue(undefined);
     mockErrorMessage = ref('');
     (SupportContactsController.getInstance as ReturnType<typeof vi.fn>).mockReturnValue({
-      fetchList: mockFetchList,
-      create: mockCreate,
-      listState: ref(null),
+      fetchOne: mockFetchOne,
+      update: mockUpdate,
+      listState: ref(new DataSuccess([{ id: 1 }, { id: 3 }])),
       errorMessage: mockErrorMessage,
     });
   });
@@ -69,9 +76,17 @@ describe('SupportEdit.vue', () => {
     expect(wrapper.find('.support-edit-page').exists()).toBe(true);
   });
 
-  it('calls fetchList on mount', () => {
+  it('calls fetchOne on mount', () => {
     mount(SupportEdit, mountOptions);
-    expect(mockFetchList).toHaveBeenCalledTimes(1);
+    expect(mockFetchOne).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders only the requested support item and ignores stale list state', async () => {
+    const wrapper = mount(SupportEdit, mountOptions);
+    await wrapper.vm.$nextTick();
+    await new Promise((r) => setTimeout(r, 0));
+
+    expect(wrapper.find('.mock-support-form').text()).toBe('2');
   });
 
   it('shows edit-actions after mount resolves', async () => {

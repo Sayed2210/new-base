@@ -7,18 +7,21 @@ import { ClassValidation } from '@/base/Presentation/Utils/classValidation';
 export default class ContactsParams implements Params {
   public readonly key: string;
   public readonly value: string;
+  public readonly id?: number;
 
   public static readonly validation = new ClassValidation().setRules({});
 
-  constructor(data: { key: string; value: string }) {
+  constructor(data: { key: string; value: string; id?: number }) {
     this.key = data.key;
     this.value = data.value;
+    this.id = data.id;
   }
 
   toMap(): { [p: string]: any } {
     return {
       key: this.key,
       value: this.value,
+      id: this.id,
     };
   }
 

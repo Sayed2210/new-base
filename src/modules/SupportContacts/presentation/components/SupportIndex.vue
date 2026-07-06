@@ -10,6 +10,9 @@
   import IndexSupportContactsParams from '../../core/params/index.about.params';
   import DataStatusBuilder from '@/shared/DataStatues/DataStatusBuilder.vue';
   import SupportSeklaton from '../SupportSeklaton.vue';
+  import IndexDelete from '@/shared/icons/DocaumentType/IndexDelete.vue';
+  import DeleteSupportContactParams from '../../core/params/delete.support.contacts.params';
+  import DeleteDialog from '@/base/Presentation/Dialogs/MainDialogs/DeleteDialog.vue';
 
   const controller = SupportContactsController.getInstance();
 
@@ -21,10 +24,17 @@
 
   const hasData = computed(() => contacts.value.length > 0);
 
-  onMounted(async () => {
+  const fetchContacts = async () => {
     const indexSupportParams = new IndexSupportContactsParams('', 1, 10, false);
     await controller.fetchList(indexSupportParams);
-  });
+  };
+
+  const deleteSupport = async (id: number) => {
+    await controller.delete(new DeleteSupportContactParams(id));
+    await fetchContacts();
+  };
+
+  onMounted(fetchContacts);
 </script>
 
 <template>
@@ -39,10 +49,6 @@
           <div class="header-actions">
             <router-link to="/support/add" class="btn-outline-green">
               + {{ $t('add_new_support_section') }}
-            </router-link>
-            <router-link to="/support/edit" class="btn-filled-green">
-              <EditpinIcon />
-              <span>{{ $t('edit') }}</span>
             </router-link>
           </div>
         </div>
@@ -61,35 +67,55 @@
               "
               class="contact-info-row"
             >
-              <div v-if="section.supportContacts?.length" class="contact-item">
-                <PhoneIcon />
-                <div class="contact-info">
-                  <span class="contact-label">{{ $t('Phone Number') }}</span>
-                  <span class="contact-value">{{
-                    section?.supportContacts?.find((el: any) => el?.key == 'phonenumbers')?.value
-                  }}</span>
+              <div class="contant-edit">
+                <div v-if="section.supportContacts?.length" class="contact-item">
+                  <PhoneIcon />
+                  <div class="contact-info">
+                    <span class="contact-label">{{ $t('Phone Number') }}</span>
+                    <span class="contact-value">{{
+                      section?.supportContacts?.find((el: any) => el?.key == 'phonenumbers')?.value
+                    }}</span>
+                  </div>
+                </div>
+
+                <div v-if="section.supportContacts?.length" class="contact-item">
+                  <WhatsIcon />
+                  <div class="contact-info">
+                    <span class="contact-label">{{ $t('chat_on_whatsapp') }}</span>
+                    <span class="contact-value">{{
+                      section?.supportContacts?.find((el: any) => el?.key == 'whatsapp_numbers')
+                        ?.value
+                    }}</span>
+                  </div>
+                </div>
+
+                <div v-if="section.supportContacts?.length" class="contact-item">
+                  <EmailIcon />
+                  <div class="contact-info">
+                    <span class="contact-label">{{ $t('email_address') }}</span>
+                    <span class="contact-value">{{
+                      section?.supportContacts?.find((el: any) => el?.key == 'emails')?.value
+                    }}</span>
+                  </div>
                 </div>
               </div>
 
-              <div v-if="section.supportContacts?.length" class="contact-item">
-                <WhatsIcon />
-                <div class="contact-info">
-                  <span class="contact-label">{{ $t('chat_on_whatsapp') }}</span>
-                  <span class="contact-value">{{
-                    section?.supportContacts?.find((el: any) => el?.key == 'whatsapp_numbers')
-                      ?.value
-                  }}</span>
-                </div>
-              </div>
-
-              <div v-if="section.supportContacts?.length" class="contact-item">
-                <EmailIcon />
-                <div class="contact-info">
-                  <span class="contact-label">{{ $t('email_address') }}</span>
-                  <span class="contact-value">{{
-                    section?.supportContacts?.find((el: any) => el?.key == 'emails')?.value
-                  }}</span>
-                </div>
+              <div class="row-actions">
+                <router-link :to="`/support/edit/${section?.id}`" class="action-btn edit">
+                  <EditpinIcon />
+                </router-link>
+                <DeleteDialog
+                  :title="$t('delete_support_contact_title')"
+                  :message="$t('delete_support_contact_message')"
+                  :hasbtn="true"
+                  @delete="deleteSupport(section.id!)"
+                >
+                  <template #btn>
+                    <span class="action-btn delete">
+                      <IndexDelete />
+                    </span>
+                  </template>
+                </DeleteDialog>
               </div>
             </div>
           </div>

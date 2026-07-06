@@ -11,6 +11,7 @@ export default class EditSupportContactsParams implements Params {
   public readonly whatsAppNumebrs: string[];
   public readonly emails: string[];
   public readonly telegramNumbers: string[];
+  public readonly id: number;
 
   public static readonly validation = new ClassValidation().setRules({
     id: { required: true },
@@ -23,16 +24,19 @@ export default class EditSupportContactsParams implements Params {
     whatsAppNumebrs: string[];
     emails: string[];
     telegramNumbers: string[];
+    id: number;
   }) {
     this.translation = data.translation;
     this.phonenumbers = data.phonenumbers;
     this.whatsAppNumebrs = data.whatsAppNumebrs;
     this.emails = data.emails;
     this.telegramNumbers = data.telegramNumbers;
+    this.id = data.id;
   }
 
   toMap(): { [p: string]: any } {
     return {
+      support_id: this.id,
       translations: this.translation.toMap(),
       phone_numbers: this.phonenumbers,
       whatsapp_numbers: this.whatsAppNumebrs,

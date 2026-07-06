@@ -110,10 +110,71 @@
     .contact-info-row {
       padding: 20px;
 
-      @include flex-row(nowrap, flex-start, center);
+      @include flex-row(nowrap, space-between, center);
 
-      gap: 60px;
       flex-wrap: wrap;
+
+      .contant-edit {
+        @include flex-row(nowrap, flex-start, center);
+
+        gap: 60px;
+      }
+
+      .row-actions {
+        @include flex-row(nowrap, center, center);
+
+        gap: 10px;
+
+        > button {
+          padding: 0;
+          border: 0;
+          background: transparent;
+        }
+      }
+
+      .action-btn {
+        @include flex-row(nowrap, center, center);
+
+        width: calc($XlSize3 + 2px);
+        height: calc($XlSize3 + 2px);
+        border-radius: $XsSize2;
+        border: 1px solid $WeakBorder;
+        background: var(--white);
+        color: $TextGray3;
+        transition: all 0.2s ease;
+
+        &:hover {
+          transform: translateY(-1px);
+        }
+
+        &.edit:hover {
+          border-color: var(--PrimaryColor);
+          color: var(--PrimaryColor);
+        }
+
+        &.show:hover {
+          border-color: var(--info-dark) !important;
+          color: var(--info-dark) !important;
+        }
+
+        &.delete:hover {
+          border-color: var(--Red);
+          color: var(--Red);
+        }
+      }
+
+      .btn-filled-green {
+        color: var(--PrimaryColor);
+        border: 1px solid var(--PrimaryColor);
+        padding: 0.5rem 0.6rem;
+        font-size: 14px;
+        font-weight: 700;
+
+        &:hover {
+          border: 1px solid var(--PrimaryColor);
+          padding: 0.5rem 0.6rem;
+        }
+      }
 
       .contact-item {
         @include flex-row(nowrap, flex-start, center);

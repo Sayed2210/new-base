@@ -36,6 +36,7 @@
   type SectionState = {
     id?: number;
     title: Record<string, string>;
+    supportContacts: ContactsModel[];
     phonenumbers: string[];
     whatsAppNumebrs: string[];
     emails: string[];
@@ -55,6 +56,7 @@
 
   const createSection = (): SectionState => ({
     title: {},
+    supportContacts: [],
     phonenumbers: [],
     whatsAppNumebrs: [],
     emails: [],
@@ -64,29 +66,57 @@
 
   const sections = ref<SectionState[]>([createSection()]);
 
+  const getContactId = (section: SectionState, key: string, value: string) =>
+    section.supportContacts.find((contact) => contact.key === key && contact.value === value)?.id;
+
   const emitData = () => {
     const params = new AddSupportContactsParams({
+      supportId: props.initialSections?.length ? props.initialSections[0].id : undefined,
       translations: new TranslationParams({
         title: sections.value.map((el) => el.title)[0],
       }),
       contacts: sections.value.flatMap((s) => [
-        ...s.phonenumbers.map((num) => new ContactsParams({ key: 'phonenumbers', value: num })),
+        ...s.phonenumbers.map(
+          (num) =>
+            new ContactsParams({
+              key: 'phonenumbers',
+              value: num,
+              id: getContactId(s, 'phonenumbers', num),
+            }),
+        ),
         ...s.whatsAppNumebrs.map(
-          (num) => new ContactsParams({ key: 'whatsapp_numbers', value: num }),
+          (num) =>
+            new ContactsParams({
+              key: 'whatsapp_numbers',
+              value: num,
+              id: getContactId(s, 'whatsapp_numbers', num),
+            }),
         ),
         ...s.telegramNumbers.map(
-          (num) => new ContactsParams({ key: 'telegram_numbers', value: num }),
+          (num) =>
+            new ContactsParams({
+              key: 'telegram_numbers',
+              value: num,
+              id: getContactId(s, 'telegram_numbers', num),
+            }),
         ),
-        ...s.emails.map((email) => new ContactsParams({ key: 'emails', value: email })),
+        ...s.emails.map(
+          (email) =>
+            new ContactsParams({
+              key: 'emails',
+              value: email,
+              id: getContactId(s, 'emails', email),
+            }),
+        ),
       ]),
     });
     emit('updateData', params);
   };
 
-  const addSection = () => {
-    sections.value.push(createSection());
-    emitData();
-  };
+  // const addSection = () => {
+  //   sections.value.push(createSection());
+  //   emitData();
+  // };
 
   const controller = SupportContactsController.getInstance();
 
@@ -98,6 +128,7 @@
       ? supportSections.map((section) => ({
           id: section.id,
           title: typeof section.titles === 'object' ? section.titles : {},
+          supportContacts: section.supportContacts,
           phonenumbers: getContactValues(section.supportContacts, 'phonenumbers'),
           whatsAppNumebrs: getContactValues(section.supportContacts, 'whatsapp_numbers'),
           emails: getContactValues(section.supportContacts, 'emails'),
@@ -107,15 +138,20 @@
       : [createSection()];
   };
 
-  const removeLocalSection = (index: number) => {
-    if (sections.value.length === 1) return;
-    sections.value.splice(index, 1);
-    emitData();
-  };
+  // const removeLocalSection = (index: number) => {
+  //   if (sections.value.length === 1) return;
+  //   sections.value.splice(index, 1);
+  //   emitData();
+  // };
+  // const deleteSection = async (id: number) => {
+  //   await controller.delete(new DeleteSupportContactParams(id));
+  //   await fetchContacts();
+  // };
 
   const removeSection = async (index: number, id?: number) => {
     if (!id) {
-      removeLocalSection(index);
+      // removeLocalSection(index);
+      await controller.delete(new DeleteSupportContactParams(id));
       return;
     }
 
@@ -162,6 +198,14 @@
     }
     emitData();
   });
+  //  watch(
+  //   () => props.initialSections,
+  //   (newSections) => {
+  //     if (newSections) {
+  //       syncSectionsFromModels(newSections);
+  //     }
+  //   }
+  // )
 </script>
 
 <template>
@@ -171,9 +215,9 @@
         <h2 class="title">{{ $t('support_contacts') }}</h2>
         <p class="description">{{ $t('support_contacts_description') }}</p>
       </div>
-      <button class="btn btn-primary add-section-btn" type="button" @click="addSection">
+      <!-- <button class="btn btn-primary add-section-btn" type="button" @click="addSection">
         + {{ $t('add_new_support_section') }}
-      </button>
+      </button> -->
     </div>
 
     <div class="sections-list">
@@ -186,7 +230,7 @@
             class="delete-section-btn"
             @click="removeSection(sIdx, section.id)"
           >
-            <DeleteSectionIcon />
+            <DeleteSectionIcon v-if="section.id" />
           </button>
         </div>
 

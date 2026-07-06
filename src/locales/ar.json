@@ -41,6 +41,8 @@
   "enter_your_telegram_link_or_number": "أدخل رابط أو رقم تيليغرام",
   "support_contact_details": "تفاصيل جهات الدعم",
   "support_contact_details_description": "عرض وإدارة معلومات التواصل المتاحة للمستخدمين.",
+  "delete_support_contact_title": "هل أنت متأكد من حذف جهة الدعم هذه؟",
+  "delete_support_contact_message": "سيؤدي حذف جهة الدعم هذه إلى إزالة بيانات التواصل المرتبطة بها. لا يمكن التراجع عن هذا الإجراء.",
   "chat_on_whatsapp": "الدردشة على واتساب",
   "no_contact_details": "لا توجد تفاصيل تواصل",
   "no_contact_details_description": "أضف معلومات الدعم حتى يتمكن المستخدمون من التواصل معك",

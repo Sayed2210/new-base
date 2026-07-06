@@ -51,21 +51,15 @@ describe('SupportForm', () => {
     expect(wrapper.exists()).toBe(true);
   });
 
-  it('renders the add section button', () => {
+  it('does not render the add section button', () => {
     const wrapper = mountForm();
     const addBtn = wrapper.find('.add-section-btn');
-    expect(addBtn.exists()).toBe(true);
+    expect(addBtn.exists()).toBe(false);
   });
 
   it('starts with one section', () => {
     const wrapper = mountForm();
     expect(wrapper.findAll('.support-section-card')).toHaveLength(1);
-  });
-
-  it('adds a new section when the add button is clicked', async () => {
-    const wrapper = mountForm();
-    await wrapper.find('.add-section-btn').trigger('click');
-    expect(wrapper.findAll('.support-section-card')).toHaveLength(2);
   });
 
   it('does not show delete button when only one section exists', () => {
@@ -74,17 +68,14 @@ describe('SupportForm', () => {
   });
 
   it('shows delete button when more than one section exists', async () => {
-    const wrapper = mountForm();
-    await wrapper.find('.add-section-btn').trigger('click');
+    const wrapper = mountForm({
+      initialSections: [
+        { id: 1, titles: {}, supportContacts: [] },
+        { id: 2, titles: {}, supportContacts: [] },
+      ],
+    });
+    await wrapper.vm.$nextTick();
     expect(wrapper.find('.delete-section-btn').exists()).toBe(true);
-  });
-
-  it('removes a section when delete is clicked', async () => {
-    const wrapper = mountForm();
-    await wrapper.find('.add-section-btn').trigger('click');
-    expect(wrapper.findAll('.support-section-card')).toHaveLength(2);
-    await wrapper.find('.delete-section-btn').trigger('click');
-    expect(wrapper.findAll('.support-section-card')).toHaveLength(1);
   });
 
   it('emits updateData on mount', () => {
@@ -92,10 +83,19 @@ describe('SupportForm', () => {
     expect(wrapper.emitted('updateData')).toBeTruthy();
   });
 
-  it('emits updateData after adding a section', async () => {
-    const wrapper = mountForm();
-    const before = wrapper.emitted('updateData')?.length ?? 0;
-    await wrapper.find('.add-section-btn').trigger('click');
-    expect(wrapper.emitted('updateData')!.length).toBeGreaterThan(before);
+  it('uses each contact id instead of the parent section id in emitted payload', () => {
+    const wrapper = mountForm({
+      initialSections: [
+        {
+          id: 10,
+          titles: { en: 'Support', ar: 'الدعم' },
+          supportContacts: [{ id: 55, key: 'phonenumbers', type: '', value: '+201234567890' }],
+        },
+      ],
+    });
+    const emitted = wrapper.emitted('updateData')?.[0]?.[0] as { toMap: () => Record<string, any> };
+
+    expect(emitted.toMap().support_contacts[0].id).toBe(55);
+    expect(emitted.toMap().support_contacts[0].id).not.toBe(10);
   });
 });

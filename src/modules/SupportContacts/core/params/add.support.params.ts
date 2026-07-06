@@ -9,16 +9,24 @@ import type TranslationParams from '@/modules/about/core/params/translation.para
 export default class AddSupportContactsParams implements Params {
   public readonly translations: TranslationParams;
   public readonly contacts: ContactsParams[];
+  public readonly supportId?: number;
 
   public static readonly validation = new ClassValidation().setRules({});
 
-  constructor(data: { translations: TranslationParams; contacts: ContactsParams[] }) {
+  constructor(data: {
+    translations: TranslationParams;
+    contacts: ContactsParams[];
+    supportId?: number;
+  }) {
     this.translations = data.translations;
     this.contacts = data.contacts;
+    this.supportId = data.supportId;
   }
 
   toMap(): { [p: string]: any } {
     return {
+      // ...(this.supportId ? { support_id: this.supportId } : {}),
+      support_id: this.supportId,
       translations: this.translations,
       support_contacts: this.contacts.map((contact) => contact.toMap()),
     };

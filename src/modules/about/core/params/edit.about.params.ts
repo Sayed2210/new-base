@@ -30,7 +30,7 @@ export default class EditAboutParams implements Params {
     return {
       translations: this.translations,
       ...(isBase64(this.images) && {
-        image: [this.images],
+        image: this.images,
       }),
       social_links: this.socialMedia,
     };

@@ -19,7 +19,7 @@ export const SupportContactsRoutes: RouteRecordRaw[] = [
     },
   },
   {
-    path: 'support/edit',
+    path: 'support/edit/:id',
     name: 'Edit Support',
     component: () => import('@/views/SupportContacts/EditSupport.vue'),
     meta: {
