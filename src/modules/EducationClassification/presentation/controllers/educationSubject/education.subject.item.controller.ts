@@ -56,4 +56,11 @@ export default class EducationSubjectItemController extends BaseController<
     }
     return super.update(params, { ...options, useJson: true });
   }
+  async delete(params: EditEducationSubjectItemParams, options?: ApiCallOptions) {
+    const result = await super.delete(params, { ...options, useJson: true });
+    if (result?.error?.title) {
+      dialogManager.toastError(result.error.title);
+    }
+    return result;
+  }
 }
