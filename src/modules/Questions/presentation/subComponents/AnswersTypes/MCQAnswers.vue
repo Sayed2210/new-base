@@ -3,11 +3,13 @@
   import DeletIcon from '@/shared/icons/DropListIcons/DeletIcon.vue';
   import UploadFileIcon from '@/shared/icons/UploadFileIcon.vue';
   import { onMounted, ref, watch } from 'vue';
-  import Checkbox from 'primevue/checkbox';
+  // import Checkbox from 'primevue/checkbox';
   import AddNewAnswerIcon from '@/shared/icons/AddNewAnswerIcon.vue';
   import type AnswerModel from '@/modules/Questions/core/models/subModels/answer.model';
   import AnswersParams from '@/modules/Questions/core/params/subParams/answers.params';
   import AttachmentsParams from '@/modules/Questions/core/params/subParams/attachments.params';
+
+  import RadioButton from 'primevue/radiobutton';
 
   type LocalAnswer = Omit<AnswerModel, 'image'> & { image?: string };
 
@@ -123,23 +125,22 @@
     },
   );
 
+  const numberToTxt = (index: number) => {
+    const txt = [
+      'First',
+      'Second',
+      'Third',
+      'Fourth',
+      'Fifth',
+      'Sixth',
+      'Seventh',
+      'Eighth',
+      'Ninth',
+      'Tenth',
+    ];
 
-const numberToTxt = (index: number) => {
-  const txt = [
-    'First',
-    'Second',
-    'Third',
-    'Fourth',
-    'Fifth',
-    'Sixth',
-    'Seventh',
-    'Eighth',
-    'Ninth',
-    'Tenth',
-  ];
-
-  return txt[index] ?? `${index + 1}th`;
-};
+    return txt[index] ?? `${index + 1}th`;
+  };
 </script>
 
 <template>
@@ -154,7 +155,7 @@ const numberToTxt = (index: number) => {
         <div class="timeline-form-content" :class="{ 'without-delete': Answers.length === 1 }">
           <div class="field-group">
             <label class="field-label" :for="`answer-${index}`">
-             {{ numberToTxt(index) }} {{ $t('answer') }} 
+              {{ numberToTxt(index) }} {{ $t('answer') }}
             </label>
             <div class="input-wrap">
               <input
@@ -187,7 +188,15 @@ const numberToTxt = (index: number) => {
           <!-- <div > -->
           <label :for="`is-correct-${index}`" class="is-correct-section"
             >{{ $t('correct answer') }}
-            <Checkbox
+            <!-- <Checkbox
+              :binary="true"
+              :model-value="item.is_right_answer"
+              :input-id="`is-correct-${index}`"
+              name="is-correct"
+              :value="item.is_right_answer"
+              @change="setCorrect(index)"
+            /> -->
+            <RadioButton
               :binary="true"
               :model-value="item.is_right_answer"
               :input-id="`is-correct-${index}`"

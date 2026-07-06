@@ -8582,6 +8582,11 @@ body::-webkit-scrollbar-thumb:hover {
   align-items: center;
   gap: 10px;
 }
+.support-contact-page .support-view-card .contact-info-row .row-actions > button {
+  padding: 0;
+  border: 0;
+  background: rgba(0, 0, 0, 0);
+}
 .support-contact-page .support-view-card .contact-info-row .action-btn {
   display: flex;
   flex-direction: row;
@@ -14377,6 +14382,16 @@ body div {
 }
 .p-radiobutton-box {
   border: 1px solid var(--gray-300) !important;
+}
+.is-correct-section .p-radiobutton-box {
+  background: #fff !important;
+  border-radius: 5px !important;
+}
+.is-correct-section .p-radiobutton-checked .p-radiobutton-box .p-radiobutton-icon {
+  background: var(--PrimaryColor) !important;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
 }
 .factor-item .p-radiobutton-checked .p-radiobutton-box {
   border: none !important;
