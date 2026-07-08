@@ -71,7 +71,7 @@
 
   const emitData = () => {
     const params = new AddSupportContactsParams({
-      supportId: props.initialSections?.length ? props.initialSections[0].id : undefined,
+      supportId: props.initialSections?.[0]?.id,
       translations: new TranslationParams({
         title: sections.value.map((el) => el.title)[0],
       }),
@@ -138,20 +138,19 @@
       : [createSection()];
   };
 
-  // const removeLocalSection = (index: number) => {
-  //   if (sections.value.length === 1) return;
-  //   sections.value.splice(index, 1);
-  //   emitData();
-  // };
+  const removeLocalSection = (index: number) => {
+    if (sections.value.length === 1) return;
+    sections.value.splice(index, 1);
+    emitData();
+  };
   // const deleteSection = async (id: number) => {
   //   await controller.delete(new DeleteSupportContactParams(id));
   //   await fetchContacts();
   // };
 
   const removeSection = async (index: number, id?: number) => {
-    if (!id) {
-      // removeLocalSection(index);
-      await controller.delete(new DeleteSupportContactParams(id));
+    if (id == null) {
+      removeLocalSection(index);
       return;
     }
 

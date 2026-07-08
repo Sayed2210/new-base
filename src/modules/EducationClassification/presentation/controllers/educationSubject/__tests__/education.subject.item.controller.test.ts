@@ -5,7 +5,7 @@ import {
 } from '@/base/Core/NetworkStructure/Resources/dataState/dataState';
 import { ErrorModel, ErrorType } from '@/base/Core/NetworkStructure/Resources/errors/errorModel';
 import { dialogManager } from '@/base/Presentation/Dialogs/dialog.manager';
-import type EditEducationSubjectItemParams from '@/modules/EducationClassification/core/params/EducationSubjects/edit.education.subject.item.params';
+import type DeleteEducationSubjectItemParams from '@/modules/EducationClassification/core/params/EducationSubjects/delete.education.subject.item.params';
 import EducationSubjectItemController from '../education.subject.item.controller';
 
 vi.mock('@/base/Presentation/Dialogs/dialog.manager', () => ({
@@ -28,7 +28,7 @@ describe('EducationSubjectItemController', () => {
   const params = {
     validate: vi.fn(() => ({ isValid: true })),
     validateOrThrow: vi.fn(),
-  } as unknown as EditEducationSubjectItemParams;
+  } as unknown as DeleteEducationSubjectItemParams;
 
   beforeEach(() => {
     vi.clearAllMocks();
