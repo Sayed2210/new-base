@@ -1,11 +1,11 @@
-import type Params from "@/base/Core/Params/params";
+import type Params from '@/base/Core/Params/params';
 import ServicesInterface, {
   CrudType,
   type ApiResponse,
   type ExtendedCallOptions,
   type ProgressCallback,
-} from "./apiServiceInterface";
-import { env } from "@/base/Core/Config/index";
+} from './apiServiceInterface';
+import { env } from '@/base/Core/Config/index';
 
 /**
  * Configuration for API endpoints supporting CRUD operations.
@@ -72,6 +72,14 @@ export interface ApiCallOptions extends ExtendedCallOptions {
 
   /** Use POST instead of the default method */
   usePost?: boolean;
+
+  /**
+   * Override the global env.useStaticData for this call only.
+   * Pass `true` to force mock data even in development mode.
+   * Pass `false` to force a real API call even in test mode.
+   * Omit to follow the global VITE_APP_ENV setting.
+   */
+  useStaticData?: boolean;
 }
 
 /**
@@ -140,7 +148,7 @@ export default abstract class BaseApiService extends ServicesInterface {
    */
   private resolveEndpoint(endpoint: string | undefined): string {
     if (!endpoint) {
-      throw new Error("Endpoint not configured");
+      throw new Error('Endpoint not configured');
     }
     return endpoint;
   }
@@ -162,29 +170,42 @@ export default abstract class BaseApiService extends ServicesInterface {
   /**
    * Fetch list of items (POST request with Params in body).
    */
-  async index(params?: Params, options?: ApiCallOptions): Promise<ApiResponse> {
+  async index(
+    params?: Params,
+    options?: ApiCallOptions,
+    isAutoRetry?: boolean,
+  ): Promise<ApiResponse> {
     const url = this.resolveEndpoint(this.endpoints.index);
 
     const mergedOptions = this.mergeOptions({
       ...options,
+      enableRetry: isAutoRetry,
       usePost: options?.usePost ?? true,
     });
-    return this.call({
+    const data = this.call({
       url,
       type: mergedOptions?.usePost ? CrudType.POST : CrudType.GET,
       params,
       ...mergedOptions,
     });
+    return data;
   }
+  // document.querySelector('#app')?.classList.add('loading');
 
+  // document.querySelector('#app')?.classList.remove('loading');
   /**
    * Fetch single item (POST request with Params in body).
    * The ID should be included in the Params.
    */
-  async show(params?: Params, options?: ApiCallOptions): Promise<ApiResponse> {
+  async show(
+    params?: Params,
+    options?: ApiCallOptions,
+    isAutoRetry?: boolean,
+  ): Promise<ApiResponse> {
     const url = this.resolveEndpoint(this.endpoints.show);
     const mergedOptions = this.mergeOptions({
       ...options,
+      enableRetry: isAutoRetry,
       usePost: options?.usePost ?? true,
     });
 
@@ -209,16 +230,17 @@ export default abstract class BaseApiService extends ServicesInterface {
     const mergedOptions = this.mergeOptions({
       ...options,
       enableRetry: isAutoRetry,
-
     });
 
-
-    return this.call({
+    // document.querySelector('#app')?.classList.add('loading');
+    const data = this.call({
       url,
       type: mergedOptions.useJson ? CrudType.POST : CrudType.FormData,
       params,
       ...mergedOptions,
     });
+    // document.querySelector('#app')?.classList.remove('loading');
+    return data;
   }
 
   /**
@@ -243,35 +265,38 @@ export default abstract class BaseApiService extends ServicesInterface {
     } else if (mergedOptions.useJson) {
       method = CrudType.PATCH;
     }
-
-    return this.call({
+    // document.querySelector('#app')?.classList.add('loading');
+    const data = this.call({
       url,
       type: mergedOptions?.usePost ? CrudType.POST : method,
       params,
       ...mergedOptions,
     });
+    // document.querySelector('#app')?.classList.remove('loading');
+
+    return data;
   }
 
   /**
    * Delete item (POST request with Params in body).
    * The ID should be included in the Params.
    */
-  async delete(
-    params?: Params,
-    options?: ApiCallOptions,
-  ): Promise<ApiResponse> {
+  async delete(params?: Params, options?: ApiCallOptions): Promise<ApiResponse> {
     const url = this.resolveEndpoint(this.endpoints.delete);
     const mergedOptions = this.mergeOptions({
       ...options,
       usePost: options?.usePost ?? true,
     });
-
-    return this.call({
+    // document.querySelector('#app')?.classList.add('loading');
+    const data = this.call({
       url,
       type: mergedOptions?.usePost ? CrudType.POST : CrudType.DELETE,
       params,
       ...mergedOptions,
     });
+
+    // document.querySelector('#app')?.classList.remove('loading');
+    return data;
   }
 
   // =========================================================================
@@ -286,27 +311,26 @@ export default abstract class BaseApiService extends ServicesInterface {
     options?: ApiCallOptions,
     isAutoRetry?: boolean,
   ): Promise<ApiResponse<T>> {
-
-
     const mergedOptions = this.mergeOptions({
       ...options,
       enableRetry: isAutoRetry,
-
     });
+    document.querySelector('#app')?.classList.add('loading');
 
-    console.log(mergedOptions, "mergedOptions");
-
-
-    return this.call({
-      url: config.url,
-      type: config.method,
-      params: config.params,
-      details: config.queryParams,
-      headers: config.headers,
-      showErrorDialog: mergedOptions.showErrorDialog,
-      showLoadingDialog: mergedOptions.showLoadingDialog,
-      ...mergedOptions,
-    }) as Promise<ApiResponse<T>>;
+    try {
+      return (await this.call({
+        url: config.url,
+        type: config.method,
+        params: config.params,
+        details: config.queryParams,
+        headers: config.headers,
+        showErrorDialog: mergedOptions.showErrorDialog,
+        showLoadingDialog: mergedOptions.showLoadingDialog,
+        ...mergedOptions,
+      })) as ApiResponse<T>;
+    } finally {
+      document.querySelector('#app')?.classList.remove('loading');
+    }
   }
 
   /**
@@ -341,9 +365,7 @@ export default abstract class BaseApiService extends ServicesInterface {
   async batch(
     requests: Array<{ config: CustomEndpointConfig; options?: ApiCallOptions }>,
   ): Promise<ApiResponse[]> {
-    const promises = requests.map(({ config, options }) =>
-      this.custom(config, options),
-    );
+    const promises = requests.map(({ config, options }) => this.custom(config, options));
 
     return Promise.all(promises);
   }
@@ -397,9 +419,7 @@ export default abstract class BaseApiService extends ServicesInterface {
         // Wait before retrying
         if (attempt < retryConfig.maxAttempts - 1) {
           if (env.isLoggingEnabled) {
-            console.log(
-              `[BaseApiService] Retry attempt ${attempt + 1}/${retryConfig.maxAttempts}`,
-            );
+            // console.log(`[BaseApiService] Retry attempt ${attempt + 1}/${retryConfig.maxAttempts}`);
           }
           await new Promise((resolve) => setTimeout(resolve, delay));
           delay *= retryConfig.backoffMultiplier;
@@ -407,7 +427,7 @@ export default abstract class BaseApiService extends ServicesInterface {
       }
     }
 
-    throw lastError || new Error("Request failed after retries");
+    throw lastError || new Error('Request failed after retries');
   }
 
   // =========================================================================

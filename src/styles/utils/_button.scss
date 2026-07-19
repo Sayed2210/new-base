@@ -1,8 +1,9 @@
-@use "../mixins/flex" as *;
-@use "../variables" as *;
+@use '../mixins/flex' as *;
+@use '../variables' as *;
 
 .btn {
   @include flex-center(row, nowrap);
+
   font-size: var(--sm-size);
   font-weight: $BaseFontWeightBold;
   transition: var(--transition);
@@ -13,6 +14,11 @@
   gap: var(--xs-size);
   border-radius: var(--radius-sm);
   padding: 10px 20px;
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 
   &.w-full {
     width: 100%;

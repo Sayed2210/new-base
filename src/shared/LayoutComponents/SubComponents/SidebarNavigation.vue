@@ -1,151 +1,250 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import CustomAccordion from "@/shared/Accordion/CustomAccordion.vue";
-import IconSetting from "@/shared/icons/IconSetting.vue";
-import BackIcon from "@/shared/icons/BackIcon.vue";
+  import { useRoute, useRouter } from 'vue-router';
+  import { computed, ref, type Component } from 'vue';
+  import SettingIcon from '@/shared/icons/SidebarIcons/SettingIcon.vue';
+  import DocumentIcon from '@/shared/icons/BreadcrumbIcons/DocumentIcon.vue';
+  import TechlabLogo from '@/assets/images/TechlabLogo.png';
+  import EducationClassificationIcon from '@/shared/icons/SidebarIcons/EducationClassificationIcon.vue';
+  import SidebarPrivecy from '@/shared/icons/SidebarPrivecy.vue';
+  import SidebarTerms from '@/shared/icons/SidebarTerms.vue';
+  import Sidebaremploye from '@/shared/icons/Sidebaremploye.vue';
+  import SupportIcon from '@/shared/icons/SidebarIcons/SupportIcon.vue';
+  import AboutIcon from '@/shared/icons/SidebarIcons/AboutIcon.vue';
+  import FaqsIcon from '@/shared/icons/SidebarIcons/FaqsIcon.vue';
+  import { useUserStore } from '@/stores/user';
+  import AuthArrowIcon from '@/shared/icons/SidebarIcons/AuthArrowIcon.vue';
+  import IconLogout from '@/shared/icons/IconLogout.vue';
+  import Accordion from 'primevue/accordion';
+  import AccordionPanel from 'primevue/accordionpanel';
+  import AccordionHeader from 'primevue/accordionheader';
+  import AccordionContent from 'primevue/accordioncontent';
+  import Question from '@/shared/icons/question.vue';
+  import ArticleIcon from '@/shared/icons/ArticleIcon.vue';
 
-// ── Section Types ─────────────────────────────────────────────
-const SidebarSectionType = {
-  settings: "settings",
-  location: "location",
-  unknown: "unknown",
-} as const;
+  const route = useRoute();
+  const emit = defineEmits(['clickItem']);
+  interface MenuItem {
+    link: string;
+    name: string;
+    icon?: Component;
+    badge?: string;
+    hasArrow?: boolean;
+  }
+  interface MenuSection {
+    group: string;
+    items: MenuItem[];
+  }
 
-type SidebarSectionKey =
-  (typeof SidebarSectionType)[keyof typeof SidebarSectionType];
+  const baseMenu: MenuSection[] = [
+    {
+      group: 'Overview',
+      items: [
+        {
+          link: '/education-classifications',
+          name: 'Education configuration',
+          icon: EducationClassificationIcon,
+        },
+        {
+          link: '/employees',
+          name: 'Employees',
+          icon: Sidebaremploye,
+        },
+        {
+          link: '/documents',
+          name: 'Documents',
+          icon: DocumentIcon,
+        },
+        {
+          link: '/skills',
+          name: 'Skills',
+          icon: SettingIcon,
+        },
+        {
+          link: '/subjects',
+          name: 'Subjects',
+          icon: SettingIcon,
+        },
+        {
+          link: '/placement-test',
+          name: 'Placement Test',
+          icon: SettingIcon,
+        },
+      ],
+    },
 
-interface SidebarSection {
-  title: string;
-  type: SidebarSectionKey;
-  icon?: string | object;
-  routes: SidebarRoute[];
-}
+    {
+      group: 'Apps Kits',
+      items: [
+        {
+          link: '/questions',
+          name: 'Questions',
+          icon: Question,
+        },
+        {
+          link: '/articles',
+          name: 'Articles',
+          icon: ArticleIcon,
+        },
+      ],
+    },
+    {
+      group: 'statics',
+      items: [
+        {
+          link: '/about',
+          name: 'About',
+          icon: AboutIcon,
+        },
+        {
+          link: '/support',
+          name: 'Support',
+          icon: SupportIcon,
+        },
+        {
+          link: '/faqs',
+          name: 'Faqs',
+          icon: FaqsIcon,
+        },
+        {
+          link: '/privacy',
+          name: 'Privacy and policy',
+          icon: SidebarPrivecy,
+        },
+        {
+          link: '/terms-conditions',
+          name: 'terms & conditions',
+          icon: SidebarTerms,
+        },
+        // {
+        //   link: '/deleted-accounts',
+        //   name: 'add logout reasons',
+        //   icon: SidebarTerms,
+        // },
+      ],
+    },
+  ];
 
-interface SidebarRoute {
-  link: string;
-  name: string;
-}
+  const menu = computed<MenuSection[]>(() => baseMenu);
 
-// ── Section Data ──────────────────────────────────────────────
-const sections = ref<SidebarSection[]>([
-  {
-    title: "settings",
-    type: SidebarSectionType.settings,
-    icon: IconSetting,
-    routes: [
-      {
-        link: "/emails",
-        name: "Emails",
-      },
-    ],
-  },
-  {
-    title: "location",
-    type: SidebarSectionType.location,
-    icon: IconSetting,
-    routes: [{ link: "/admin/countries", name: "country" }],
-  },
-]);
+  const { user } = useUserStore();
+  //logout
+  const userStore = useUserStore();
+  const router = useRouter();
 
-const route = useRoute();
-const accordionValue = ref<string[]>([]);
+  const logout = () => {
+    userStore.logout();
+    router.push({ name: 'Choose Country' });
+  };
 
-watch(
-  () => route.path,
-  (newPath) => {
-    const activeIndex = sections.value.findIndex((s) =>
-      s.routes.some((r) => newPath.includes(r.link)),
-    );
-    accordionValue.value = activeIndex >= 0 ? [activeIndex.toString()] : [];
-  },
-  { immediate: true },
-);
+  const isDropMenuOpen = ref(false);
 
-const isOpen = ref(true);
-const router = useRouter();
-const RouterBack = () => {
-  router.back();
-};
+  const toggleDropMenu = () => {
+    isDropMenuOpen.value = !isDropMenuOpen.value;
+  };
 </script>
-
 <template>
-  <aside :class="['sidebar', isOpen ? 'open' : 'close']">
+  <aside class="sidebar">
     <div class="sidebar-wrapper">
-      <button class="sidebar-back" @click="RouterBack">
-        <BackIcon class="icon" />
-        <span>back</span>
-      </button>
-
-      <div class="links">
-        <CustomAccordion
-          :items="sections"
-          :multiple="false"
-          :defaultValue="accordionValue"
-          AccordionClass="sidebar-accordion"
-          AccordionPanelClass="sidebar-panel"
-          AccordionHeaderClass="sidebar-header"
-          AccordionContentClass="sidebar-content"
-        >
-          <template #header="{ item }">
-            <div class="links-header">
-              <component
-                v-if="typeof item.icon !== 'string' && item.icon"
-                :is="item.icon"
-              />
-              {{ $t(item.title) }}
-            </div>
-          </template>
-
-          <template #content="{ item }">
-            <ul>
-              <li v-for="(routeItem, index) in item.routes" :key="index">
-                <router-link
-                  :to="routeItem.link"
-                  :class="{ active: route.path.includes(routeItem.link) }"
-                >
-                  <span>{{ $t(routeItem.name) }}</span>
-                </router-link>
-              </li>
-            </ul>
-          </template>
-        </CustomAccordion>
+      <div class="logo-container">
+        <img class="logo" :src="TechlabLogo" alt="Techlab Logo" />
+        <!-- <h2 class="logo">Logo</h2> -->
       </div>
+
+      <!-- Menu -->
+      <div class="menu">
+        <div v-for="(group, gIndex) in menu" :key="gIndex" class="menu-group">
+          <p v-if="group.group" class="group-title">
+            {{ group.group }}
+          </p>
+
+          <router-link
+            v-for="(item, i) in group.items"
+            :key="i"
+            :to="item.link"
+            class="menu-item"
+            :class="{ active: route.path === item.link }"
+            @click="emit('clickItem')"
+          >
+            <component :is="item.icon" class="icon" />
+
+            <span class="label">{{ item.name }}</span>
+
+            <span v-if="item?.badge" class="badge">
+              {{ item?.badge }}
+            </span>
+
+            <span v-if="item?.hasArrow" class="arrow">›</span>
+          </router-link>
+        </div>
+      </div>
+
+      <Accordion :value="0">
+        <template #collapseicon> </template>
+        <template #expandicon> </template>
+        <AccordionPanel value="0">
+          <AccordionHeader>
+            <div class="auth-container" @click="toggleDropMenu">
+              <div class="auth-data">
+                <img
+                  :src="user?.image || `https://cyber.comolho.com/static/img/avatar.png`"
+                  alt="image"
+                />
+                <div class="user-data">
+                  <span class="name">{{ user?.name }}</span>
+                  <span class="status">Admin</span>
+                </div>
+              </div>
+              <auth-arrow-icon />
+            </div>
+          </AccordionHeader>
+          <AccordionContent>
+            <div class="mega-body">
+              <button class="menu-item">
+                <icon-user-circle />
+                <span>{{ $t('my_profile') }}</span>
+                <icon-chevron-right class="arrow" />
+              </button>
+              <button class="menu-item">
+                <icon-settings />
+                <span>{{ $t('settings') }}</span>
+                <icon-chevron-right class="arrow" />
+              </button>
+              <button class="menu-item">
+                <icon-bell />
+                <span>{{ $t('notifications') }}</span>
+                <icon-chevron-right class="arrow" />
+              </button>
+              <div class="divider"></div>
+              <button class="menu-item danger" @click="logout">
+                <icon-logout />
+                <span>{{ $t('logout') }}</span>
+              </button>
+            </div>
+          </AccordionContent>
+        </AccordionPanel>
+      </Accordion>
     </div>
   </aside>
 </template>
 
-<style scoped lang="scss">
-.links-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 600;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-
-  li {
-    a {
-      display: block;
-      padding: 0.5rem 0;
-      color: inherit;
-      text-decoration: none;
-
-      &.active {
-        color: #3b82f6;
-        font-weight: 500;
-      }
-    }
+<style scoped>
+  :deep(.p-accordionheader) {
+    padding: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
   }
-}
 
-@media (max-width: 600px) {
-  aside {
-    display: none !important;
+  :deep(.p-accordionheader-link) {
+    padding: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
   }
-}
+
+  :deep(.p-accordion) {
+    margin-top: auto;
+  }
+
+  :deep(.p-accordioncontent-content) {
+    padding: 0 !important;
+  }
 </style>

@@ -1,7 +1,9 @@
 import type Params from '@/base/Core/Params/params';
 import axios from 'axios';
 import type { AxiosResponse } from 'axios';
-import NetworkService, { type NetworkRequestConfig } from '@/base/Core/NetworkStructure/networking/networkService';
+import NetworkService, {
+  type NetworkRequestConfig,
+} from '@/base/Core/NetworkStructure/networking/networkService';
 import type ServiceCallParams from '@/base/Core/Params/callParamsInterface';
 import { dialogManager } from '@/base/Presentation/Dialogs/dialog.manager';
 import { env } from '@/base/Core/Config';
@@ -24,13 +26,16 @@ export const CrudType = {
   PATCH: 'patch',
 } as const;
 
-export type CrudType =
-  (typeof CrudType)[keyof typeof CrudType];
+export type CrudType = (typeof CrudType)[keyof typeof CrudType];
 
 /**
  * Progress callback type
  */
-export type ProgressCallback = (progress: { loaded: number; total?: number; progress: number }) => void;
+export type ProgressCallback = (progress: {
+  loaded: number;
+  total?: number;
+  progress: number;
+}) => void;
 
 /**
  * Extended call options
@@ -108,10 +113,10 @@ export default abstract class ServicesInterface {
     try {
       // Log request if enabled
       if (env.isLoggingEnabled) {
-        console.log(`[ApiService] ${type.toUpperCase()} ${url}`, {
-          params: params?.toMap(),
-          details,
-        });
+        // console.log(`[ApiService] ${type.toUpperCase()} ${url}`, {
+        //   params: params?.toMap(),
+        //   details,
+        // });
       }
 
       switch (type) {
@@ -124,7 +129,7 @@ export default abstract class ServicesInterface {
               queryParams: details ?? {},
               isAuth: auth,
             },
-            networkConfig
+            networkConfig,
           );
           break;
 
@@ -136,7 +141,7 @@ export default abstract class ServicesInterface {
               queryParams: details,
               isAuth: auth,
             },
-            networkConfig
+            networkConfig,
           );
           break;
 
@@ -149,7 +154,7 @@ export default abstract class ServicesInterface {
               queryParams: details ?? {},
               isAuth: auth,
             },
-            networkConfig
+            networkConfig,
           );
           break;
 
@@ -161,7 +166,7 @@ export default abstract class ServicesInterface {
               queryParams: details,
               isAuth: auth,
             },
-            networkConfig
+            networkConfig,
           );
           break;
 
@@ -174,7 +179,7 @@ export default abstract class ServicesInterface {
               queryParams: details,
               isAuth: auth,
             },
-            networkConfig
+            networkConfig,
           );
 
           break;
@@ -188,7 +193,7 @@ export default abstract class ServicesInterface {
               queryParams: details,
               isAuth: auth,
             },
-            networkConfig
+            networkConfig,
           );
           break;
 
@@ -209,8 +214,6 @@ export default abstract class ServicesInterface {
         console.error(`[ApiService] Error:`, apiError.toJSON());
       }
 
-      console.log(apiError);
-      console.log(showErrorDialog);
       // Show error dialog if requested
       if (showErrorDialog) {
         dialogManager.error(ErrorHandler.getUserMessage(apiError));

@@ -1,27 +1,26 @@
-import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
-import { useUserStore } from '@/stores/user'
-// import { OrganizationTypeEnum } from '@/features/auth/Core/Enum/organization_type'
+import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
+import { useUserStore } from '@/stores/user';
 
 export function authGuard(
   to: RouteLocationNormalized,
-  from: RouteLocationNormalized,
-  next: NavigationGuardNext
+  _from: RouteLocationNormalized,
+  next: NavigationGuardNext,
 ): void {
-  const userData = useUserStore()
+  const userData = useUserStore();
 
-  // Not authenticated - redirect to login
-  if (to.name !== 'Login' && !userData.isAuth) {
-    return next({ path: '/login' })
+  if (to.path === '/choose-country' || to.path === '/not-found') {
+    return next();
   }
 
-  // Already authenticated - redirect to dashboard based on user type
-  if (to.name === 'Login' && userData.isAuth) {
-    // Derive redirect path based on user type
-    // Users with type 1 (EMPLOYEE) go to organization, others to admin
-    const userType = userData.user?.type;
-    const redirectPath = userType === 1 ? '/organization' : '/admin';
-    return next({ path: redirectPath })
+  const isLoginPage = to.path === '/login';
+
+  if (!userData.isAuth && !isLoginPage) {
+    return next({ name: 'Choose Country' });
   }
 
-  next()
+  if (isLoginPage && userData.isAuth) {
+    return next({ name: 'About' });
+  }
+
+  next();
 }

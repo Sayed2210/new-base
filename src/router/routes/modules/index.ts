@@ -1,15 +1,40 @@
 import type { RouteRecordRaw } from 'vue-router';
-import { emailRoutes } from './email';
-import { InputsRoutes } from './inputs';
-
-
+// import { countryRoutes } from './country';
+import { employeeRoutes } from './employee';
+import { documentRoutes } from './document';
+import { faqsRoutes } from './faqs';
+import { privacyRoutes } from './privacy';
+import { termsConditionsRoutes } from './terms-conditions';
+import { stagesRoutes } from './stages';
+import { subjectsRoutes } from './subjects';
+import { unitsRoutes } from './units';
+import { educationClassificationRoutes } from './education-classification';
+import { AboutRoutes } from './about';
+import { SupportContactsRoutes } from './support';
+import { DeletedAccountsRoutes } from './deleted-accounts';
+import { SkillsRoutes } from './skills';
+import { questionsRoutes } from './question';
+import { ArticlesRoutes } from './Articles';
+import { PackagesRoutes } from './package';
+import { PlacementTestRoutes } from './placement_test';
 
 export const dashboardRoutes: RouteRecordRaw[] = [
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: () => import('@/views/AppHome.vue'),
-  },
-  ...emailRoutes,
-  ...InputsRoutes,
-]
+  // ...countryRoutes,
+  ...employeeRoutes,
+  ...documentRoutes,
+  ...faqsRoutes,
+  ...privacyRoutes,
+  ...termsConditionsRoutes,
+  ...stagesRoutes,
+  ...subjectsRoutes,
+  ...unitsRoutes,
+  ...educationClassificationRoutes,
+  ...AboutRoutes,
+  ...SupportContactsRoutes,
+  ...DeletedAccountsRoutes,
+  ...SkillsRoutes,
+  ...questionsRoutes,
+  ...ArticlesRoutes,
+  ...PackagesRoutes,
+  ...PlacementTestRoutes
+];

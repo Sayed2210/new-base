@@ -83,7 +83,7 @@ const rootAttrs = computed(() => {
     @click="!isDisabled && $emit('click', $event)"
   >
     <!-- Loading spinner -->
-    <span v-if="loading" class="btn__spinner" />
+    <span v-if="loading" class="loader" />
 
     <!-- Icon left -->
     <span v-if="icon === 'left' && !loading" class="btn__icon btn__icon--left">

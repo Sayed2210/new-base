@@ -1,0 +1,67 @@
+import BaseController from '@/base/Presentation/Controller/baseController';
+import type { ControllerConfig } from '@/base/Presentation/Controller/baseController';
+import type { ApiCallOptions } from '@/base/Data/ApiService/baseApiService';
+import type Params from '@/base/Core/Params/params';
+import EducationSubjectItemRepository from '@/modules/EducationClassification/data/repositories/educationSubject/education.subject.item.repository';
+import type EducationSubjectModel from '@/modules/EducationClassification/core/models/EducationSubject/education.subject.model';
+import type EditEducationSubjectItemParams from '@/modules/EducationClassification/core/params/EducationSubjects/edit.education.subject.item.params';
+import type DeleteEducationSubjectItemParams from '@/modules/EducationClassification/core/params/EducationSubjects/delete.education.subject.item.params';
+import { dialogManager } from '@/base/Presentation/Dialogs/dialog.manager';
+
+export default class EducationSubjectItemController extends BaseController<
+  EducationSubjectModel,
+  EducationSubjectModel[]
+> {
+  private static instance: EducationSubjectItemController;
+
+  protected get repository() {
+    return EducationSubjectItemRepository.getInstance();
+  }
+
+  protected get config(): ControllerConfig {
+    return {
+      showLoadingDialog: false,
+      showSuccessDialog: false,
+      showErrorDialog: false,
+      showErrorTosat: true,
+      showSuccessTosat: true,
+      autoRetry: false,
+      maxAutoRetries: 1,
+    };
+  }
+
+  private constructor() {
+    super();
+  }
+
+  static getInstance(): EducationSubjectItemController {
+    if (!EducationSubjectItemController.instance) {
+      EducationSubjectItemController.instance = new EducationSubjectItemController();
+    }
+    return EducationSubjectItemController.instance;
+  }
+
+  async create(params: Params, options?: ApiCallOptions) {
+    return super.create(params, { ...options, useJson: true });
+  }
+
+  async update(params: EditEducationSubjectItemParams, options?: ApiCallOptions) {
+    const translations = Object.values(params.translations?.title ?? {});
+
+    const hasNoTranslations =
+      translations.length === 0 || translations.every((value) => !String(value).trim());
+
+    if (hasNoTranslations) {
+      dialogManager.toastWarning('Please add at least one translation');
+      return;
+    }
+    return super.update(params, { ...options, useJson: true });
+  }
+  async delete(params: DeleteEducationSubjectItemParams, options?: ApiCallOptions) {
+    const result = await super.delete(params, { ...options, useJson: true });
+    if (result?.error?.title) {
+      dialogManager.toastError(result.error.title);
+    }
+    return result;
+  }
+}

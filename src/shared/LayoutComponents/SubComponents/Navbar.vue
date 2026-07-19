@@ -1,102 +1,159 @@
 <script lang="ts" setup>
-import { ref } from "vue";
-// import { useRoute, useRouter } from 'vue-router'
-// import IconFullScreen from '@/shared/icons/IconFullScreen.vue'
-// import IconMenu from '@/shared/icons/IconMenu.vue'
-import IconLogout from "@/shared/icons/IconLogout.vue";
-import IconArrowDownNav from "@/shared/icons/IconArrowDownNav.vue";
-// import { setDefaultImage } from '@/base/Presentation/Utils/set_default_image'
-// import { setDefaultImage } from "@/base/Presentation/Utils/set_default_image";
-// import { useUserStore } from "@/stores/user";
-// import defaultImage from "@/assets/images/user.png";
-// import ChangeLanguage from './ChangeLanguage.vue'
-// import Notification from '../icons/Notification.vue'
-import { useUserStore } from "@/stores/user";
-import SearchIcon from "@/shared/icons/SearchIcon.vue";
+  import { ref, watch } from 'vue';
+  import IconLogout from '@/shared/icons/IconLogout.vue';
+  import { useUserStore } from '@/stores/user';
+  import SearchIcon from '@/shared/icons/SearchIcon.vue';
+  import HeaderSettingIcon from '@/shared/icons/HeaderIcons/HeaderSettingIcon.vue';
+  import HeaderMessgaesIcon from '@/shared/icons/HeaderIcons/HeaderMessgaesIcon.vue';
+  import HeaderNotificationIcon from '@/shared/icons/HeaderIcons/HeaderNotificationIcon.vue';
+  import EmployeeImage from '@/assets/images/headerIMages/employee.jpg';
+  import { useRouter } from 'vue-router';
+  import Drawer from 'primevue/drawer';
+  import SidebarNavigation from './SidebarNavigation.vue';
+  import HeaderSidebarIcon from '@/shared/icons/HeaderIcons/HeaderSidebarIcon.vue';
+  import { useRouteSearch } from '@/stores/routerSearch';
 
-const props = defineProps({
-  open: {
-    type: Boolean,
-    default: true,
-  },
-});
+  const userStore = useUserStore();
+  const router = useRouter();
 
-const emit = defineEmits(["open"]);
+  const logout = () => {
+    userStore.logout();
+    router.push('/login');
+  };
 
-const userStore = useUserStore();
+  const isDropMenuOpen = ref(false);
+  const toggleDropMenu = () => {
+    isDropMenuOpen.value = !isDropMenuOpen.value;
+  };
 
-const user = userStore.user;
+  const DrawerVisible = ref(false);
+  const { user } = useUserStore();
 
-const logout = () => {
-  userStore.logout();
-};
+  const { query, results, isOpen, activeIndex, navigate, onKeydown } = useRouteSearch();
 
-const isDropMenuOpen = ref(false);
-
-const toggleDropMenu = () => {
-  isDropMenuOpen.value = !isDropMenuOpen.value;
-};
+  watch(results, (val) => {
+    isOpen.value = val.length > 0;
+    activeIndex.value = -1;
+  });
 </script>
 
 <template>
   <header class="header">
     <nav class="nav">
-      <div class="menu">
-        <!-- Add the new icon to open the sidebar -->
-        <!-- <span v-if="!props.open" class="cursor-pointer" @click="toggleSidebar">
-          <IconMenu />
-        </span> -->
-        <!-- <span  class="cursor-pointer" @click="toggleSidebar">
-          <IconMenu />
-        </span> -->
-        <!-- <div class="header-link flex gap-sm items-center">
-          <h1>
-            <router-link to="/">{{ $t('home') }} </router-link>
-          </h1>
-          <p class="route-name">{{ $t(typeof route?.name === 'string' ? route.name : '') }} /</p>
-        </div> -->
-        <router-link class="flex items-center gap-2" :to="'/'">
-          <!-- <img :src="defaultLogo" alt="logo-img"> -->
-          <p class="logo">logo</p>
-        </router-link>
-      </div>
-
-      <div class="search">
+      <div class="search" @keydown="onKeydown">
         <SearchIcon />
-        <input type="serach" placeholder="Search What You Want" />
+        <input
+          v-model="query"
+          type="search"
+          placeholder="Search What You Want"
+          autocomplete="off"
+        />
+
+        <Transition name="dropdown">
+          <ul v-if="isOpen" class="search__results">
+            <li
+              v-for="(route, index) in results"
+              :key="route.name"
+              :class="{ 'is-active': index === activeIndex }"
+              @mouseenter="activeIndex = index"
+              @mousedown.prevent="navigate(route)"
+            >
+              {{ route.title }}
+            </li>
+          </ul>
+        </Transition>
       </div>
 
       <div class="setting">
-        <!-- <ChangeLanguage class="countery-icon" /> -->
+        <HeaderNotificationIcon class="cursor-pointer" />
+        <HeaderMessgaesIcon class="cursor-pointer" />
+        <HeaderSettingIcon class="cursor-pointer" />
 
-        <!-- <div class="notification cursor-pointer" @click="toggleFullScreen">
-          <Notification />
-        </div> -->
+        <div class="user cursor-pointer dropdown-trigger">
+          <img alt="user" :src="EmployeeImage" @click="toggleDropMenu" />
 
-        <div
-          class="user cursor-pointer dropdown-trigger"
-          @click="toggleDropMenu"
-        >
-          <IconArrowDownNav class="drop-icon" />
-          <div class="profile-data">
-            <span>{{ user?.email }}</span>
-            <!-- <span>{{ user?.type == OrganizationTypeEnum.ADMIN ? 'Admin' : 'Organization' }}</span> -->
-          </div>
+          <transition name="mega-menu">
+            <div v-if="isDropMenuOpen" class="mega-menu">
+              <div class="mega-header">
+                <img
+                  :src="EmployeeImage || `https://cyber.comolho.com/static/img/avatar.png`"
+                  alt="image"
+                />
+                <div>
+                  <p class="name">{{ user?.name }}</p>
+                  <span class="role">Admin</span>
+                </div>
+              </div>
 
-          <img alt="user" src="@/assets/images/app/system-failed.png" />
+              <div class="divider"></div>
 
-          <div class="dropdown-menu" v-if="isDropMenuOpen">
-            <ul>
-              <li @click="logout">
-                <IconLogout />
-                <span> {{ $t("logout") }} </span>
-              </li>
-            </ul>
-          </div>
+              <div class="mega-actions">
+                <button class="logout-btn" @click="logout">
+                  <icon-logout />
+                  <span>{{ $t('logout') }}</span>
+                </button>
+              </div>
+            </div>
+          </transition>
+        </div>
+
+        <div class="sidebar-drawer">
+          <button class="cursor-pointer" @click="DrawerVisible = true">
+            <HeaderSidebarIcon />
+          </button>
+          <Drawer v-model:visible="DrawerVisible" position="right">
+            <template #header> </template>
+            <SidebarNavigation @click-item="DrawerVisible = false" />
+          </Drawer>
         </div>
       </div>
     </nav>
   </header>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+  .search {
+    position: relative;
+
+    &__results {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      list-style: none;
+      margin: 0;
+      padding: 4px;
+      z-index: 99999;
+
+      li {
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.15s;
+
+        &.is-active,
+        &:hover {
+          background: #f1f5f9;
+        }
+      }
+    }
+  }
+
+  .dropdown-enter-active,
+  .dropdown-leave-active {
+    transition:
+      opacity 0.15s,
+      transform 0.15s;
+  }
+
+  .dropdown-enter-from,
+  .dropdown-leave-to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+</style>
